@@ -59,11 +59,11 @@ and open the template in the editor.
                     <div class="col-md-12">
                         <ul class="nav nav-tabs">
                             <li class="active">
-                                <a  href="#1" data-toggle="tab">Mis solicitudes</a>
+                                <a  href="#1" data-toggle="tab">Equipos</a>
                             </li>
                             <li><a href="#2" data-toggle="tab">Ubicación</a>
                             </li>
-                            <li><a href="#3" data-toggle="tab">Equipos</a>
+                            <li><a href="#3" data-toggle="tab">Mis solicitudes</a>
                             </li>
                         </ul>
                         <div class="tab-content ">
@@ -93,7 +93,7 @@ and open the template in the editor.
                                                     <h:message for="equisoli" errorClass="field-error" />
                                                     <h:selectOneMenu id="equisoli" value="#{solicitudesBean.objeSoli.codiEqui}" class="form-control" pt:data-live-search="true">
                                                         <f:selectItem pt:data-hidden="true" itemLabel="Seleccione..."/>
-                                                        <f:selectItems value="#{equiposBean.listEqui}" var="lst2" itemLabel="#{lst2.codiEqui}#{' - '}#{lst2.descEqui}" itemValue="#{lst2}"/>
+                                                        <f:selectItems value="#{equiposBean.listEqui}" var="lst2" itemLabel="#{lst2.codiEqui}#{' '}#{lst2.descEqui}#{' '}#{lst2.marEqui}#{' '}#{lst2.modeEqui}#{' N° Serie: '}#{lst2.seriEqui}#{' Ubicado en: '}#{lst2.codiUbic.nombUbic}" itemValue="#{lst2}"/>
                                                         <f:converter converterId="PooConv"/>
                                                     </h:selectOneMenu>
                                                 </div>
