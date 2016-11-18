@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" 
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" 
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="../WEB-INF/resources/fragmentos/comun.xhtml">
+        <!-- Título de la página -->
+        <ui:param name="pageTitl" value="Visitantes"/>
+        <ui:param name="pageNomb" value="Visitantes"/>
+        <ui:param name="pageDesc" value="Mantenimiento de Visitantes"/>
+        <!-- Activar el link del menú -->
+        <ui:param name="actiMenuCita" value="active"/>
+        <ui:param name="actiAlumVisi" value="active"/>
+        <!-- Scripts personalizados -->
+        <ui:define name="CustomScripts">
+            <!--Plugins Select-->
+            <h:outputStylesheet library="css" name="bootstrap-select.css"/>
+            <h:outputScript library="js" name="bootstrap-select.js"/>
+            <!--Plugins custom-->
+            <h:outputScript library="js" name="custom/mantenimientos.js"/>
+            <h:outputScript library="js" name="custom/AlumnoVisitante.js"/>
+        </ui:define>
+        <!-- Elementos propios del boby -->
+        <ui:define name="body">
+            <div class="row RegDiv">
+                <div class="col-md-12 col-xs-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Tabla de Datos</div>
+                        <div class="panel-body">
+                            <h:panelGroup id="ContRegi">
+                                <div id="toolTablRegi">
+                                    <h:form>
+                                        <p:remoteCommand name="consObjeAlum" actionListener="#{alumnoVisitanteBean.setAlumn()}" update="" 
+                                                         oncomplete="" global="true"/>
+                                        <p:remoteCommand name="consObje" actionListener="#{alumnoVisitanteBean.cons()}" update=":FormRegi" 
+                                                         oncomplete="$('#ModaFormRegi').modal('show'); INIT_FORM(); INIT_OBJE();" global="true"/>
+                                        <p:remoteCommand name="elimObje" actionListener="#{alumnoVisitanteBean.elim()}" update=":FormRegi :ContRegi" 
+                                                         oncomplete="INIT_OBJE(); INIT_FORM(); INIT_OBJE_MODA();" global="true"/>
+                                        <h:commandLink id="btonNuev" class="btn btn-success">
+                                            <p:ajax listener="#{alumnoVisitanteBean.limpForm()}" update=":FormRegi" global="true" 
+                                                    oncomplete="$('#ModaFormRegi').modal('show'); INIT_FORM(); INIT_OBJE_TABL();"/>
+                                            <i class="fa fa-plus"/> Nuevo
+                                        </h:commandLink>
+                                    </h:form>
+                                </div>
+                                <h:dataTable pt:data-id="TablRegi" id="TablRegi" value="#{alumnoVisitanteBean.listAlumVisi}"
+                                             var="fila" class="boottable" pt:data-toolbar="#toolTablRegi"
+                                             styleClass="table-hover table-bordered table-condensed table-striped table-responsive"
+                                             pt:data-show-refresh="false" pt:data-show-toggle="false" pt:data-show-columns="false" 
+                                             pt:data-search="true" pt:data-pagination="true" pt:data-page-list="[5, 10, 20, 50]"
+                                             pt:data-click-to-select="true"  pt:data-select-item-name="radio"
+                                             pt:data-single-select="true">                                
+                                    <h:column pt:data-field="state" pt:data-checkbox="true">
+                                    </h:column>
+                                    <h:column pt:data-align="right" pt:data-sortable="true" pt:data-field="id" pt:data-visible='false'>
+                                        <f:facet name="header">Código</f:facet>
+                                        <h:outputText value="#{fila.codiAlumVisi}"/>
+                                    </h:column>
+                                    <h:column pt:data-sortable="true" pt:data-field="nomb">
+                                        <f:facet name="header">Visitante</f:facet>
+                                        <h:outputText value="#{fila.codiVisi.nombVisi.concat(' ').concat(fila.codiVisi.apelVisi)}"/>   
+                                    </h:column>
+                                    <h:column pt:data-sortable="true" pt:data-field="dui">
+                                        <f:facet name="header">Alumno</f:facet>
+                                        <h:outputText value="#{citasBean.consObjeAlumno(fila.carnAlum).nomb}"/>   
+                                    </h:column>
+                                    <h:column pt:data-sortable="true">
+                                        <f:facet name="header">Parentesco</f:facet>
+                                        <h:panelGroup rendered="#{fila.pareAlumVisi eq '1'}">Padre/Madre</h:panelGroup>
+                                        <h:panelGroup rendered="#{fila.pareAlumVisi eq '2'}">Tio/Tia</h:panelGroup>
+                                        <h:panelGroup rendered="#{fila.pareAlumVisi eq '3'}">Abuelo/Abuela</h:panelGroup>
+                                        <h:panelGroup rendered="#{fila.pareAlumVisi eq '4'}">Hermano/Hermana</h:panelGroup>
+                                        <h:panelGroup rendered="#{fila.pareAlumVisi eq '5'}">Primo/Prima</h:panelGroup>
+                                        <h:panelGroup rendered="#{fila.pareAlumVisi eq '6'}">
+                                            <h:outputText value="#{fila.espeAlumVisi}"/>  
+                                        </h:panelGroup>
+
+                                    </h:column>
+                                </h:dataTable>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <!-- Modal -->
+                <div id="ModaFormRegi" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times"/></button>
+                                <h4 class="modal-title">Gestión de Alumnos en Visitantes</h4>
+                            </div>
+                            <div class="modal-body" style="padding-top: 2px;">
+                                <ui:fragment id="FragAlumIsDoce" rendered="#{citasBean.isUsuaDoce}">
+                                    <h:panelGroup id = "gpTablAlum">
+                                        <h:dataTable pt:data-id="TablAlum" id="TablAlum" value="#{citasBean.listAlumnosWS}"
+                                                     var="fila" class="boottable" pt:data-toolbar="#toolTablAlum"
+                                                     styleClass="table-hover table-bordered table-condensed table-striped table-responsive"
+                                                     pt:data-show-refresh="false" pt:data-show-toggle="false" pt:data-show-columns="false" 
+                                                     pt:data-search="true" pt:data-pagination="true" pt:data-page-list="[5, 10, 20, 50]"
+                                                     pt:data-click-to-select="true"  pt:data-select-item-name="radio"
+                                                     pt:data-single-select="true">                                
+                                            <h:column pt:data-field="state" pt:data-checkbox="true">
+                                            </h:column>
+                                            <h:column pt:data-align="right" pt:data-sortable="true" pt:data-field="id" class="hidden">
+                                                <f:facet name="header">Carnet</f:facet>
+                                                <h:outputText value="#{fila.carn}"/>
+                                            </h:column>
+                                            <h:column pt:data-sortable="true" pt:data-field="nomb">
+                                                <f:facet name="header">Nombre</f:facet>
+                                                <h:outputText value="#{fila.nomb}"/>   
+                                            </h:column>
+                                            <h:column pt:data-sortable="true" pt:data-field="niv">
+                                                <f:facet name="header">Nivel</f:facet>
+                                                <h:outputText value="#{fila.grad}"/>   
+                                            </h:column>
+                                            <h:column pt:data-sortable="true" pt:data-field="espe">
+                                                <f:facet name="header">Epecialidad</f:facet>
+                                                <h:outputText value="#{fila.espe}"/>   
+                                            </h:column>
+                                        </h:dataTable>
+                                    </h:panelGroup>
+                                </ui:fragment>
+
+                                <ui:fragment id="FragAlumNoDoce" rendered="#{!citasBean.isUsuaDoce}">
+                                    <h:form>
+                                        <div class="cutom_search">
+                                            <h:inputText id="cadeText" value="#{citasBean.buscAlum}" class="form-control cutom_search_text" />
+                                            <h:commandLink id="btonBusc" class="btn btn-success cutom_search_button">
+                                                <p:ajax  process="cadeText" oncomplete="INIT_OBJE_TABL();" update="gpTablAlumNoDoce"  global="true" />
+                                                <i class="fa fa-search"/>
+                                            </h:commandLink>
+                                        </div>
+                                    </h:form>
+
+                                    <h:panelGroup id="gpTablAlumNoDoce">
+                                        <h:dataTable pt:data-id="TablAlumNoDoce" id="TablAlumNoDoce" value="#{citasBean.listAlumnosWS}"
+                                                     var="fila" class="boottable" pt:data-toolbar="#toolTablAlumNoDoce"
+                                                     styleClass="table-hover table-bordered table-condensed table-striped table-responsive"
+                                                     pt:data-show-refresh="false" pt:data-show-toggle="false" pt:data-show-columns="false" 
+                                                     pt:data-search="false" pt:data-pagination="true" pt:data-page-list="[5, 10, 20, 50]"
+                                                     pt:data-click-to-select="true"  pt:data-select-item-name="radio"
+                                                     pt:data-single-select="true">                                
+                                            <h:column pt:data-field="state" pt:data-checkbox="true">
+                                            </h:column>
+                                            <h:column pt:data-align="right" pt:data-sortable="true" pt:data-field="id" class="hidden">
+                                                <f:facet name="header">Carnet</f:facet>
+                                                <h:outputText value="#{fila.carn}"/>
+                                            </h:column>
+                                            <h:column pt:data-sortable="true" pt:data-field="nomb">
+                                                <f:facet name="header">Nombre</f:facet>
+                                                <h:outputText value="#{fila.nomb}"/>   
+                                            </h:column>
+                                            <h:column pt:data-sortable="true" pt:data-field="niv">
+                                                <f:facet name="header">Nivel</f:facet>
+                                                <h:outputText value="#{fila.grad}"/>   
+                                            </h:column>
+                                            <h:column pt:data-sortable="true" pt:data-field="espe">
+                                                <f:facet name="header">Epecialidad</f:facet>
+                                                <h:outputText value="#{fila.espe}"/>   
+                                            </h:column>
+                                        </h:dataTable>
+                                    </h:panelGroup>
+                                </ui:fragment>
+                            </div>
+                            <h:form id="FormRegi" class="form-horizontal">
+
+                                <div class="modal-body" style="padding-top: 2px;"> 
+                                    <fieldset>
+                                        <h:inputHidden id="codi" value="#{alumnoVisitanteBean.objeAlumVisi.codiAlumVisi}" />
+                                        
+                                        <div class="input-group col-xs-12">
+                                            <h:outputLabel  for="seleVisi" value="Visitante: "/>
+                                            <h:message for="seleVisi" errorClass="field-error" />
+                                            <h:selectOneMenu id="seleVisi" value="#{alumnoVisitanteBean.objeAlumVisi.codiVisi}" class="form-control select" pt:data-live-search="true" required="True" requiredMessage="Debe Seleccionar Un Visitante">
+                                                <f:selectItem pt:data-hidden="true" itemLabel="Seleccione..."/>
+                                                <f:selectItems value="#{visitantesBean.listVisi}" var="lst" itemLabel="#{lst.nombVisi.concat(' ').concat(lst.apelVisi)}" itemValue="#{lst}"/>
+                                                <f:converter converterId="PooConv"/>
+                                            </h:selectOneMenu>
+                                        </div>
+                                        <div class="input-group col-xs-12">
+                                            <h:outputLabel  for="seleParen" value="Parentesco: "/>
+                                            <h:message for="seleParen" errorClass="field-error" />
+                                            <h:selectOneMenu id="seleParen" value="#{alumnoVisitanteBean.objeAlumVisi.pareAlumVisi}" class="form-control select" pt:data-live-search="true" required="true" requiredMessage="Debe Seleccionar un Parentesco">
+                                                <f:selectItem pt:data-hidden="true" itemLabel="Seleccione..."/>
+                                                <f:selectItem itemValue="1" itemLabel="Padre/Madre"/>
+                                                <f:selectItem itemValue="2" itemLabel="Tio/Tia"/>
+                                                <f:selectItem itemValue="3" itemLabel="Abuelo/Abuela"/>
+                                                <f:selectItem itemValue="4" itemLabel="Hermano/Hermana"/>
+                                                <f:selectItem itemValue="5" itemLabel="Primo/Prima"/>
+                                                <f:selectItem itemValue="6" itemLabel="Otro"/>
+                                                <f:converter converterId="PooConv"/>
+                                            </h:selectOneMenu>
+                                        </div>
+                                        <div class="input-group col-xs-12" id="ParenDiv" style="display: none;">
+                                            <h:outputLabel  for="pareAlum" value="Especificar Parentesco: "/>
+                                            <h:inputText  id="pareAlum" value="#{alumnoVisitanteBean.objeAlumVisi.espeAlumVisi}" class="form-control"/>
+                                            <h:message for="pareAlum" errorClass="field-error" />
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="modal-footer">
+                                    <div class="input-group-btn right" style="padding-top: 5px;">
+                                        <div class="btn-group">
+                                            <h:commandLink id="btonCanc" class="btn btn-default" pt:data-dismiss="modal">
+                                                <p:ajax listener="#{alumnoVisitanteBean.limpForm()}" process="@form" update="@form" global="true"/>
+                                                <i class="fa fa-mail-forward"/> Cerrar
+                                            </h:commandLink>
+                                            <h:commandLink id="btonGuar" class="btn btn-success" rendered="#{alumnoVisitanteBean.guardar}">
+                                                <p:ajax listener="#{alumnoVisitanteBean.guar()}" process="@form" update="@form :ContRegi" oncomplete="INIT_OBJE(); INIT_OBJE_MODA(); INIT_FORM();" />
+                                                <i class="fa fa-plus"/> Guardar
+                                            </h:commandLink>
+                                            <h:commandLink id="btonNuev" class="btn btn-success" rendered="#{!alumnoVisitanteBean.guardar}">
+                                                <p:ajax listener="#{alumnoVisitanteBean.limpForm()}" process="@form" update="@form" oncomplete="INIT_OBJE_MODA(); INIT_FORM();" />
+                                                <i class="fa fa-plus"/> Nuevo
+                                            </h:commandLink>
+                                            <h:commandLink id="btonModi" class="btn btn-primary" rendered="#{!alumnoVisitanteBean.guardar}">
+                                                <p:ajax listener="#{alumnoVisitanteBean.modi()}" process="@form" update="@form :ContRegi" oncomplete="INIT_OBJE(); INIT_OBJE_MODA(); INIT_FORM();" />
+                                                <i class="fa fa-edit"/> Modificar
+                                            </h:commandLink>
+                                            <h:outputLink id="btonElim" class="btn btn-danger" rendered="#{!alumnoVisitanteBean.guardar}" value="#" pt:data-placement="left"
+                                                          pt:data-toggle="confirmation" pt:data-btn-ok-label="Sí" pt:data-btn-ok-icon="fa fa-times"
+                                                          pt:data-btn-ok-class="btn-danger btn-xs" pt:data-btn-cancel-label="No" pt:data-btn-cancel-icon="fa fa-mail-forward"
+                                                          pt:data-btn-cancel-class="btn-default btn-xs" pt:data-title="¿Esta seguro que desea eliminar?"
+                                                          pt:data-on-confirm="elimObje"><!--data-on-confirm = nombre del comando remoto de eliminar (sin paréntesis)-->
+                                                <i class="fa fa-times"/> Eliminar
+                                            </h:outputLink>
+                                        </div>
+                                    </div>
+                                </div>
+                            </h:form>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" 
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" 
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"   
+      xmlns:cs="http://xmlns.udb.edu.sv/component">
+      
+      
+    <ui:composition template="../WEB-INF/resources/fragmentos/comun.xhtml">
+        <!-- Título de la página -->
+        <ui:param name="pageTitl" value="Bienvenido ::: Página Reportes"/>
+        <ui:param name="pageNomb" value="Página Reportes"/>
+        <ui:param name="pageDesc" value="Reportes control de citas"/>
+        <!-- Activar el link del menú -->
+        <ui:param name="actiMenuCita" value="active"/>
+        <ui:param name="actiCitaRepo" value="active"/>
+        <!-- Scripts personalizados -->
+        <ui:define name="CustomScripts">
+            <!--h:outputScript library="js" name="custom/alum.js"/-->
+        </ui:define>
+        <!-- Elementos propios del boby -->
+        <ui:define name="body">
+            
+ 
+            <div class="row RegDiv">
+                <div class="col-md-12 col-xs-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Reportes control de citas</div>
+                        <div class="panel-body">                            
+                            <h:form id="FormVisorPdfJs"> 
+                                <p:accordionPanel activeIndex="-1">
+                                    <p:tab title="Estadisticas citas">
+                                        <h:panelGrid columns="10" cellpadding="10">
+
+                                            <h:outputLabel  for="anioCitas" value="Ingrese el año: "/>
+                                            <p:inputMask style="float: right; width: 70%;" id="anioCitas" value="#{reportesBean.anioCitas}" mask="9999" class="form-control"/>
+                                            <h:commandLink style="float: right; width: 100%;" id="btonRepo" class="btn btn-success" rendered="#{true}">
+                                                <p:ajax listener="#{reportesBean.procCita()}" process="@form" update="@form" />
+                                                <i class="fa fa-print"/> Procesar Reporte
+                                            </h:commandLink>
+                                            <br/><br/>
+                                            <br/><br/> 
+                                        </h:panelGrid>
+                                        <cs:PdfViewer id="demo" value="#{reportesBean.docuRepo}" width="100%" height="500px"/>     
+                                    </p:tab> 
+                                    
+                                    <p:tab title="Estadisticas visitas">
+                                    <h:panelGrid columns="10" cellpadding="10">
+                                        <h:outputLabel  for="anioVisi" value="Ingrese el año: "/>
+                                        <p:inputMask style="float: right; width: 70%;" id="anioVisi" value="#{reportesBean.anioVisi}" mask="9999" class="form-control"/>
+                                        <h:commandLink style="float: right; width: 100%;" id="btonRepo1" class="btn btn-success" rendered="#{true}">
+                                            <p:ajax listener="#{reportesBean.procVisi()}" process="@form" update="@form" />
+                                            <i class="fa fa-print"/> Procesar Reporte
+                                        </h:commandLink>
+                                        <br/><br/>
+                                        <br/><br/> 
+                                    </h:panelGrid>
+                                        <cs:PdfViewer id="demo1" value="#{reportesBean.docuRepo}" width="100%" height="500px"/>     
+
+                                </p:tab>
+                                    
+                                </p:accordionPanel>
+                            </h:form>
+                            
+                            
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        </ui:define>
+    </ui:composition>
+</html>

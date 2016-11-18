@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" 
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" 
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="../WEB-INF/resources/fragmentos/comun.xhtml">
+        <!-- Título de la página -->
+        <ui:param name="pageTitl" value="Visitantes"/>
+        <ui:param name="pageNomb" value="Visitantes"/>
+        <ui:param name="pageDesc" value="Mantenimiento de Visitantes"/>
+        <!-- Activar el link del menú -->
+        <ui:param name="actiMenuCita" value="active"/>
+        <ui:param name="actiVisi" value="active"/>
+        <!-- Scripts personalizados -->
+        <ui:define name="CustomScripts">
+        <!--Plugins Select-->
+        <h:outputStylesheet library="css" name="bootstrap-select.css"/>
+        <h:outputScript library="js" name="bootstrap-select.js"/>
+        <!--Plugins custom-->
+            <h:outputScript library="js" name="custom/mantenimientos.js"/>
+        </ui:define>
+        <!-- Elementos propios del boby -->
+        <ui:define name="body">
+            <div class="row RegDiv">
+                <div class="col-md-12 col-xs-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Tabla de Datos</div>
+                        <div class="panel-body">
+                            <h:panelGroup id="ContRegi">
+                                <div id="toolTablRegi"  >
+                                    <h:form>
+                                        
+                                        <p:remoteCommand name="consObje" actionListener="#{visitantesBean.cons()}" update=":FormRegi" 
+                                                         oncomplete="$('#ModaFormRegi').modal('show');" global="true"/>
+                                        <p:remoteCommand name="elimObje" actionListener="#{visitantesBean.elim()}" update=":FormRegi :ContRegi" 
+                                                         oncomplete="INIT_OBJE(); INIT_OBJE_MODA();" global="true"/>
+                                        <h:commandLink id="btonNuev" class="btn btn-success">
+                                            <p:ajax listener="#{visitantesBean.limpForm()}" update=":FormRegi" global="true" 
+                                                    oncomplete="$('#ModaFormRegi').modal('show'); INIT_OBJE(); INIT_OBJE_MODA(); "/>
+                                            <i class="fa fa-plus"/> Nuevo
+                                        </h:commandLink>
+                                        
+                                    </h:form>
+                                </div>
+                                <h:form>
+                                    <div class="cutom_search">
+                                        <h:inputText id="cadeText" value="#{visitantesBean.cadeText}" class="form-control cutom_search_text" />
+                                        <h:commandLink id="btonBusc" class="btn btn-success cutom_search_button">
+                                            <p:ajax  process="cadeText" oncomplete="INIT_OBJE(); INIT_OBJE_MODA();" update="@form :ContRegi"  global="true" />
+                                            <i class="fa fa-search"/>
+                                        </h:commandLink>
+                                    </div>
+                                </h:form>
+                                
+                                <h:dataTable pt:data-id="TablRegi" id="TablRegi" value="#{visitantesBean.listVisi}"
+                                        var="fila" class="boottable" pt:data-toolbar="#toolTablRegi"
+                                        styleClass="table-hover table-bordered table-condensed table-striped table-responsive"
+                                        pt:data-show-refresh="false" pt:data-show-toggle="false" pt:data-show-columns="false" 
+                                        pt:data-search="false" pt:data-pagination="true" pt:data-page-list="[5, 10, 20, 50]"
+                                        pt:data-click-to-select="true"  pt:data-select-item-name="radio"
+                                        pt:data-single-select="true">                                
+                               <h:column pt:data-field="state" pt:data-checkbox="true">
+                               </h:column>
+                               <h:column pt:data-align="right" pt:data-sortable="true" pt:data-field="id" pt:data-visible='false'>
+                                   <f:facet name="header">Código</f:facet>
+                                   <h:outputText value="#{fila.codiVisi}"/>
+                               </h:column>
+                               <h:column pt:data-sortable="true" pt:data-field="nomb">
+                                   <f:facet name="header">Nombre</f:facet>
+                                   <h:outputText value="#{fila.nombVisi.concat(' ').concat(fila.apelVisi)}"/>   
+                               </h:column>
+                               <h:column pt:data-sortable="true" pt:data-field="dui">
+                                   <f:facet name="header">DUI</f:facet>
+                                   <h:outputText value="#{fila.duiVisi}"/>   
+                               </h:column>
+                               <h:column pt:data-sortable="true" pt:data-field="tele">
+                                   <f:facet name="header">Contacto</f:facet>
+                                   <h:panelGroup rendered="#{fila.corrVisi != null}">
+                                       <span class='fa fa-envelope' style="margin-right: 10px;"></span>
+                                        <h:outputText value="#{fila.corrVisi}"/>
+                                        <br/>
+                                    </h:panelGroup>
+                                   <h:panelGroup rendered="#{fila.teleVisi != null}">
+                                       <span class='fa fa-phone' style="margin-right: 10px;"></span>
+                                        <h:outputText value="#{fila.teleVisi}"/>
+                                    </h:panelGroup>
+                               </h:column>
+                            </h:dataTable>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <!-- Modal -->
+                <div id="ModaFormRegi" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <h:form id="FormRegi" class="form-horizontal">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times"/></button>
+                                    <h4 class="modal-title">Gestión de Visitantes</h4>
+                                </div>
+                                <div class="modal-body" style="padding-top: 2px;">
+                                    <fieldset class="col-md-12">
+                                        <h:inputHidden id="codi" value="#{visitantesBean.objeVisi.codiVisi}" />
+                                        <div class="input-group col-xs-12">
+                                            <h:outputLabel  for="nomb" value="Nombre: "/>
+                                            <h:message for="nomb" errorClass="field-error" />
+                                            <h:inputText id="nomb" value="#{visitantesBean.objeVisi.nombVisi}" class="form-control" required="true" requiredMessage="Debe Registrar Un Nombre"/>
+                                        </div>
+                                        <div class="input-group col-xs-12">
+                                            <h:outputLabel  for="apel" value="Apellido: "/>
+                                            <h:message for="apel" errorClass="field-error" />
+                                            <h:inputText id="apel" value="#{visitantesBean.objeVisi.apelVisi}" class="form-control" required="true" requiredMessage="Debe Registrar Un Apellido"/>
+                                        </div>
+                                        <div class="input-group col-xs-12">
+                                            <h:outputLabel  for="dui" value="DUI: "/>
+                                            <h:message for="dui" errorClass="field-error" />
+                                            <p:inputMask id="dui" value="#{visitantesBean.objeVisi.duiVisi}" class="form-control" mask="99999999-9" requiredMessage="DUI"/>
+                                        </div>
+                                        <div class="input-group col-xs-12">
+                                            <h:outputLabel  for="tel" value="Teléfono: "/>
+                                            <h:message for="tel" errorClass="field-error" />
+                                            <p:inputMask id="tel" value="#{visitantesBean.objeVisi.teleVisi}" mask="9999-9999" class="form-control" required="true" requiredMessage="Debe Registrar un Número Telefónico"/>
+                                        </div>
+                                        <div class="input-group col-xs-12">
+                                            <h:outputLabel  for="mail" value="E-mail: "/>
+                                            <h:message for="mail" errorClass="field-error" />
+                                            <h:inputText id="mail" value="#{visitantesBean.objeVisi.corrVisi}" class="form-control" required="true" requiredMessage="Debe Registrar un Correo Electrónico" validatorMessage="Formato Inválido" />
+                                        </div>
+                                        <div class="input-group col-xs-12">
+                                            <h:outputLabel  for="tipo" value="Tipo Visitante: "/>
+                                            <h:message for="tipo" errorClass="field-error" />
+                                            <h:selectOneMenu id="tipo" value="#{visitantesBean.objeVisi.tipoVisi}" class="form-control select" pt:data-live-search="true" required="true" requiredMessage="Debe Seleccionar el Tipo de Visitante">
+                                                <f:selectItem pt:data-hidden="true" itemLabel="Seleccione..."/>
+                                                <f:selectItem itemValue="1" itemLabel="Encargado Alumno"/>
+                                                <f:selectItem itemValue="2" itemLabel="Particular"/>
+                                            </h:selectOneMenu>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="modal-footer">
+                                        <div class="input-group-btn right" style="padding-top: 5px;">
+                                            <div class="btn-group">
+                                                <h:commandLink id="btonCanc" class="btn btn-default" pt:data-dismiss="modal">
+                                                    <p:ajax listener="#{visitantesBean.limpForm()}" process="@form" update="@form" global="true"/>
+                                                    <i class="fa fa-mail-forward"/> Cerrar
+                                                </h:commandLink>
+                                                <h:commandLink id="btonGuar" class="btn btn-success" rendered="#{visitantesBean.guardar}">
+                                                    <p:ajax listener="#{visitantesBean.guar()}" process="@form" update="@form :ContRegi" oncomplete="INIT_OBJE(); INIT_OBJE_MODA();" />
+                                                    <i class="fa fa-plus"/> Guardar
+                                                </h:commandLink>
+                                                <h:commandLink id="btonNuev" class="btn btn-success" rendered="#{!visitantesBean.guardar}">
+                                                    <p:ajax listener="#{visitantesBean.limpForm()}" process="@form" update="@form" oncomplete="INIT_OBJE_MODA();" />
+                                                    <i class="fa fa-plus"/> Nuevo
+                                                </h:commandLink>
+                                                <h:commandLink id="btonModi" class="btn btn-primary" rendered="#{!visitantesBean.guardar}">
+                                                    <p:ajax listener="#{visitantesBean.modi()}" process="@form" update="@form :ContRegi" oncomplete="INIT_OBJE(); INIT_OBJE_MODA();" />
+                                                    <i class="fa fa-edit"/> Modificar
+                                                </h:commandLink>
+                                                <h:outputLink id="btonElim" class="btn btn-danger" rendered="#{!visitantesBean.guardar}" value="#" pt:data-placement="left"
+                                                              pt:data-toggle="confirmation" pt:data-btn-ok-label="Sí" pt:data-btn-ok-icon="fa fa-times"
+                                                              pt:data-btn-ok-class="btn-danger btn-xs" pt:data-btn-cancel-label="No" pt:data-btn-cancel-icon="fa fa-mail-forward"
+                                                              pt:data-btn-cancel-class="btn-default btn-xs" pt:data-title="¿Esta seguro que desea eliminar?"
+                                                              pt:data-on-confirm="elimObje"><!--data-on-confirm = nombre del comando remoto de eliminar (sin paréntesis)-->
+                                                    <i class="fa fa-times"/> Eliminar
+                                                </h:outputLink>
+                                            </div>
+                                        </div>
+                                </div>
+                            </h:form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>

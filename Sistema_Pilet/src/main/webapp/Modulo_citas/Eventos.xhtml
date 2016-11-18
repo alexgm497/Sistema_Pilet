@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" 
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" 
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="../WEB-INF/resources/fragmentos/comun.xhtml">
+        <!-- Título de la página -->
+        <ui:param name="pageTitl" value="Eventos"/>
+        <ui:param name="pageNomb" value="Eventos"/>
+        <ui:param name="pageDesc" value="Mantenimiento de Eventos"/>
+        <!-- Activar el link del menú -->
+        <ui:param name="actiMenuCita" value="active"/>
+        <ui:param name="actiEven" value="active"/>
+        <!-- Scripts personalizados -->
+        <ui:define name="CustomScripts">
+        <!--Plugins Selector de Fecha-->
+        <h:outputStylesheet library="css" name="datepicker3.css"/>
+        <h:outputScript library="js" name="bootstrap-datepicker.js"/>
+        <h:outputScript library="js" name="bootstrap-datepicker.es.js"/>
+        <!--Plugins Selector de Hora-->
+        <h:outputStylesheet library="css" name="bootstrap-timepicker.min.css"/>
+        <h:outputScript library="js" name="bootstrap-timepicker.js"/>
+        <!--Plugins Selector de Hora-->
+        <h:outputStylesheet library="css" name="bootstrap-timepicker.min.css"/>
+        <h:outputScript library="js" name="bootstrap-timepicker.min.js"/>
+        <!--Plugins Select-->
+        <h:outputStylesheet library="css" name="bootstrap-select.css"/>
+        <h:outputScript library="js" name="bootstrap-select.js"/>
+        <!--Plugins custom-->
+            <h:outputScript library="js" name="custom/mantenimientos.js"/>
+        </ui:define>
+        <!-- Elementos propios del boby -->
+        <ui:define name="body">
+            <div class="row RegDiv">
+                <div class="col-md-12 col-xs-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Tabla de Datos</div>
+                        <div class="panel-body">
+                            <h:panelGroup id="ContRegi">
+                                <div id="toolTablRegi">
+                                    <h:form>
+                                        
+                                        <p:remoteCommand name="consObje" actionListener="#{eventosBean.cons()}" update=":FormRegi" 
+                                                         oncomplete="$('#ModaFormRegi').modal('show');" global="true"/>
+                                        <p:remoteCommand name="elimObje" actionListener="#{eventosBean.elim()}" update=":FormRegi :ContRegi" 
+                                                         oncomplete="INIT_OBJE(); INIT_OBJE_MODA();" global="true"/>
+                                        <h:commandLink id="btonNuev" class="btn btn-success">
+                                            <p:ajax listener="#{eventosBean.limpForm()}" update=":FormRegi" global="true" 
+                                                    oncomplete="$('#ModaFormRegi').modal('show');"/>
+                                            <i class="fa fa-plus"/> Nuevo
+                                        </h:commandLink>
+                                    </h:form>
+                                </div>
+                                <h:dataTable pt:data-id="TablRegi" id="TablRegi" value="#{eventosBean.listEven}"
+                                        var="fila" class="boottable" pt:data-toolbar="#toolTablRegi"
+                                        styleClass="table-hover table-bordered table-condensed table-striped table-responsive"
+                                        pt:data-show-refresh="false" pt:data-show-toggle="false" pt:data-show-columns="false" 
+                                        pt:data-search="true" pt:data-pagination="true" pt:data-page-list="[5, 10, 20, 50]"
+                                        pt:data-click-to-select="true"  pt:data-select-item-name="radio"
+                                        pt:data-single-select="true">                                
+                               <h:column pt:data-field="state" pt:data-checkbox="true">
+                               </h:column>
+                               <h:column pt:data-align="right" pt:data-sortable="true" pt:data-field="id" pt:data-visible='false'>
+                                   <f:facet name="header">Código</f:facet>
+                                   <h:outputText value="#{fila.codiEvent}"/>
+                               </h:column>
+                               <h:column pt:data-sortable="true" pt:data-field="nomb">
+                                   <f:facet name="header">Nombre de Evento</f:facet>
+                                   <h:outputText value="#{fila.nombEven}"/>   
+                               </h:column>
+                               <h:column pt:data-sortable="true" pt:data-field="dui">
+                                   <f:facet name="header">Inicia</f:facet>
+                                   <h:outputText value="#{fila.fechInicEven}">
+                                       <f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-6"/>
+                                   </h:outputText>   
+                               </h:column>
+                               <h:column pt:data-sortable="true">
+                                  <f:facet name="header">Termina</f:facet>
+                                  <h:outputText value="#{fila.fechFinaEven}">
+                                      <f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-6"/>
+                                  </h:outputText> 
+                               </h:column>
+                            </h:dataTable>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <!-- Modal -->
+                <div id="ModaFormRegi" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <h:form id="FormRegi" class="form-horizontal">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times"/></button>
+                                    <h4 class="modal-title">Gestión de Eventos</h4>
+                                </div>
+                                <div class="modal-body" style="padding-top: 2px;">
+                                    <fieldset class="col-md-12">
+                                        <h:inputHidden id="codi" value="#{eventosBean.objeEven.codiEvent}" />
+                                        <div class="input-group col-xs-12">
+                                            <h:outputLabel  for="luga" value="Lugar: "/>
+                                            <h:message for="luga" errorClass="field-error" />
+                                            <h:selectOneMenu id="luga" value="#{eventosBean.objeEven.codiUbic}" class="form-control select" pt:data-live-search="true" required="true" requiredMessage="Debe Seleccionar un Lugar">
+                                                <f:selectItem pt:data-hidden="true" itemLabel="Seleccione..."/>
+                                                <f:selectItems value="#{ubicacionesBean.consListUbicPorDisEven()}" var="lst" itemLabel="#{lst.nombUbic}" itemValue="#{lst}"/>
+                                                <f:converter converterId="PooConv"/>
+                                            </h:selectOneMenu>
+                                        </div>
+                                        <div class="input-group col-xs-12">
+                                            <h:outputLabel  for="nombEven" value="Nombre de Evento: "/>
+                                            <h:message for="nombEven" errorClass="field-error" />
+                                            <h:inputText  id="nombEven" value="#{eventosBean.objeEven.nombEven}" class="form-control" required="true" requiredMessage="Debe Registrar un Nombre pra el Evento"/>
+                                        </div>
+                                        <div class="input-group col-xs-12">
+                                            <h:outputLabel  for="fechInic" value="Fecha Inicio: "/>
+                                            <h:message for="fechInic" errorClass="field-error" />
+                                            <h:inputText id="fechInic" value="#{eventosBean.objeEven.fechInicEven}" class="form-control datepicker" required="true" requiredMessage="Debe Seleccionar Una Fecha de Inicio">
+                                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                                            </h:inputText>       
+                                        </div>
+                                        <div class="input-group col-xs-12">
+                                            <h:outputLabel  for="fechFina" value="Fecha Fin: "/>
+                                            <h:message for="fechFina" errorClass="field-error" />
+                                            <h:inputText id="fechFina" value="#{eventosBean.objeEven.fechFinaEven}" class="form-control datepicker" required="true" requiredMessage="Debe Seleccionar Una Fecha de Fin">
+                                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                                            </h:inputText>
+                                        </div>
+                                        <div class="input-group col-xs-12">
+                                            <h:outputLabel  for="horaInicEven" value="Hora Inicio: "/>
+                                            <h:message for="horaInicEven" errorClass="field-error" />
+                                            <h:inputText id="horaInicEven" value="#{eventosBean.objeEven.horaInicEven}" class="form-control timepicker" required="true" requiredMessage="Debe Seleccionar Una Hora de Inicio"/>
+                                        </div>
+                                        <div class="input-group col-xs-12">
+                                            <h:outputLabel  for="horaFinaEven" value="Hora Fin: "/>
+                                            <h:message for="horaFinaEven" errorClass="field-error" />	
+                                            <h:inputText id="horaFinaEven" value="#{eventosBean.objeEven.horaFinaEven}" class="form-control timepicker" required="true" requiredMessage="Debe Seleccionar Una Hora de Fin"/>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="modal-footer">
+                                        <div class="input-group-btn right" style="padding-top: 5px;">
+                                            <div class="btn-group">
+                                                <h:commandLink id="btonCanc" class="btn btn-default" pt:data-dismiss="modal">
+                                                    <p:ajax listener="#{eventosBean.limpForm()}" process="@form" update="@form" global="true"/>
+                                                    <i class="fa fa-mail-forward"/> Cerrar
+                                                </h:commandLink>
+                                                <h:commandLink id="btonGuar" class="btn btn-success" rendered="#{eventosBean.guardar}">
+                                                    <p:ajax listener="#{eventosBean.guar()}" process="@form" update="@form :ContRegi" oncomplete="INIT_OBJE(); INIT_OBJE_MODA();" />
+                                                    <i class="fa fa-plus"/> Guardar
+                                                </h:commandLink>
+                                                <h:commandLink id="btonNuev" class="btn btn-success" rendered="#{!eventosBean.guardar}">
+                                                    <p:ajax listener="#{eventosBean.limpForm()}" process="@form" update="@form" oncomplete="INIT_OBJE_MODA();" />
+                                                    <i class="fa fa-plus"/> Nuevo
+                                                </h:commandLink>
+                                                <h:commandLink id="btonModi" class="btn btn-primary" rendered="#{!eventosBean.guardar}">
+                                                    <p:ajax listener="#{eventosBean.modi()}" process="@form" update="@form :ContRegi" oncomplete="INIT_OBJE(); INIT_OBJE_MODA();" />
+                                                    <i class="fa fa-edit"/> Modificar
+                                                </h:commandLink>
+                                                <h:outputLink id="btonElim" class="btn btn-danger" rendered="#{!eventosBean.guardar}" value="#" pt:data-placement="left"
+                                                              pt:data-toggle="confirmation" pt:data-btn-ok-label="Sí" pt:data-btn-ok-icon="fa fa-times"
+                                                              pt:data-btn-ok-class="btn-danger btn-xs" pt:data-btn-cancel-label="No" pt:data-btn-cancel-icon="fa fa-mail-forward"
+                                                              pt:data-btn-cancel-class="btn-default btn-xs" pt:data-title="¿Esta seguro que desea eliminar?"
+                                                              pt:data-on-confirm="elimObje"><!--data-on-confirm = nombre del comando remoto de eliminar (sin paréntesis)-->
+                                                    <i class="fa fa-times"/> Eliminar
+                                                </h:outputLink>
+                                            </div>
+                                        </div>
+                                </div>
+                            </h:form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>

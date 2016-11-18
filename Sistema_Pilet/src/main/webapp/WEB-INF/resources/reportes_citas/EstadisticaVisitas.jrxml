@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="EstadisticaVisitas" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="37bc6ce8-4f3d-456a-8354-532c0ac9e9fd">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="49"/>
+	<parameter name="anioVisi" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     COUNT(cita.`codi_cita`) AS CANTIDAD,
+     case month(cambio_cita.`fech_inic_cita_nuev`) when 1 then 'ENERO' when 2 then 'FEBRERO'
+     when 3 then 'MARZO' when 4 then 'ABRIL' when 5 then 'MAYO' when 6 then 'JUNIO' when 7 then 'JULIO'
+     when 8 then 'AGOSTO' when 9 then 'SEPTIEMBRE' when 10 then 'OCTUBRE' when 11 then 'NOVIEMBRE'
+     when 12 then 'DICIEMBRE' END AS MES
+FROM
+     `cita` cita INNER JOIN `cambio_cita` cambio_cita ON cita.`codi_cita` = cambio_cita.`codi_cita`
+WHERE cita.`tipo_cita` = 2 AND YEAR(cambio_cita.`fech_inic_cita_nuev`) = $P{anioVisi} GROUP BY  MONTH(cambio_cita.`fech_inic_cita_nuev`)]]>
+	</queryString>
+	<field name="CANTIDAD" class="java.lang.Long"/>
+	<field name="MES" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="91" splitType="Stretch">
+			<image>
+				<reportElement x="12" y="4" width="161" height="78" uuid="9771780b-b43f-4be8-b114-dc4c4148fb83"/>
+				<imageExpression><![CDATA["ricaldone.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="186" y="15" width="347" height="28" uuid="9a5a70f9-4684-44bc-a2e1-2a74299f257f"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ESTADISTICAS DE VISITAS POR AÑO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="186" y="43" width="347" height="20" uuid="92460c4c-0a72-4950-824f-e215769f939d"/>
+				<textElement textAlignment="Center">
+					<font size="15" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{anioVisi}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="85" y="0" width="201" height="20" backcolor="#808080" uuid="ccd1d4d9-52eb-417f-b54d-dc89eb19cdc6"/>
+				<box leftPadding="0">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="286" y="0" width="197" height="20" backcolor="#808080" uuid="ceff9d6e-9346-4168-bc76-45eb3539cea5"/>
+				<box leftPadding="0">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CANTIDAD]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="85" y="0" width="201" height="20" uuid="1219d4f9-6166-4570-a663-851b29fbc806"/>
+				<box leftPadding="0">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MES}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="286" y="0" width="197" height="20" uuid="998cbff4-9dc7-4538-abe6-1b9e2c3572e1"/>
+				<box leftPadding="0">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CANTIDAD}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="304" splitType="Stretch">
+			<pieChart>
+				<chart>
+					<reportElement x="0" y="0" width="572" height="304" uuid="a59d148e-c026-4d26-adda-50b2eaddd7af"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<pieDataset>
+					<keyExpression><![CDATA[$F{MES}+ " (" + $F{CANTIDAD} +")"]]></keyExpression>
+					<valueExpression><![CDATA[$F{CANTIDAD}]]></valueExpression>
+				</pieDataset>
+				<piePlot>
+					<plot/>
+					<itemLabel/>
+				</piePlot>
+			</pieChart>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>
