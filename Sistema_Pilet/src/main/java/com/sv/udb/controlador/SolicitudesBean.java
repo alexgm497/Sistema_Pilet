@@ -204,14 +204,14 @@ public class SolicitudesBean implements Serializable {
 
     /**
      * Funcion para asignar solicitud a un técnico
-     * @param codiSoli
+     * @param Soli
      * @param codiUsua
      */
-    public void asig(int codiSoli, int codiUsua) {
+    public void asig(Solicitudes Soli, int codiUsua) {
         RequestContext ctx = RequestContext.getCurrentInstance(); //Capturo el contexto de la página
         try {
             this.listSoli.remove(this.objeSoli); //Limpia el objeto viejo
-            FCDESoli.asig(codiSoli, codiUsua);//Agrega el objeto modificado
+            FCDESoli.asig(Soli.getCodiSoli(), Soli.getPrioSoli(), codiUsua);
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Solicitud asignada')");
         } catch (Exception ex) {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al modificar ')");

@@ -79,9 +79,10 @@ public class SolicitudesFacade extends AbstractFacade<Solicitudes> implements So
     }
 
     @Override
-    public void asig(int codiSoli, int codiUsua) {
-        Query q = getEntityManager().createQuery("UPDATE Solicitudes s SET s.codiEnca = :codiUsua, s.estaSoli = 2 WHERE s.codiSoli = :codiSoli", Solicitudes.class);
+    public void asig(int codiSoli, String prio, int codiUsua) {
+        Query q = getEntityManager().createQuery("UPDATE Solicitudes s SET s.codiEnca = :codiUsua, s.prioSoli = :prio, s.estaSoli = 2 WHERE s.codiSoli = :codiSoli", Solicitudes.class);
         q.setParameter("codiUsua", codiUsua);
+        q.setParameter("prio", prio);
         q.setParameter("codiSoli", codiSoli);
         q.executeUpdate();
     }

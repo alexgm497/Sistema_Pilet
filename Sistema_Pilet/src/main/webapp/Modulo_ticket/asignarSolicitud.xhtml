@@ -73,8 +73,8 @@ and open the template in the editor.
                                 <p:outputPanel >
                                     <h:form>
                                         <h:commandLink id="btonestado" class="btn btn-success">
-                                                    <p:ajax listener="#{solicitudesBean.cambEsta()}" process="@form" update="@form :ContTicket" oncomplete="INIT_OBJE_TICKET();" />
-                                                    ${solicitudesBean.estado}
+                                            <p:ajax listener="#{solicitudesBean.cambEsta()}" process="@form" update="@form :ContTicket" oncomplete="INIT_OBJE_TICKET();" />
+                                            ${solicitudesBean.estado}
                                         </h:commandLink>
                                     </h:form>
                                 </p:outputPanel>
@@ -203,6 +203,16 @@ and open the template in the editor.
                                                 </h:column>
                                             </h:dataTable>
                                         </h:panelGroup>
+                                        <br/>
+                                        <div class="input-group input-group-xs">
+                                            <h:outputLabel  for="prio" value="Prioridad: "/>
+                                            <h:selectOneMenu id="prio" value="#{solicitudesBean.objeSoli.prioSoli}" class="form-control">
+                                                <f:selectItem itemValue="Alta" itemLabel="Alta"/>
+                                                <f:selectItem itemValue="Media" itemLabel="Media"/>
+                                                <f:selectItem itemValue="Baja" itemLabel="Baja"/>
+                                            </h:selectOneMenu>
+                                            <h:message for="prio" errorClass="field-error" />
+                                        </div>
                                         <center><h4 class="title">Técnicos disponibles</h4></center>
                                         <h:dataTable pt:data-id="TablTecn" id="TablTecn" value="#{usuarioBean.consTecn()}"
                                                      var="fila3" class="boottable" pt:data-toolbar="#toolTablTecn"
@@ -222,7 +232,7 @@ and open the template in the editor.
                                             </h:column>
                                             <h:column>
                                                 <h:commandLink id="btonAsig" class="btn btn-success" pt:data-dismiss="modal">
-                                                    <p:ajax listener="#{solicitudesBean.asig(solicitudesBean.objeSoli.codiSoli, fila3.codiUsua)}" process="@form" update="@form :ContTicket" oncomplete="INIT_OBJE_TICKET();" />
+                                                    <p:ajax listener="#{solicitudesBean.asig(solicitudesBean.objeSoli, fila3.codiUsua)}" process="@form" update="@form :ContTicket" oncomplete="INIT_OBJE_TICKET();" />
                                                     <i class="fa fa-plus"/> Asignar
                                                 </h:commandLink>
                                             </h:column>

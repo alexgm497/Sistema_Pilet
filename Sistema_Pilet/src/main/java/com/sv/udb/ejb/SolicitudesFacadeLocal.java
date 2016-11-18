@@ -42,7 +42,7 @@ public interface SolicitudesFacadeLocal {
 
     List<Solicitudes> findRange(int[] range);
     
-    void asig(int codiSoli, int codiUsua);
+    void asig(int codiSoli, String prio, int codiUsua);
     
     void reso(int codiSoli);
 
