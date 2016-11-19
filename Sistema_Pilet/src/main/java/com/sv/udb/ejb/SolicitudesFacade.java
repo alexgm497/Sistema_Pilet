@@ -102,4 +102,12 @@ public class SolicitudesFacade extends AbstractFacade<Solicitudes> implements So
         q.setParameter("codiSoli", codiSoli);
         q.executeUpdate();
     }
+    
+    @Override
+    public Solicitudes findSoli(int codi){
+        Query q = getEntityManager().createQuery("SELECT u FROM Solicitudes u WHERE u.codiSoli = :codiSoli", Solicitudes.class);
+        q.setParameter("codiSoli", codi);
+        Solicitudes resu = (Solicitudes)q.getSingleResult();
+        return resu;
+    }
 }

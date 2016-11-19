@@ -30,8 +30,10 @@ import org.primefaces.context.RequestContext;
 public class ResolucionSolicitudBean implements Serializable{
     @EJB
     private ResolucionSolicitudesFacadeLocal FCDEResoSoli;
+    @EJB
     private SolicitudesFacadeLocal FCDESoli;
     private ResolucionSolicitudes objeResoSoli;
+    private Solicitudes objeSoli;
     private List<ResolucionSolicitudes> listResoSoli;
     private boolean guardar;
     private int cant = 0;
@@ -42,6 +44,14 @@ public class ResolucionSolicitudBean implements Serializable{
      */
     public ResolucionSolicitudes getObjeResoSoli() {
         return objeResoSoli;
+    }
+
+    public Solicitudes getObjeSoli() {
+        return objeSoli;
+    }
+
+    public void setObjeSoli(Solicitudes objeSoli) {
+        this.objeSoli = objeSoli;
     }
 
     /**
@@ -95,21 +105,22 @@ public class ResolucionSolicitudBean implements Serializable{
 
     /**
      * Función para guardar
+     * @param codi
      */
-    public void guar()
+    public void guar(int codi)
     {
         RequestContext ctx = RequestContext.getCurrentInstance(); //Capturo el contexto de la página
         try
         {
-            Solicitudes soli = new Solicitudes(SolicitudesBean.codiSoli);
-            this.objeResoSoli.setCodiSoli(soli);
+            this.objeSoli = FCDESoli.findSoli(codi);
+            this.objeResoSoli.setCodiSoli(this.objeSoli);
             this.objeResoSoli.setFechResoSoli(new Date());
             this.objeResoSoli.setEstaResoSoli(1);
             FCDEResoSoli.create(this.objeResoSoli);
-            FCDESoli.reso(SolicitudesBean.codiSoli);
+            FCDESoli.reso(codi);
             this.limpForm();
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos guardados')");
-            ctx.execute("location.reload()");
+            //ctx.execute("location.reload()");
         }
         catch(Exception ex)
         {

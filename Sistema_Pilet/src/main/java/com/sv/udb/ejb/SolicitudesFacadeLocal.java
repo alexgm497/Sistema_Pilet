@@ -24,6 +24,8 @@ public interface SolicitudesFacadeLocal {
 
     Solicitudes find(Object id);
     
+    Solicitudes findSoli(int codi);
+    
     List<Solicitudes> findTodo();
     
     List<Solicitudes> findEncargado();

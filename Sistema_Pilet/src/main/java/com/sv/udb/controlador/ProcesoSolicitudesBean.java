@@ -127,7 +127,7 @@ public class ProcesoSolicitudesBean implements Serializable{
             FCDEProcSoli.create(this.objeProcSoli);
             this.listProcSoli.add(this.objeProcSoli);
             this.guardar = false;
-            //this.limpForm(); //Omito para mantener los datos en la modal
+            this.limpForm();
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos guardados')");
         }
         catch(Exception ex)

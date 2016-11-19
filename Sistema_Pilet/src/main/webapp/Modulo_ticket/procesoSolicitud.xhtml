@@ -320,7 +320,7 @@ and open the template in the editor.
                                         <div class="input-group-btn right" style="padding-top: 5px;">
                                             <div class="btn-group">
                                                 <h:commandLink id="btonNuevReso" class="btn btn-success" pt:data-dismiss="modal">
-                                                    <p:ajax listener="#{resolucionSolicitudBean.guar()}" process="@form" update="@form :ContTicket" oncomplete="INIT_OBJE_TICKET();" />
+                                                    <p:ajax listener="#{resolucionSolicitudBean.guar(solicitudesBean.objeSoli.codiSoli)}" process="@form" update="@form :ContTicket :TablReso" oncomplete="INIT_OBJE_TICKET();" />
                                                     <i class="fa fa-plus"/> Guardar
                                                 </h:commandLink>
                                                 <h:commandLink id="btonCancReso" class="btn btn-default" pt:data-dismiss="modal">

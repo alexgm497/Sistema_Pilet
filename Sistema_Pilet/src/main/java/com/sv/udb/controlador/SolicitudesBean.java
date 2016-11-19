@@ -34,7 +34,6 @@ public class SolicitudesBean implements Serializable {
     private List<Solicitudes> listSoliEnca;
     private List<Solicitudes> listSoliTecn;
     private List<Solicitudes> listSoliVaci;
-    static int codiSoli;
     private boolean guardar;
     private String estado = "Sin Asignación";
     private boolean estaB = true;
@@ -337,7 +336,6 @@ public class SolicitudesBean implements Serializable {
         int codi = Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("codiPara"));
         try {
             this.objeSoli = FCDESoli.find(codi);
-            codiSoli = objeSoli.getCodiSoli();
             this.guardar = false;
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Consultado a "
                     + String.format("%s", this.objeSoli.getCodiSoli()) + "')");
