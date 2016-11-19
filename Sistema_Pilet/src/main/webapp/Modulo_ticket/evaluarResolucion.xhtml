@@ -92,7 +92,7 @@ and open the template in the editor.
                                     </h:column>
                                     <h:column pt:data-sortable="true" pt:data-field="tiem">
                                         <f:facet name="header">Tiempo de resolución</f:facet>
-                                        <h:outputText value="#{fila.tiemResoSoli}"/>   
+                                        <h:outputText value="#{fila.tiemResoSoli} días"/>   
                                     </h:column>
                                     <h:column pt:data-sortable="true" pt:data-field="equi">
                                         <f:facet name="header">Equipo</f:facet> 
@@ -278,7 +278,7 @@ and open the template in the editor.
                                     <div class="input-group-btn right" style="padding-top: 5px;">
                                         <div class="btn-group">
                                             <h:commandLink id="btonGuar" class="btn btn-success" pt:data-dismiss="modal">
-                                                <p:ajax listener="#{evaluacionResolucionesBean.guar(resolucionSolicitudBean.consReso(solicitudesBean.objeSoli.codiSoli))}" process="@form" update="@form :TablTicket :TablEval" global="true"/>
+                                                <p:ajax listener="#{evaluacionResolucionesBean.guar(resolucionSolicitudBean.consReso(solicitudesBean.objeSoli.codiSoli))}" process="@form" update="@form :TablEval" global="true"/>
                                                 <i class="fa fa-plus"/> Enviar evaluación
                                             </h:commandLink>
                                             <h:commandLink id="btonCanc" class="btn btn-default" pt:data-dismiss="modal">

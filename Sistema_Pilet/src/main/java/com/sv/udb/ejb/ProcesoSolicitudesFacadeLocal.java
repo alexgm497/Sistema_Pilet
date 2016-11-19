@@ -32,6 +32,8 @@ public interface ProcesoSolicitudesFacadeLocal {
 
     List<ProcesoSolicitudes> findTodo();
     
+    List<ProcesoSolicitudes> findProcSoli(int codi);
+    
     int count();
     
 }

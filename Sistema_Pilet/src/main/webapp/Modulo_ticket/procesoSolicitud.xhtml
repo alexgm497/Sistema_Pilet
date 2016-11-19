@@ -254,7 +254,7 @@ and open the template in the editor.
                                             </h:panelGroup>       
                                             <h:panelGroup  >
                                                 <center><h4 class="title">Detalle de mantenimiento</h4></center>
-                                                <h:dataTable pt:data-id="TablProc" id="TablProc" value="#{procesoSolicitudesBean.listProcSoli}"
+                                                <h:dataTable pt:data-id="TablProc" id="TablProc" value="#{procesoSolicitudesBean.procSoli(solicitudesBean.objeSoli.codiSoli)}"
                                                              var="fila4" class="boottable" pt:data-toolbar="#toolTablMant"
                                                              styleClass="col-md-12 table-hover table-bordered table-condensed table-striped table-responsive"
                                                              pt:data-show-refresh="false" pt:data-show-toggle="false" pt:data-show-columns="false">

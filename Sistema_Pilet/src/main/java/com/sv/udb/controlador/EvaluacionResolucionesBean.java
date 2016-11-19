@@ -126,19 +126,23 @@ public class EvaluacionResolucionesBean implements Serializable {
             this.objeEvalReso.setCodiResoSoli(reso);
             FCDEEvalReso.create(this.objeEvalReso);
             this.guardar = false;
+            if (objeEvalReso.getPuntEvalReso() >= 4) {
+                ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos guardados')");
+            } else {                
+                ctx.execute("setMessage('MESS_WARN', 'Atención', 'Datos guardados. Se reactivó la solicitud.')");
+            }
             this.limpForm();
-            ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos guardados')");
         } catch (Exception ex) {
-            ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al guardar ')");
+            ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al guardar')");
             ex.printStackTrace();
         }
+        ctx.execute("window.setTimeout(function(){location.reload()},2500)");
     }
-    
-    public List<EvaluacionResoluciones> cons(){
-        try{
+
+    public List<EvaluacionResoluciones> cons() {
+        try {
             this.listEvalReso = FCDEEvalReso.findEvalUsua();
-        }
-        catch(Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return this.listEvalReso;

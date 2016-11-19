@@ -248,4 +248,14 @@ public class ProcesoSolicitudesBean implements Serializable{
             
         }
     }
+    
+    public List<ProcesoSolicitudes> procSoli(int soli){
+        try{
+            this.listProcSoli = FCDEProcSoli.findProcSoli(soli);
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return this.listProcSoli;
+    }
 }

@@ -45,5 +45,12 @@ public class ProcesoSolicitudesFacade extends AbstractFacade<ProcesoSolicitudes>
         List resu = q.getResultList();
         return resu;
     }
-
+    
+    @Override
+    public List<ProcesoSolicitudes> findProcSoli(int codi) {
+        Query q = getEntityManager().createQuery("SELECT u FROM ProcesoSolicitudes u WHERE u.codiSoli.codiSoli = :codiSoli", ProcesoSolicitudes.class);
+        q.setParameter("codiSoli", codi);
+        List resu = q.getResultList();
+        return resu;
+    }
 }
