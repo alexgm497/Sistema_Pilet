@@ -110,4 +110,11 @@ public class SolicitudesFacade extends AbstractFacade<Solicitudes> implements So
         Solicitudes resu = (Solicitudes)q.getSingleResult();
         return resu;
     }
+
+    @Override
+    public List<Solicitudes> findTodoR() {
+        Query q = getEntityManager().createQuery("SELECT u FROM Solicitudes u", Solicitudes.class);
+        List resu = q.getResultList();
+        return resu;
+    }
 }

@@ -34,6 +34,7 @@ public class SolicitudesBean implements Serializable {
     private List<Solicitudes> listSoliEnca;
     private List<Solicitudes> listSoliTecn;
     private List<Solicitudes> listSoliVaci;
+    private List<Solicitudes> listTodoR;
     private boolean guardar;
     private String estado = "Sin Asignación";
     private boolean estaB = true;
@@ -46,10 +47,21 @@ public class SolicitudesBean implements Serializable {
         return objeSoli;
     }
 
+    public List<Solicitudes> getListTodoR() {
+        return listTodoR;
+    }
+
+    public void setListTodoR(List<Solicitudes> listTodoR) {
+        this.listTodoR = listTodoR;
+    }
+
     /**
      * Función para definir el objeto objeSoli
      * @param objeSoli
      */
+    
+    
+    
     public void setObjeSoli(Solicitudes objeSoli) {
         this.objeSoli = objeSoli;
     }
@@ -117,6 +129,7 @@ public class SolicitudesBean implements Serializable {
         this.consTodo();
         this.consEncargado();
         this.consTecnico();
+        this.consTodoR();
     }
 
     /**
@@ -242,6 +255,16 @@ public class SolicitudesBean implements Serializable {
     public void consTodo() {
         try {
             this.listSoli = FCDESoli.findTodo();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+
+        }
+    }
+    
+    public void consTodoR() {
+        try {
+            this.listTodoR = FCDESoli.findTodoR();
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {

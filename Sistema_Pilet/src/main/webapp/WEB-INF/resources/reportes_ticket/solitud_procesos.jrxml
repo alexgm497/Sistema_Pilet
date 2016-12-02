@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="solitud_procesos" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b85e90b9-ae5d-4114-8895-c854922a22a6">
+	<property name="ireport.zoom" value="1.2100000000000002"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="codi_soli" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT desc_proc_soli, fech_proc_soli FROM proceso_solicitudes WHERE codi_soli = $P{codi_soli}]]>
+	</queryString>
+	<field name="desc_proc_soli" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fech_proc_soli" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="96" splitType="Stretch">
+			<staticText>
+				<reportElement x="20" y="34" width="523" height="30" forecolor="#000000" uuid="c9d56f9e-64d0-429e-9bef-963eb058a3b3"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="24" isBold="true" isItalic="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Procesos de una solicitud]]></text>
+			</staticText>
+			<image>
+				<reportElement x="5" y="0" width="311" height="87" uuid="46e4faf3-3f51-4a00-9921-3469997b2254"/>
+				<imageExpression><![CDATA["ricaldone.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="22" splitType="Stretch">
+			<rectangle>
+				<reportElement x="83" y="0" width="203" height="22" backcolor="#808080" uuid="5fbb7dfe-2d13-429f-9f0f-b7e08c70ceb2"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="286" y="0" width="170" height="22" backcolor="#808080" uuid="b187f4bc-8f17-48cd-b3fd-b74bb3140830"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="82" y="0" width="187" height="22" uuid="ebae44f5-f2ab-4965-be41-f66695fa22a5"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="14"/>
+				</textElement>
+				<text><![CDATA[Descripción]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="288" y="0" width="154" height="20" uuid="a4c28275-325b-4497-9914-347e73f95110"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="14"/>
+				</textElement>
+				<text><![CDATA[Fecha y hora]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement x="83" y="0" width="219" height="22" uuid="08dc3f19-5f33-4c93-8bdc-29f2f12759e9"/>
+				<textElement textAlignment="Center">
+					<font fontName="Segoe UI Light" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{desc_proc_soli}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="288" y="0" width="157" height="22" uuid="4f3efcdb-1ec9-41d8-96a6-da281e492a38"/>
+				<textElement textAlignment="Center">
+					<font fontName="Segoe UI Light" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fech_proc_soli}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="82" y="0" width="1" height="22" uuid="d1d00943-a6a6-46dc-810c-66d1ab10ac7c"/>
+			</line>
+			<line>
+				<reportElement x="285" y="0" width="1" height="22" uuid="0537a158-7874-420c-a3e9-23ec194ebb77"/>
+			</line>
+			<line>
+				<reportElement x="455" y="0" width="1" height="22" uuid="7e5ee82e-93b0-48ed-9ff4-643d8d2babf4"/>
+			</line>
+			<line>
+				<reportElement x="83" y="21" width="373" height="1" uuid="61d3739a-019a-4e55-ba3d-7bb291566929"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="23" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
