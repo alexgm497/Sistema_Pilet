@@ -29,7 +29,27 @@ public class ReportesTicketBean implements Serializable{
     private GlobalAppBean globalAppBean;
     private byte[] docuRepo; 
     private int codisoli;
+    private int mes;
+    private String anio = "";
 
+    public String getAnio() {
+        return anio;
+    }
+
+    public void setAnio(String anio) {
+        this.anio = anio;
+    }
+
+    
+    public int getMes() {
+        return mes;
+    }
+
+    public void setMes(int mes) {
+        this.mes = mes;
+    }
+
+    
     public int getCodisoli() {
         return codisoli;
     }
@@ -55,6 +75,26 @@ public class ReportesTicketBean implements Serializable{
             params.put("codi_soli", codisoli);
             //System.out.println("El codigo es " + codisoli);
             String pathRepo = globalAppBean.getResourcePath("reportes_ticket/solitud_procesos.jasper");
+            this.docuRepo = JasperRunManager.runReportToPdf(pathRepo, params, cn);
+            ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Reporte cargado correctamente')");
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+            ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al cargar reporte ')");            
+        }
+    }
+    
+    public void soliResu()
+    {
+        RequestContext ctx = RequestContext.getCurrentInstance(); //Capturo el contexto de la página
+        try
+        {
+            Connection cn = new Conexion().getCn(); //La conexión
+            Map params = new HashMap(); //Mapa de parámetros  
+            params.put("mes", mes);
+            params.put("anio", anio);
+            String pathRepo = globalAppBean.getResourcePath("reportes_ticket/solicitudes_resueltas.jasper");
             this.docuRepo = JasperRunManager.runReportToPdf(pathRepo, params, cn);
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Reporte cargado correctamente')");
         }
