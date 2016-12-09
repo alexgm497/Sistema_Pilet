@@ -118,7 +118,7 @@ public class EvaluacionResolucionesBean implements Serializable {
      *
      * @param reso
      */
-    public void guar(ResolucionSolicitudes reso) {
+    public void guar(ResolucionSolicitudes reso, Boolean ren) {
         RequestContext ctx = RequestContext.getCurrentInstance(); //Capturo el contexto de la página
         try {
             this.objeEvalReso.setEstaEvalReso(true);
@@ -126,7 +126,7 @@ public class EvaluacionResolucionesBean implements Serializable {
             this.objeEvalReso.setCodiResoSoli(reso);
             FCDEEvalReso.create(this.objeEvalReso);
             this.guardar = false;
-            if (objeEvalReso.getPuntEvalReso() >= 4) {
+            if (!ren) {
                 ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos guardados')");
             } else {                
                 ctx.execute("setMessage('MESS_WARN', 'Atención', 'Datos guardados. Se reactivó la solicitud.')");
