@@ -266,6 +266,12 @@ and open the template in the editor.
                                                         <f:facet name="header">Descripción</f:facet>
                                                         <h:outputText value="#{fila4.descProcSoli}"/>   
                                                     </h:column>
+                                                    <h:column pt:data-sortable="true">
+                                                        <f:facet name="header">Fecha/Hora proceso</f:facet>
+                                                        <h:outputText value="#{fila4.fechProcSoli}">
+                                                            <f:convertDateTime pattern="dd/MM/yyyy H:mm:ss" timeZone="GMT-6"/>
+                                                        </h:outputText>                            
+                                                    </h:column>
                                                 </h:dataTable>
                                             </h:panelGroup>    
                                         </fieldset>                                    
