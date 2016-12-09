@@ -87,7 +87,18 @@ and open the template in the editor.
                                         </h:panelGrid>
                                         <cs:PdfViewer id="demo1" value="#{reporteTicketBean.docuRepo}" width="100%" height="500px"/>     
                                     </p:tab> 
-                                    
+                                    <!--Tercer reporte-->
+                                    <p:tab title="Mantenimientos Activos">
+                                        <h:panelGrid columns="10" cellpadding="10">
+                                            <h:commandLink style="float: right; width: 100%;" id="btonRepo2" class="btn btn-success" rendered="#{true}">
+                                                <p:ajax listener="#{reporteTicketBean.mantActi()}" process="@form" update="@form" />
+                                                <i class="fa fa-print"/> Procesar Reporte
+                                            </h:commandLink>
+                                            <br/><br/>
+                                            <br/><br/> 
+                                        </h:panelGrid>
+                                        <cs:PdfViewer id="demo2" value="#{reporteTicketBean.docuRepo}" width="100%" height="500px"/>     
+                                    </p:tab> 
                                     
                                 </p:accordionPanel>
                             </h:form>

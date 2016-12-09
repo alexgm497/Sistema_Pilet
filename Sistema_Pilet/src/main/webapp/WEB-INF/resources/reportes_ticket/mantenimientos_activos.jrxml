@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="mantenimientos_activos" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="aa2be695-550e-462d-9a26-516502718acb">
+	<property name="ireport.zoom" value="1.331000000000001"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[SELECT m.codi_mant, IF(m.cont_dias_mant > 1, CONCAT(m.cont_dias_mant, ' dias'), CONCAT(m.cont_dias_mant, ' dia')), u.nomb_ubic, tm.nomb_tipo_mant FROM (mantenimientos AS m INNER JOIN ubicaciones AS u
+ON m.codi_ubic = u.codi_ubic)
+INNER JOIN tipo_mantenimientos AS tm
+ON m.codi_tipo_mant = tm.codi_tipo_mant AND m.esta_mant_prev = true;]]>
+	</queryString>
+	<field name="codi_mant" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="IF(m.cont_dias_mant &gt; 1, CONCAT(m.cont_dias_mant, &apos; dias&apos;), CONCAT(m.cont_dias_mant, &apos; dia&apos;))" class="java.lang.String"/>
+	<field name="nomb_ubic" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nomb_tipo_mant" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="89" splitType="Stretch">
+			<staticText>
+				<reportElement x="82" y="26" width="473" height="30" forecolor="#000000" uuid="8eca184f-a153-4b10-b831-44faa5c926c4"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="24" isBold="true" isItalic="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Listado de Mantenimientos activos]]></text>
+			</staticText>
+			<image>
+				<reportElement x="0" y="0" width="311" height="81" uuid="29a25cc4-fa4a-4a48-b7be-50812ab9d82d"/>
+				<imageExpression><![CDATA["ricaldone.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="21" splitType="Stretch">
+			<rectangle>
+				<reportElement x="42" y="1" width="81" height="20" backcolor="#808080" uuid="2b05800b-5fde-4b9d-95c6-695ee9592667"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="123" y="1" width="100" height="20" backcolor="#808080" uuid="9ea66adc-ad2e-476a-8fdf-05dcba90062d"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="223" y="1" width="100" height="20" backcolor="#808080" uuid="c5955c8d-cde3-41dd-9d28-019211670f6c"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="323" y="1" width="191" height="20" backcolor="#808080" uuid="b68f8f14-6579-498e-8a89-7e5dd2356e16"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="42" y="1" width="81" height="20" uuid="5c7fdca5-7025-499a-9bfc-08d6a966b888"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[Codigo mantenimiento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="123" y="1" width="100" height="20" uuid="c8832f42-9064-4a58-8b4f-0b7746676e42"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[Cantidad de Días]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="223" y="1" width="100" height="20" uuid="35e00429-373a-46aa-96f6-4835b8b2eaa2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[Ubicación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="323" y="1" width="191" height="20" uuid="a5d3b2f9-9f35-4f5f-9f7c-1c28e56e8ac9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[Tipo de Mantenimiento]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<rectangle>
+				<reportElement x="42" y="0" width="81" height="20" uuid="da2adba1-3632-4e8c-85b6-a1e34a53ad4b"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="123" y="0" width="100" height="20" uuid="5a8ce5fb-99ff-4045-81f0-c99fccb89dc7"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="223" y="0" width="100" height="20" uuid="0ff282a0-ba4a-41e6-b828-af2411177d3d"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="323" y="0" width="191" height="20" uuid="bded1a84-aa33-49a6-b37a-475e472d0d60"/>
+			</rectangle>
+			<textField>
+				<reportElement x="42" y="0" width="81" height="20" uuid="8886cc1d-39d3-437e-bab4-334886cacb79"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{codi_mant}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="123" y="0" width="100" height="20" uuid="eb56f716-b283-4241-93ba-970582d466da"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{IF(m.cont_dias_mant > 1, CONCAT(m.cont_dias_mant, ' dias'), CONCAT(m.cont_dias_mant, ' dia'))}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="223" y="0" width="100" height="20" uuid="a33bc2bf-fd18-4597-ac63-7d96b1095900"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nomb_ubic}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="323" y="0" width="191" height="20" uuid="396bb1e4-96fb-4f1c-9920-ca776ea18692"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nomb_tipo_mant}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="33" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="28" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

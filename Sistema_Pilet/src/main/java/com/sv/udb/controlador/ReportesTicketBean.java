@@ -105,4 +105,22 @@ public class ReportesTicketBean implements Serializable{
         }
     }
     
+    public void mantActi()
+    {
+        RequestContext ctx = RequestContext.getCurrentInstance(); //Capturo el contexto de la página
+        try
+        {
+            Connection cn = new Conexion().getCn(); //La conexión
+            Map params = new HashMap(); //Mapa de parámetros  
+            String pathRepo = globalAppBean.getResourcePath("reportes_ticket/mantenimientos_activos.jasper");
+            this.docuRepo = JasperRunManager.runReportToPdf(pathRepo, params, cn);
+            ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Reporte cargado correctamente')");
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+            ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al cargar reporte ')");            
+        }
+    }
+    
 }
