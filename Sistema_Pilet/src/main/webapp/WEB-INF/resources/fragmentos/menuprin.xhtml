@@ -47,6 +47,13 @@ and open the template in the editor.
                             </ul>
                             <ul class="treeview-menu">
                                 <li class="#{actiUsuaRole}">
+                                    <h:link outcome="/Modulo_usuarios/permisorol" rendered="#{globalAppBean.getEstaPermByName('/Modulo_usuarios/permisorol.xhtml')}">
+                                        <i class="fa fa-user"></i> Asignar permisos a roles
+                                    </h:link>
+                                </li>
+                            </ul>
+                            <ul class="treeview-menu">
+                                <li class="#{actiUsuaRole}">
                                     <h:link outcome="/Modulo_usuarios/usuariorol" rendered="#{globalAppBean.getEstaPermByName('/Modulo_usuarios/usuariorol.xhtml')}">
                                         <i class="fa fa-user"></i> Asignar roles a usuario
                                     </h:link>
@@ -90,6 +97,7 @@ and open the template in the editor.
                                     </h:link>
                                 </li>
                             </ul>
+                            
                             <ul class="treeview-menu">
                                 <li class="#{actiTipoMant}">
                                     <h:link outcome="/Modulo_ticket/tipoMantenimientos" rendered="#{globalAppBean.getEstaPermByName('/Modulo_ticket/tipoMantenimientos.xhtml')}">
@@ -126,6 +134,20 @@ and open the template in the editor.
                                 </li>
                             </ul>
                             <ul class="treeview-menu">
+                                <li class="#{actiEquipos}">
+                                    <h:link outcome="/Modulo_ticket/equipos" rendered="#{globalAppBean.getEstaPermByName('/Modulo_ticket/equipos.xhtml')}">
+                                        <i class="fa fa-user"></i> Equipos
+                                    </h:link>
+                                </li>
+                            </ul>
+                            <ul class="treeview-menu">
+                                <li class="#{actiUbicaciones}">
+                                    <h:link outcome="/Modulo_ticket/ubicaciones" rendered="#{globalAppBean.getEstaPermByName('/Modulo_ticket/ubicaciones.xhtml')}">
+                                        <i class="fa fa-user"></i> Ubicaciones
+                                    </h:link>
+                                </li>
+                            </ul>
+                            <ul class="treeview-menu">
                                 <li class="#{actiTickRepo}">
                                     <h:link outcome="/Modulo_ticket/reportesTicket" rendered="#{globalAppBean.getEstaPermByName('/Modulo_ticket/reportesTicket.xhtml')}">
                                         <i class="fa fa-user"></i> Reportes
@@ -145,28 +167,28 @@ and open the template in the editor.
                             <ul class="treeview-menu">
                                 <li class="#{actiHoraDisp}">
                                     <h:link outcome="/Modulo_citas/HorarioDisponible" rendered="#{globalAppBean.getEstaPermByName('/Modulo_citas/HorarioDisponible.xhtml')}">
-                                        <i class="fa fa-user"></i> Horario Disponible
+                                        <i class="fa fa-calendar"></i> Horario Disponible
                                     </h:link>
                                 </li>
                             </ul>
                             <ul class="treeview-menu">
                                 <li class="#{actiExceHoraDisp}">
                                     <h:link outcome="/Modulo_citas/ExcepcionHorarioDisponible" rendered="#{globalAppBean.getEstaPermByName('/Modulo_citas/ExcepcionHorarioDisponible.xhtml')}">
-                                        <i class="fa fa-user"></i> Excepcion Horario
+                                        <i class="fa fa-clock-o"></i> Excepcion Horario
                                     </h:link>
                                 </li>
                             </ul>
                             <ul class="treeview-menu">
                                 <li class="#{actiEven}">
                                     <h:link outcome="/Modulo_citas/Eventos" rendered="#{globalAppBean.getEstaPermByName('/Modulo_citas/Eventos.xhtml')}">
-                                        <i class="fa fa-user"></i> Eventos
+                                        <i class="fa fa-calendar-o"></i> Eventos
                                     </h:link>
                                 </li>
                             </ul>
                             <ul class="treeview-menu">
                                 <li class="#{actiVisi}">
                                     <h:link outcome="/Modulo_citas/Visitantes" rendered="#{globalAppBean.getEstaPermByName('/Modulo_citas/Visitantes.xhtml')}">
-                                        <i class="fa fa-user"></i> Visitantes
+                                        <i class="fa fa-users"></i> Visitantes
                                     </h:link>
                                 </li>
                             </ul>
@@ -181,28 +203,28 @@ and open the template in the editor.
                             <ul class="treeview-menu">
                                 <li class="#{actiCale}">
                                     <h:link outcome="/Modulo_citas/CitaCalendario" rendered="#{globalAppBean.getEstaPermByName('/Modulo_citas/CitaCalendario.xhtml')}">
-                                        <i class="fa fa-user"></i> Calendario de Citas y Visitas
+                                        <i class="fa fa-calendar"></i> Calendario de Citas
                                     </h:link>
                                 </li>
                             </ul>
                             <ul class="treeview-menu">
                                 <li class="#{actiCita}">
                                     <h:link outcome="/Modulo_citas/Citas" rendered="#{globalAppBean.getEstaPermByName('/Modulo_citas/Citas.xhtml')}">
-                                        <i class="fa fa-user"></i> Cita Alumno
+                                        <i class="fa fa-calendar"></i> Cita Alumno
                                     </h:link>
                                 </li>
                             </ul>
                             <ul class="treeview-menu">
                                 <li class="#{actiCitaVisi}">
                                     <h:link outcome="/Modulo_citas/CitasVisitante" rendered="#{globalAppBean.getEstaPermByName('/Modulo_citas/CitasVisitante.xhtml')}">
-                                        <i class="fa fa-user"></i> Cita Visitante
+                                        <i class="fa fa-calendar"></i> Cita Visitante
                                     </h:link>
                                 </li>
                             </ul>
                             <ul class="treeview-menu">
                                 <li class="#{actiVisiTas}">
                                     <h:link outcome="/Modulo_citas/Visitas" rendered="#{globalAppBean.getEstaPermByName('/Modulo_citas/Visitas.xhtml')}">
-                                        <i class="fa fa-user"></i> Visitas
+                                        <i class="fa fa-calendar"></i> Visitas
                                     </h:link>
                                 </li>
                             </ul>
@@ -216,14 +238,7 @@ and open the template in the editor.
                             <ul class="treeview-menu">
                                 <li class="#{actiCitaAlum}">
                                     <h:link outcome="/Modulo_citas/CitaAlumno" rendered="#{globalAppBean.getEstaPermByName('/Modulo_citas/CitaAlumno.xhtml')}">
-                                        <i class="fa fa-user"></i> Cita Alumno
-                                    </h:link>
-                                </li>
-                            </ul>
-                            <ul class="treeview-menu">
-                                <li class="#{actiCitaAlum}">
-                                    <h:link outcome="/Modulo_citas/CitaAlumno" rendered="#{globalAppBean.getEstaPermByName('/Modulo_citas/CitaAlumno.xhtml')}">
-                                        <i class="fa fa-user"></i> Cita Alumno
+                                        <i class="fa fa-calendar"></i> Cita Alumno
                                     </h:link>
                                 </li>
                             </ul>
@@ -263,44 +278,33 @@ and open the template in the editor.
                             </a>
                                 
                                 <ul class="treeview-menu">
-                                    <li class="#{actiGrad}">
-                                        <h:link outcome="/Modulo_becas/Grado" rendered="#{globalAppBean.getEstaPermByName('/Modulo_becas/Grado.xhtml')}">
-                                            <i class="fa fa-user"></i> Grados
-                                        </h:link>
-                                    </li>
-                                </ul>
-                                <ul class="treeview-menu">
                                     <li class="#{actiBecaSoli}">
-                                        <h:link outcome="/Modulo_becas/beca_soli" rendered="#{globalAppBean.getEstaPermByName('/Modulo_becas/beca_soli.xhtml')}">
+                                        <h:link outcome="/Modulo_becas/becas" rendered="#{globalAppBean.getEstaPermByName('/Modulo_becas/becas.xhtml')}">
                                             <i class="fa fa-user"></i> Solicitud de beca
                                         </h:link>
                                     </li>
-                                </ul>
+                                </ul>                                
                                 <ul class="treeview-menu">
-                                    <li class="#{actiDetaBeca}">
-                                        <h:link outcome="/Modulo_becas/deta_beca" rendered="#{globalAppBean.getEstaPermByName('/Modulo_becas/deta_beca.xhtml')}">
-                                            <i class="fa fa-user"></i> Detalle de Becas
+                                    <li class="#{actiGrad}">
+                                        <h:link outcome="/Modulo_becas/Grado" rendered="#{globalAppBean.getEstaPermByName('/Modulo_becas/Grado.xhtml')}">
+                                            <i class="fa fa-archive"></i> Grados
                                         </h:link>
                                     </li>
                                 </ul>
-                                <ul class="treeview-menu">
-                                    <li class="#{actiDocu}">
-                                        <h:link outcome="/Modulo_becas/documentos" rendered="#{globalAppBean.getEstaPermByName('/Modulo_becas/documentos.xhtml')}">
-                                            <i class="fa fa-user"></i> Documentos
-                                        </h:link>
-                                    </li>
-                                </ul>
+                                
+                                
+                                
                                 <ul class="treeview-menu">
                                     <li class="#{actiTipoBeca}">
                                         <h:link outcome="/Modulo_becas/tipo_beca" rendered="#{globalAppBean.getEstaPermByName('/Modulo_becas/tipo_beca.xhtml')}">
-                                            <i class="fa fa-user"></i> Tipos de Beca
+                                            <i class="fa fa-archive"></i> Tipos de Beca
                                         </h:link>
                                     </li>
                                 </ul>
                                 <ul class="treeview-menu">
                                     <li class="#{actiTipoDocu}">
                                         <h:link outcome="/Modulo_becas/tipo_docu" rendered="#{globalAppBean.getEstaPermByName('/Modulo_becas/tipo_docu.xhtml')}">
-                                            <i class="fa fa-user"></i> Tipos de Documentos
+                                            <i class="fa fa-archive"></i> Tipos de Documentos
                                         </h:link>
                                     </li>
                                 </ul>
@@ -308,41 +312,23 @@ and open the template in the editor.
                                  <ul class="treeview-menu">
                                     <li class="#{actiTipoEsta}">
                                         <h:link outcome="/Modulo_becas/tipo_esta" rendered="#{globalAppBean.getEstaPermByName('/Modulo_becas/tipo_esta.xhtml')}">
-                                            <i class="fa fa-user"></i> Tipos de Estados
+                                            <i class="fa fa-archive"></i> tipos de condición
                                         </h:link>
                                     </li>
                                 </ul>
                                 <ul class="treeview-menu">
-                                <li class="#{actiTipoReti}">
-                                    <h:link outcome="/Modulo_becas/tipo_reti" rendered="#{globalAppBean.getEstaPermByName('/Modulo_becas/tipo_reti.xhtml')}">
-                                        <i class="fa fa-user"></i> Tipos de Retiros
-                                    </h:link>
-                                </li>
-                            </ul>
-                                
-                            </li>                        
-                            <li class="treeview #{actiMenu3}">
-                            <a href="#">
-                                <i class="fa fa-dashboard"></i> <span>Transacciones</span>
-                                <span class="pull-right-container">
-                                    <i class="fa fa-angle-left pull-right"></i>
-                                </span>
-                            </a>
-                                
-                                
-                           
-                            <ul class="treeview-menu">
-                                <li class="#{actiDona}">
-                                    <h:link outcome="/Modulo_becas/Donacion" rendered="#{globalAppBean.getEstaPermByName('/Modulo_becas/Donacion.xhtml')}">
-                                        <i class="fa fa-user"></i> Donacion
-                                    </h:link>
-                                </li>
-                            </ul>
+                                    <li class="#{actiTipoReti}">
+                                        <h:link outcome="/Modulo_becas/tipo_reti" rendered="#{globalAppBean.getEstaPermByName('/Modulo_becas/tipo_reti.xhtml')}">
+                                            <i class="fa fa-archive"></i> Tipos de Retiros
+                                        </h:link>
+                                    </li>
+                                </ul>
+                                                            
                             
                             <ul class="treeview-menu">
                                 <li class="#{actiEmpr}">
                                     <h:link outcome="/Modulo_becas/empresa" rendered="#{globalAppBean.getEstaPermByName('/Modulo_becas/empresa.xhtml')}">
-                                        <i class="fa fa-user"></i> Empresa
+                                        <i class="fa fa-building-o"></i> Empresa
                                     </h:link>
                                 </li>
                             </ul>
@@ -352,31 +338,25 @@ and open the template in the editor.
                             <ul class="treeview-menu">
                                 <li class="#{actiTipoDona}">
                                     <h:link outcome="/Modulo_becas/tipo_dona" rendered="#{globalAppBean.getEstaPermByName('/Modulo_becas/tipo_dona.xhtml')}">
-                                        <i class="fa fa-user"></i> Tipos de Donacion
+                                        <i class="fa fa-archive"></i> Tipos de Donacion
                                     </h:link>
                                 </li>
                             </ul>
                             <ul class="treeview-menu">
                                 <li class="#{actiTrans}">
                                     <h:link outcome="/Modulo_becas/transacciones" rendered="#{globalAppBean.getEstaPermByName('/Modulo_becas/transacciones.xhtml')}">
-                                        <i class="fa fa-user"></i> Transacciones
+                                        <i class="fa fa-money"></i> Transacciones
                                     </h:link>
                                 </li>
                             </ul>                                
-                            </li>
-                        <li class="treeview #{actiMenu3}">
-                            <a href="#">
-                                <i class="fa fa-dashboard"></i> <span>Seguimientos</span>
-                                <span class="pull-right-container">
-                                    <i class="fa fa-angle-left pull-right"></i>
-                                </span>
-                            </a>
+                          
+                        
                             
                             
                               <ul class="treeview-menu">
                                 <li class="#{actiCale}">
                                     <h:link outcome="/Modulo_becas/Calendario" rendered="#{globalAppBean.getEstaPermByName('/Modulo_becas/Calendario.xhtml')}">
-                                        <i class="fa fa-user"></i> Calendario
+                                        <i class="fa fa-calendar"></i> Calendario
                                     </h:link>
                                 </li>
                             </ul>
@@ -384,37 +364,41 @@ and open the template in the editor.
                          <ul class="treeview-menu">
                                 <li class="#{actiSegu}">
                                     <h:link outcome="/Modulo_becas/seguimiento" rendered="#{globalAppBean.getEstaPermByName('/Modulo_becas/seguimiento.xhtml')}">
-                                        <i class="fa fa-user"></i> Seguimiento
+                                        <i class="fa fa-pencil"></i> Seguimiento
                                     </h:link>
                                 </li>
                             </ul>
                             
-                         <ul class="treeview-menu">
-                                <li class="#{actiSegu}">
-                                    <h:link outcome="/Modulo_becas/seguimiento_empresa" rendered="#{globalAppBean.getEstaPermByName('/Modulo_becas/seguimiento_empresa.xhtml')}">
-                                        <i class="fa fa-user"></i> Seguimiento Empresa
-                                    </h:link>
-                                </li>
-                            </ul>  
-                            
-                         <ul class="treeview-menu">
-                                <li class="#{actiSegu}">
-                                    <h:link outcome="/Modulo_becas/seguimiento_soli" rendered="#{globalAppBean.getEstaPermByName('/Modulo_becas/seguimiento_soli.xhtml')}">
-                                        <i class="fa fa-user"></i> Seguimiento Alumno
-                                    </h:link>
-                                </li>
-                            </ul>    
+                         
                         
                          <ul class="treeview-menu">
                                 <li class="#{actiTipoSegu}">
                                     <h:link outcome="/Modulo_becas/tipo_segu" rendered="#{globalAppBean.getEstaPermByName('/Modulo_becas/tipo_segu.xhtml')}">
-                                        <i class="fa fa-user"></i> Tipos de Seguimientos
+                                        <i class="fa fa-archive"></i> Tipos de Seguimientos
                                     </h:link>
                                 </li>
                             </ul>
                                 
-                            
-                        </li>
+                                                  
+                          
+                        <ul class="treeview-menu">
+                                <li class="#{actiTipoSegu}">
+                                    <h:link outcome="/Modulo_becas/reportes.xhtml" rendered="#{globalAppBean.getEstaPermByName('/Modulo_becas/reportes.xhtml')}">
+                                        <i class="fa fa-book"></i> Ver Reportes
+                                    </h:link>
+                                </li>
+                            </ul>
+                                
+                                <ul class="treeview-menu">
+                                <li class="#{actiTipoSegu}">
+                                    <h:link outcome="/Modulo_becas/dise_soli.xhtml" rendered="#{globalAppBean.getEstaPermByName('/Modulo_becas/reportes.xhtml')}">
+                                        <i class="fa fa-book"></i> Dise Solicitud
+                                    </h:link>
+                                </li>
+                            </ul>
+                                
+                            </li>   
+                        
                         
                         
                     </ui:fragment>

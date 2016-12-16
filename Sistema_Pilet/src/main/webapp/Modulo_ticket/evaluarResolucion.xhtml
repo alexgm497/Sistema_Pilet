@@ -80,10 +80,6 @@ and open the template in the editor.
                                         <f:facet name="header">Código</f:facet>
                                         <h:outputText value="#{fila.codiSoli}"/>
                                     </h:column>
-                                    <h:column pt:data-sortable="true" pt:data-field="encargado">
-                                        <f:facet name="header">Encargado</f:facet>
-                                        <h:outputText value="#{usuarioBean.consNomb(fila.codiEnca)}"/>   
-                                    </h:column>
                                     <h:column pt:data-sortable="true" pt:data-field="depa">
                                         <f:facet name="header">Departamento</f:facet>
                                         <h:outputText value="#{fila.codiDepa.nombDepa}"/>   

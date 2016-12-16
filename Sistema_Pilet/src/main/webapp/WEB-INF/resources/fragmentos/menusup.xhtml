@@ -12,7 +12,7 @@ and open the template in the editor.
     <ui:composition>
             <header class="main-header">
                 <!-- Logo -->
-                <a href="index.html" class="logo">
+                <a href="/Sistema_Pilet/poo/index.xhtml" class="logo">
                     <!-- mini logo for sidebar mini 50x50 pixels -->
                     <span class="logo-mini"><p:graphicImage value="#{globalAppBean.getImage('images/logoitr.png')}" width="35px" class="user-image" alt="Usuario"/></span>
                     <!-- logo for regular state and mobile devices -->
@@ -26,7 +26,7 @@ and open the template in the editor.
                     <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                         <span class="sr-only">Toggle navigation</span>
                     </a>
-
+                    <h:panelGroup id="paneNoti">
                     <div class="navbar-custom-menu">
                         <ul class="nav navbar-nav">
                             <li class="dropdown notifications-menu">
@@ -39,7 +39,7 @@ and open the template in the editor.
                                     <li>
                                         <ul id="resultado" class="menu">
                                             <h:form>
-                                                <p:remoteCommand name="consNoti" actionListener="#{notificacionBean.cons()}" update=":FormNoti" 
+                                                <p:remoteCommand name="consNoti" actionListener="#{notificacionBean.cons()}" update=":FormNoti :paneNoti" 
                                                          oncomplete="$('#ModaFormNoti').modal('show');" global="true"/>
                                                 <ui:repeat var="noti" varStatus="status" value="#{loginBean.listNoti}">
                                                     <li>
@@ -100,6 +100,7 @@ and open the template in the editor.
                             </li>
                         </ul>
                     </div>
+                    </h:panelGroup>
                 </nav>
             </header>
         <script type="text/javascript">
