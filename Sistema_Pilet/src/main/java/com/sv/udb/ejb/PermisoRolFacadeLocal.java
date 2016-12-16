@@ -23,6 +23,8 @@ public interface PermisoRolFacadeLocal {
     void remove(PermisoRol permisoRol);
 
     PermisoRol find(Object id);
+    
+    PermisoRol findByPermAndRole(Object perm, Object role);
 
     List<PermisoRol> findAll();
 

@@ -26,10 +26,16 @@ public interface DetalleBecaFacadeLocal {
 
     List<DetalleBeca> findAll();
     
+    List<DetalleBeca> findByBeca(Object id);
+    
     List<DetalleBeca> findForCombo(Object id);
 
     List<DetalleBeca> findRange(int[] range);
+    
+    void desa_deta(int codi_deta);
 
     int count();
+    
+    int validar(int codi_beca, int codi_tipo);
     
 }

@@ -178,7 +178,7 @@ public class UbicacionesBean implements Serializable {
     {
         try
         {
-            this.listUbic = FCDEUbic.findAll();
+            this.listUbic = FCDEUbic.findTodo();
         }
         catch(Exception ex)
         {

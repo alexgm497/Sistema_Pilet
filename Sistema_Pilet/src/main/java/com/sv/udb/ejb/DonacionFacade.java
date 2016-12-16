@@ -55,4 +55,16 @@ public class DonacionFacade extends AbstractFacade<Donacion> implements Donacion
         return resu.isEmpty() ? null : resu;
     }
     
+    @Override
+    public List<Donacion> findDona(int codi)  {        
+        String consulta = "SELECT * FROM donacion WHERE codi_empr = ?1";
+        Query q = getEntityManager().createNativeQuery(consulta, Donacion.class);                      
+        q.setParameter(1, codi);          
+        List resu = q.getResultList();   
+        
+        
+        System.out.println(Arrays.toString(resu.toArray()));
+        return resu.isEmpty() ? null : resu;
+    }
+    
 }

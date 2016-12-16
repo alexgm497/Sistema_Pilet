@@ -5,6 +5,7 @@
  */
 package com.sv.udb.ejb;
 
+import com.sv.udb.modelo.Pregunta;
 import com.sv.udb.modelo.Seccion;
 import java.util.List;
 import javax.ejb.Local;
@@ -25,6 +26,8 @@ public interface SeccionFacadeLocal {
     Seccion find(Object id);
 
     List<Seccion> findAll();
+    
+    List<Seccion> findAllActive();
 
     List<Seccion> findRange(int[] range);
 

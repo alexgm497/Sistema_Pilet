@@ -56,6 +56,9 @@ and open the template in the editor.
                                         <p:remoteCommand name="consObjeEmpl" actionListener="#{citasBean.setEmplRecep()}" update=":contModaSoliCita :paneClose" 
                                                          oncomplete="INIT_OBJE_MODA();" global="true"/>
 
+                                        <p:remoteCommand name="consObjeVisiCita" actionListener="#{citasBean.setVisiVisi()}" update=":paneTabl  :paneCloseVisi" 
+                                                         oncomplete="INIT_OBJE_TABL_VISI(); INIT_OBJE_MODA(); INIT_OBJE_REGI_VISI();" global="true"/>
+                                        
                                         <div class="btn-group">
                                             <h:commandLink id="btonRegiVisi" class="btn btn-success">
                                                 <p:ajax listener="#{visitantesBean.limpForm()}" update=":FormRegiVisi" global="true" 
@@ -68,7 +71,7 @@ and open the template in the editor.
                                                 <i class="fa fa-users"/> Solicitar Cita
                                             </h:commandLink>  
                                             <h:commandLink id="btonRegiVisiCita" class="btn btn-success">
-                                                <p:ajax listener="#{citasBean.limpForm()}" update=":FormRegiVisiCita" global="true" 
+                                                <p:ajax listener="#{citasBean.limpForm()}" update=":contModaVisiCita" global="true" 
                                                         oncomplete="$('#ModaFormRegiVisiCita').modal('show'); INIT_OBJE();"/>
                                                 <i class="fa fa-calendar-o"/> Registrar Visita
                                             </h:commandLink>  
@@ -166,26 +169,11 @@ and open the template in the editor.
                                     <h:panelGroup rendered="#{citasBean.objeVisiCita.estaVisi eq '0'}">
                                         <h3>Esta Cita o Visita Esta pendiente.</h3>
                                         <h5>Registrar entrada de los visitantes</h5>
-                                        <div class="input-group-btn right" style="padding-top: 5px;">
-                                            <div class="btn-group">
-                                                <h:commandLink class="btn btn-success">
-                                                    <p:ajax listener="#{citasBean.cambVisiCitaRecep(1)}" process="@form" update="@form :ContRegi" oncomplete="INIT_OBJE(); INIT_OBJE_MODA();" />
-                                                    <i class="fa fa-check"/> Confirmar Entrada de Visitantes
-                                                </h:commandLink>
-                                            </div>
-                                        </div>
                                     </h:panelGroup>
                                     <h:panelGroup rendered="#{citasBean.objeVisiCita.estaVisi eq '1'}">
                                         <h3>Esta Cita o Visita se está llevando a cabo.</h3>
                                         <h5>Registrar salida de los visitantes</h5>
-                                        <div class="input-group-btn right" style="padding-top: 5px;">
-                                            <div class="btn-group">
-                                                <h:commandLink class="btn btn-success">
-                                                    <p:ajax listener="#{citasBean.cambVisiCitaRecep(2)}" process="@form" update="@form :ContRegi" oncomplete="INIT_OBJE(); INIT_OBJE_MODA();" />
-                                                    <i class="fa fa-check"/> Confirmar Salida de Visitantes
-                                                </h:commandLink>
-                                            </div>
-                                        </div>
+                                        
                                     </h:panelGroup>
                                     <h:panelGroup rendered="#{citasBean.objeVisiCita.estaVisi eq '2'}">
                                         <h3>Esta Cita o Visita ha terminado.</h3>
@@ -194,6 +182,18 @@ and open the template in the editor.
                                 <div class="modal-footer">
                                     <div class="input-group-btn right" style="padding-top: 5px;">
                                         <div class="btn-group">
+                                            <h:panelGroup rendered="#{citasBean.objeVisiCita.estaVisi eq '0'}">
+                                                <h:commandLink class="btn btn-success">
+                                                    <p:ajax listener="#{citasBean.cambVisiCitaRecep(1)}" process="@form" update="@form :ContRegi" oncomplete="INIT_OBJE(); INIT_OBJE_MODA();" />
+                                                    <i class="fa fa-check"/> Confirmar Entrada de Visitantes
+                                                </h:commandLink>
+                                            </h:panelGroup>
+                                            <h:panelGroup rendered="#{citasBean.objeVisiCita.estaVisi eq '1'}">
+                                                <h:commandLink class="btn btn-success">
+                                                    <p:ajax listener="#{citasBean.cambVisiCitaRecep(2)}" process="@form" update="@form :ContRegi" oncomplete="INIT_OBJE(); INIT_OBJE_MODA();" />
+                                                    <i class="fa fa-check"/> Confirmar Salida de Visitantes
+                                                </h:commandLink>
+                                            </h:panelGroup>
                                         </div>
                                     </div>
                                 </div>
@@ -430,7 +430,7 @@ and open the template in the editor.
 
                                                     <h:outputLabel  for="hora" value="Horario comunmente disponible del Personal de la Institución (Citado)"/>
                                                     <h:message for="hora" errorClass="field-error" />
-                                                    <h:selectOneMenu id="hora" value="#{citasBean.horaSeleSoliCita}" class="form-control select" pt:data-live-search="true" required="true" requiredMessage="Necesita Seleccionar un Horario Disponible">
+                                                    <h:selectOneMenu id="hora" value="#{citasBean.horaSeleSoliCita}" class="form-control select" pt:data-live-search="true">
                                                         <f:selectItem pt:data-hidden="true" itemLabel="Seleccione..."/>
                                                         <f:selectItems value="#{citasBean.listHoraCitaDoce}" var="lstHora" itemLabel="#{lstHora.diaDisp} #{lstHora.fecha} de (#{lstHora.horaInic} a #{lstHora.horaFina})" itemValue="#{lstHora}"/>
                                                         <f:converter converterId="PooConv"/>
@@ -473,21 +473,291 @@ and open the template in the editor.
                     <div class="modal-dialog">
                         <!-- Modal content-->
                         <div class="modal-content">
-                            <h:form id="FormRegiVisiCita" class="form-horizontal">
+                            <h:panelGroup id="contModaVisiCita" class="form-horizontal">
                                 <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times"/></button>
-                                    <h4 class="modal-title">Registrar Visita</h4>
+                                    <h:panelGroup id="paneCloseVisi">
+                                        <h:panelGroup rendered="#{citasBean.switFormCita}">
+                                            <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times"/></button>
+                                        </h:panelGroup>
+                                        <h:panelGroup rendered="#{!citasBean.switFormCita}">
+                                            <h:form>
+                                                    <h:commandLink class="close">
+                                                        <p:ajax listener="#{citasBean.toggSwitFormCita()}" process="@this" update=":contModaVisiCita :paneCloseVisi" oncomplete="INIT_OBJE_MODA();" global="true"/>
+                                                            <i class="fa fa-times"/>
+                                                    </h:commandLink>
+                                                </h:form>
+                                        </h:panelGroup>
+                                    </h:panelGroup>
                                 </div>
-                                <div class="modal-body" style="padding-top: 2px;">
-
-                                </div>
-                                <div class="modal-footer">
-                                    <div class="input-group-btn right" style="padding-top: 5px;">
-                                        <div class="btn-group">
+                                <h:panelGroup id="tablPart">
+                                    <h:panelGroup rendered="#{citasBean.switFormCita}">
+                                        <h:form>
+                                            <h:panelGroup rendered="#{citasBean.programar || citasBean.reprogramar}">
+                                                <div class="modal-body">
+                                                    <div class="input-group col-xs-12">
+                                                        <h:outputLabel  for="tipoVisiGrup" value="¿A quién(es) desea programar la visita? "/>
+                                                        <h:message for="tipoVisiGrup" errorClass="field-error" />
+                                                        <h:selectOneMenu id="tipoVisiGrup" value="#{citasBean.isGrouVisi}" class="form-control select" pt:data-live-search="true">
+                                                            <f:selectItem pt:data-hidden="true" itemLabel="Seleccione..."/>
+                                                            <f:selectItem itemValue="false" itemLabel="Visitante(s)"/>
+                                                            <f:selectItem itemValue="true" itemLabel="Grupo"/>
+                                                            <p:ajax process="@this,tipoVisiGrup" listener="#{citasBean.limpForm()}" oncomplete="INIT_OBJE(); INIT_OBJE_MODA();" update=":FormRegi :tablPart" />
+                                                        </h:selectOneMenu>
+                                                    </div>
+                                                </div>
+                                            </h:panelGroup>
+                                        </h:form>
+                                        <div class="modal-body">
+                                            <h:panelGroup rendered="#{citasBean.isGrouVisi}">
+                                                <h4 style="">Encargado de Grupo:</h4>
+                                            </h:panelGroup>
+                                            <h:panelGroup rendered="#{!citasBean.isGrouVisi}">
+                                                <h4 style="">Visitantes Involucrados en la Visita:</h4>
+                                            </h:panelGroup>
+                                            <h:form id="frmMensGlob">
+                                                <h:inputHidden id="mensTabl" value="#"/>
+                                                <h:message for="mensTabl" errorClass="field-error"/>
+                                            </h:form>
+                                            <h:dataTable pt:data-id="TablInvo" value="#{citasBean.listVisiVisiTemp}"
+                                                    var="fila" class="boottable" pt:data-toolbar="#toolTablInvo"
+                                                    styleClass="table-hover table-bordered table-condensed table-striped table-responsive"
+                                                    pt:data-show-refresh="false" pt:data-show-toggle="false" pt:data-show-columns="false" 
+                                                    pt:data-search="true" pt:data-pagination="true" pt:data-page-list="[5, 10, 20, 50]"
+                                                    pt:data-click-to-select="true"  pt:data-select-item-name="radio"
+                                                    pt:data-single-select="true" style="width: 100%;"> 
+                                                <h:column pt:data-sortable="true" pt:data-field="visi">
+                                                    <f:facet name="header">Visitante</f:facet>
+                                                    <h:outputText value="#{fila.nombVisi} #{fila.apelVisi}"/>
+                                                </h:column>
+                                                <h:column pt:data-sortable="true" pt:data-field="carn">
+                                                    <f:facet name="header">DUI</f:facet>
+                                                    <h:outputText value="#{fila.duiVisi}"/>   
+                                                </h:column>
+                                                <h:column pt:data-sortable="true" pt:data-field="tele">
+                                                    <f:facet name="header">Contacto</f:facet>
+                                                     <h:panelGroup rendered="#{fila.corrVisi != null}">
+                                                         <span class='fa fa-envelope' style="margin-right: 10px;"></span>
+                                                          <h:outputText value="#{fila.corrVisi}"/>
+                                                          <br/>
+                                                      </h:panelGroup>
+                                                     <h:panelGroup rendered="#{fila.teleVisi != null}">
+                                                         <span class='fa fa-phone' style="margin-right: 10px;"></span>
+                                                          <h:outputText value="#{fila.teleVisi}"/>
+                                                     </h:panelGroup>
+                                                </h:column>
+                                                <h:column pt:data-sortable="true" pt:data-field="acci" rendered="#{citasBean.programar}">
+                                                    <f:facet name="header">Acciones</f:facet>
+                                                    <h:form>
+                                                        <h:commandLink class="btn btn-xs btn-danger">
+                                                            <p:ajax listener="#{citasBean.dropVisiVisi(fila)}" process="@form" update=":tablPart :ContRegi :paneClose" oncomplete="INIT_OBJE(); INIT_OBJE_MODA(); INIT_OBJE_REGI_VISI();" />
+                                                            <i class="fa fa-trash-o"/> Quitar
+                                                        </h:commandLink>
+                                                    </h:form>   
+                                                </h:column>
+                                            </h:dataTable>
                                         </div>
-                                    </div>
-                                </div>
-                            </h:form>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                                <h:form id="FormRegiVisiCita" class="form-horizontal">
+                                    <ui:fragment id="FragForm" rendered="#{citasBean.switFormCita}">    
+                                        <div class="modal-body" style="padding-top: 2px;">                                    
+                                            <h:inputHidden id="codi" value="#{citasBean.objeCita.codiCita}" />
+                                            <h:panelGroup rendered="#{citasBean.programar}">
+                                                
+                                                <h:commandLink id="btonMostBusc" class="btn btn-default btn-sm">
+                                                    <p:ajax listener="#{citasBean.toggSwitFormCita()}" process="@this,btonMostBusc" update="@form :paneTabl :tablPart :paneClose" global="true" oncomplete="INIT_OBJE(); INIT_OBJE_MODA(); INIT_OBJE_REGI_VISI();"/>
+                                                    <i class="fa fa-search"/> Editar Participantes ...
+                                                </h:commandLink>
+                                                <br/>
+
+                                                <hr/>
+                                            </h:panelGroup>
+                                            <h:panelGroup rendered="#{citasBean.programar || citasBean.reprogramar}">
+                                                <h:panelGroup rendered="#{citasBean.isGrouVisi}">
+                                                    <div class="input-group col-xs-12">
+                                                        <h:outputLabel  for="nombGrup" value="Nombre del Grupo: "/>
+                                                        <h:message for="nombGrup" errorClass="field-error" />
+                                                        <h:inputText  id="nombGrup" value="#{citasBean.objeCita.nombGrupCita}" class="form-control" required="true" requiredMessage="Debe registrar el nombre del Grupo"/>
+                                                    </div>
+                                                    <div class="input-group col-xs-12">
+                                                        <h:outputLabel  for="cantGrup" value="Cantidad de Personas en el Grupo: "/>
+                                                        <h:message for="cantGrup" errorClass="field-error" />
+                                                        <h:inputText  id="cantGrup" value="#{citasBean.objeCita.cantGrupCita}" class="form-control" required="true" requiredMessage="Debe Especificar la cantidad de personas"/>
+                                                    </div>
+                                                </h:panelGroup>
+                                                <h:panelGroup id="combLugaEven">
+                                                    <div class="input-group col-xs-12">
+                                                        <h:outputLabel  for="tipoLugaEven" value="La Cita se desarrollará en: "/>
+                                                        <h:message for="tipoLugaEven" errorClass="field-error" />
+                                                        <h:selectOneMenu id="tipoLugaEven" value="#{citasBean.lugaEven}" class="form-control select" pt:data-live-search="true">
+                                                            <f:selectItem pt:data-hidden="true" itemLabel="Seleccione..."/>
+                                                            <f:selectItem itemValue="true" itemLabel="Lugar"/>
+                                                            <f:selectItem itemValue="false" itemLabel="Evento"/>
+                                                            <p:ajax process="@this,tipoLugaEven" oncomplete="INIT_OBJE(); INIT_OBJE_MODA();" update="@this,combLugaEven" />
+                                                        </h:selectOneMenu>
+                                                    </div>
+                                                    <h:panelGroup rendered="#{citasBean.lugaEven}">
+                                                        <div class="input-group col-xs-12">
+                                                            <h:outputLabel  for="lugaCita" value="Lugar: "/>
+                                                            <h:message for="lugaCita" errorClass="field-error" />
+                                                            <h:selectOneMenu id="lugaCita" value="#{citasBean.objeCita.codiUbic}" class="form-control select" pt:data-live-search="true" required='true' requiredMessage="Debe Seleccionar un Lugar">
+                                                                <f:selectItem pt:data-hidden="true" itemLabel="Seleccione..."/>
+                                                                <f:selectItems value="#{ubicacionesBean.consListUbicPorDispCita()}" var="lst" itemLabel="#{lst.nombUbic}" itemValue="#{lst}"/>
+                                                                <f:converter converterId="PooConv"/>
+                                                            </h:selectOneMenu>
+                                                        </div>
+                                                    </h:panelGroup>
+                                                    <h:panelGroup rendered="#{!citasBean.lugaEven}">
+                                                        <div class="input-group col-xs-12">
+                                                            <h:outputLabel  for="evenCita" value="Evento: "/>
+                                                            <h:message for="evenCita" errorClass="field-error" />
+                                                            <h:selectOneMenu id="evenCita" value="#{citasBean.objeCita.codiEven}" class="form-control select" pt:data-live-search="true" required='true' requiredMessage="Debe Seleccionar un Evento">
+                                                                <f:selectItem pt:data-hidden="true" itemLabel="Seleccione..."/>
+                                                                <f:selectItems value="#{eventosBean.listEven}" var="lst" itemLabel="#{lst.nombEven}" itemValue="#{lst}"/>
+                                                                <f:converter converterId="PooConv"/>
+                                                            </h:selectOneMenu>
+                                                        </div>
+                                                    </h:panelGroup>
+                                                </h:panelGroup>
+                                                <div class="input-group col-xs-12">
+                                                    <h:outputLabel  for="horaFinaCita" value="Hora de Salida Estimada: "/>
+                                                    <h:message for="horaFinaCita" errorClass="field-error" />
+                                                    <h:inputText id="horaFinaCita" value="#{citasBean.fechFina}" class="form-control timepicker" required="true" requiredMessage="Debe Seleccionar una Hora de Finalización"/>
+                                                </div>
+                                            </h:panelGroup>
+                                            <div class="input-group col-xs-12">
+                                                <h:outputLabel  for="descCita" value="Motivo: "/>
+                                                <h:message for="descCita" errorClass="field-error" />
+                                                <h:inputTextarea  id="descCita" value="#{citasBean.motivo}" class="form-control" required="true" requiredMessage="Debe Especificar El Motivo"/>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                                <div class="input-group-btn right" style="padding-top: 5px;">
+                                                    <div class="btn-group">
+                                                        <h:commandLink id="btonCanc" class="btn btn-default" pt:data-dismiss="modal">
+                                                            <p:ajax listener="#{citasBean.limpForm()}" process="@form" update="@form" global="true"/>
+                                                            <i class="fa fa-mail-forward"/> Cerrar
+                                                        </h:commandLink>
+                                                        <h:commandLink id="btonProgCita" class="btn btn-success" rendered="#{citasBean.programar}">
+                                                            <p:ajax listener="#{citasBean.progVisiRecep()}" process="@form" update="@form :ContRegi :tablPart" oncomplete="INIT_OBJE(); INIT_OBJE_MODA();" />
+                                                            <i class="fa fa-plus"/> Programar
+                                                        </h:commandLink>
+                                                    </div>
+                                                </div>
+                                        </div>
+                                    </ui:fragment>
+                                </h:form>
+                                <h:panelGroup id="paneTabl" class="form-horizontal">
+                                    <ui:fragment id="FragBusc" rendered="#{!citasBean.switFormCita}">
+                                        <div class="modal-body" style="padding-top: 2px;">
+                                            <br/>
+                                            <h:panelGroup rendered="#{citasBean.isGrouVisi}">
+                                                <h4 style="">Seleccionar Encargado:</h4>
+                                            </h:panelGroup>
+                                            <h:panelGroup rendered="#{!citasBean.isGrouVisi}">
+                                                <h4 style="">Seleccionar Visitantes:</h4>
+                                            </h:panelGroup>
+                                            <h:form>
+                                                <div class="cutom_search">
+                                                    <h:inputText id="cadeText" value="#{visitantesBean.cadeText}" class="form-control cutom_search_text" />
+                                                    <h:commandLink id="btonBusc" class="btn btn-success cutom_search_button">
+                                                        <p:ajax  process="cadeText" oncomplete="INIT_OBJE(); INIT_OBJE_MODA();" update="@form :ContRegi :TablVisi"  global="true" />
+                                                        <i class="fa fa-search"/>
+                                                    </h:commandLink>
+                                                </div>
+                                            </h:form>
+
+                                            <h:dataTable pt:data-id="TablVisiCita" id="TablVisiCita" value="#{visitantesBean.listVisi}"
+                                                    var="fila" class="boottable" pt:data-toolbar="#toolTablVisiCita"
+                                                    styleClass="table-hover table-bordered table-condensed table-striped table-responsive"
+                                                    pt:data-show-refresh="false" pt:data-show-toggle="false" pt:data-show-columns="false" 
+                                                    pt:data-search="false" pt:data-pagination="true" pt:data-page-list="[5, 10, 20, 50]"
+                                                    pt:data-click-to-select="true"  pt:data-select-item-name="radio"
+                                                    pt:data-single-select="true">                                
+                                                <h:column pt:data-field="state" pt:data-checkbox="true">
+                                                </h:column>
+                                                <h:column pt:data-align="right" pt:data-sortable="true" pt:data-field="id" pt:data-visible='false'>
+                                                    <f:facet name="header">Código</f:facet>
+                                                    <h:outputText value="#{fila.codiVisi}"/>
+                                                </h:column>
+                                                <h:column pt:data-sortable="true" pt:data-field="nomb">
+                                                    <f:facet name="header">Nombre</f:facet>
+                                                    <h:outputText value="#{fila.nombVisi.concat(' ').concat(fila.apelVisi)}"/>   
+                                                </h:column>
+                                                <h:column pt:data-sortable="true" pt:data-field="dui">
+                                                    <f:facet name="header">DUI</f:facet>
+                                                    <h:outputText value="#{fila.duiVisi}"/>   
+                                                </h:column>
+                                                <h:column pt:data-sortable="true" pt:data-field="tele">
+                                                    <f:facet name="header">Contacto</f:facet>
+                                                     <h:panelGroup rendered="#{fila.corrVisi != null}">
+                                                         <span class='fa fa-envelope' style="margin-right: 10px;"></span>
+                                                          <h:outputText value="#{fila.corrVisi}"/>
+                                                          <br/>
+                                                      </h:panelGroup>
+                                                     <h:panelGroup rendered="#{fila.teleVisi != null}">
+                                                         <span class='fa fa-phone' style="margin-right: 10px;"></span>
+                                                          <h:outputText value="#{fila.teleVisi}"/>
+                                                     </h:panelGroup>
+                                                </h:column>
+                                             </h:dataTable>
+                                            <hr/>
+                                            <h:panelGroup rendered="#{citasBean.isGrouVisi}">
+                                                <h4 style="">Encargado de Grupo:</h4>
+                                            </h:panelGroup>
+                                            <h:panelGroup rendered="#{!citasBean.isGrouVisi}">
+                                                <h4 style="">Visitantes Involucrados en la Visita:</h4>
+                                            </h:panelGroup>
+                                            <h:dataTable pt:data-id="TablVisiCita" value="#{citasBean.listVisiVisiTemp}"
+                                                    var="fila" class="boottable" pt:data-toolbar="#toolTablVisiCita"
+                                                    styleClass="table-hover table-bordered table-condensed table-striped table-responsive"
+                                                    pt:data-show-refresh="false" pt:data-show-toggle="false" pt:data-show-columns="false" 
+                                                    pt:data-search="true" pt:data-pagination="true" pt:data-page-list="[5, 10, 20, 50]"
+                                                    pt:data-click-to-select="true"  pt:data-select-item-name="radio"
+                                                    pt:data-single-select="true" style="width: 100%;"> 
+                                                <h:column pt:data-sortable="true" pt:data-field="visi">
+                                                    <f:facet name="header">Visitante</f:facet>
+                                                    <h:outputText value="#{fila.nombVisi} #{fila.apelVisi}"/>
+                                                </h:column>
+                                                <h:column pt:data-sortable="true" pt:data-field="carn">
+                                                    <f:facet name="header">DUI</f:facet>
+                                                    <h:outputText value="#{fila.duiVisi}"/>   
+                                                </h:column>
+                                                <h:column pt:data-sortable="true" pt:data-field="tele">
+                                                    <f:facet name="header">Contacto</f:facet>
+                                                     <h:panelGroup rendered="#{fila.corrVisi != null}">
+                                                         <span class='fa fa-envelope' style="margin-right: 10px;"></span>
+                                                          <h:outputText value="#{fila.corrVisi}"/>
+                                                          <br/>
+                                                      </h:panelGroup>
+                                                     <h:panelGroup rendered="#{fila.teleVisi != null}">
+                                                         <span class='fa fa-phone' style="margin-right: 10px;"></span>
+                                                          <h:outputText value="#{fila.teleVisi}"/>
+                                                     </h:panelGroup>
+                                                </h:column>
+                                                <h:column pt:data-sortable="true" pt:data-field="acci">
+                                                    <f:facet name="header">Acciones</f:facet>
+                                                    <h:form>
+                                                        <h:commandLink class="btn btn-xs btn-danger">
+                                                            <p:ajax listener="#{citasBean.dropVisiVisi(fila)}" process="@form" update=":paneTabl :ContRegi :paneClose" oncomplete="INIT_OBJE(); INIT_OBJE_MODA(); " />
+                                                            <i class="fa fa-trash-o"/> Quitar
+                                                        </h:commandLink>
+                                                    </h:form>   
+                                                </h:column>
+                                            </h:dataTable>
+                                            <hr/>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <h:form>
+                                                <h:commandLink id="btonMostForm" class="btn btn-default btn-sm">
+                                                    <p:ajax listener="#{citasBean.toggSwitFormCita()}" process="@this,btonMostForm" update="@form :FormRegi :paneTabl :tablPart :paneClose" oncomplete="INIT_OBJE_MODA(); INIT_OBJE_REGI_VISI();" global="true"/>
+                                                        <i class="fa fa-search"/> Volver al formulario ...
+                                                </h:commandLink>
+                                            </h:form>
+                                        </div>
+                                    </ui:fragment>
+                                </h:panelGroup>
+                            </h:panelGroup>
                         </div>
                     </div>
                 </div>

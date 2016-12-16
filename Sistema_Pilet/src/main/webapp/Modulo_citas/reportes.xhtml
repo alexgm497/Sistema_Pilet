@@ -12,8 +12,8 @@ and open the template in the editor.
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"   
       xmlns:cs="http://xmlns.udb.edu.sv/component">
-      
-      
+
+
     <ui:composition template="../WEB-INF/resources/fragmentos/comun.xhtml">
         <!-- Título de la página -->
         <ui:param name="pageTitl" value="Bienvenido ::: Página Reportes"/>
@@ -24,59 +24,104 @@ and open the template in the editor.
         <ui:param name="actiCitaRepo" value="active"/>
         <!-- Scripts personalizados -->
         <ui:define name="CustomScripts">
-            <!--h:outputScript library="js" name="custom/alum.js"/-->
+            <h:outputScript library="js" name="custom/slid.js"/>
+            <!--Plugins Selector de Fecha-->
+            <h:outputStylesheet library="css" name="datepicker3.css"/>
+            <h:outputScript library="js" name="bootstrap-datepicker.js"/>
+            <h:outputScript library="js" name="bootstrap-datepicker.es.js"/>
+            <!--Plugins Selector de Hora-->
+            <h:outputStylesheet library="css" name="bootstrap-timepicker.min.css"/>
+            <h:outputScript library="js" name="bootstrap-timepicker.js"/>
+            <!--Plugins Select-->
+            <h:outputStylesheet library="css" name="bootstrap-select.css"/>
+            <h:outputScript library="js" name="bootstrap-select.js"/>
+            <h:outputScript library="js" name="custom/mantenimientos.js"/>
+            <h:outputScript library="js" name="custom/Reportes.js"/>
         </ui:define>
         <!-- Elementos propios del boby -->
         <ui:define name="body">
-            
- 
+
+
             <div class="row RegDiv">
                 <div class="col-md-12 col-xs-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">Reportes control de citas</div>
                         <div class="panel-body">                            
-                            <h:form id="FormVisorPdfJs"> 
+                            
                                 <p:accordionPanel activeIndex="-1">
+                                     
                                     <p:tab title="Estadisticas citas">
+                                        <h:form id="FormVisorPdfJs">
                                         <h:panelGrid columns="10" cellpadding="10">
-
-                                            <h:outputLabel  for="anioCitas" value="Ingrese el año: "/>
-                                            <p:inputMask style="float: right; width: 70%;" id="anioCitas" value="#{reportesBean.anioCitas}" mask="9999" class="form-control"/>
-                                            <h:commandLink style="float: right; width: 100%;" id="btonRepo" class="btn btn-success" rendered="#{true}">
-                                                <p:ajax listener="#{reportesBean.procCita()}" process="@form" update="@form" />
-                                                <i class="fa fa-print"/> Procesar Reporte
-                                            </h:commandLink>
-                                            <br/><br/>
-                                            <br/><br/> 
+                                            <p>Entre las fechas:</p>
+                                            <div style="display: inline-block; height: 40px;" class="input-group col-xs-4">
+                                                <h:outputLabel  for="fechNCita" value="Fecha inicio: "/>
+                                                <h:message for="fechNCita" errorClass="field-error"/>
+                                                <h:inputText id="fechNCita" value="#{reportesBean.fechNuevCita}" class="form-control datepicker" required="true" requiredMessage="Debe Seleccionar una Fecha">
+                                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                                </h:inputText> 
+                                            </div>
+                                            <div style="display: inline-block; height: 40px;" class="input-group col-xs-4">
+                                                <h:outputLabel  for="fechFCita" value="Fecha final: "/>
+                                                <h:message for="fechFCita" errorClass="field-error" />
+                                                <h:inputText id="fechFCita" value="#{reportesBean.fechFinCita}" class="form-control datepicker" required="true" requiredMessage="Debe Seleccionar una Fecha">
+                                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                                </h:inputText> 
+                                            </div>
+                                            <div style="display: inline-block; vertical-align: top; height: 40px;" class="input-group col-xs-6">
+                                                <h:commandLink id="btonRepoCita" class="btn btn-success">
+                                                    <p:ajax listener="#{reportesBean.procCita()}" process="@form" update=":ModaRepoView" global="true" 
+                                                        oncomplete="PF('ModaRepo').show();"/>
+                                                <i class="fa fa-plus"/> Nuevo
+                                                </h:commandLink>
+                                            </div>
                                         </h:panelGrid>
-                                        <cs:PdfViewer id="demo" value="#{reportesBean.docuRepo}" width="100%" height="500px"/>     
+                                        </h:form>
                                     </p:tab> 
                                     
-                                    <p:tab title="Estadisticas visitas">
-                                    <h:panelGrid columns="10" cellpadding="10">
-                                        <h:outputLabel  for="anioVisi" value="Ingrese el año: "/>
-                                        <p:inputMask style="float: right; width: 70%;" id="anioVisi" value="#{reportesBean.anioVisi}" mask="9999" class="form-control"/>
-                                        <h:commandLink style="float: right; width: 100%;" id="btonRepo1" class="btn btn-success" rendered="#{true}">
-                                            <p:ajax listener="#{reportesBean.procVisi()}" process="@form" update="@form" />
-                                            <i class="fa fa-print"/> Procesar Reporte
-                                        </h:commandLink>
-                                        <br/><br/>
-                                        <br/><br/> 
-                                    </h:panelGrid>
-                                        <cs:PdfViewer id="demo1" value="#{reportesBean.docuRepo}" width="100%" height="500px"/>     
 
-                                </p:tab>
+                                    
+                                    <p:tab title="Estadisticas visitas">
+                                        <h:form id="formVisia">
+                                        <h:panelGrid columns="10" cellpadding="10">
+                                            <p>Entre las fechas:</p>
+                                            <div style="display: inline-block; height: 40px;" class="input-group col-xs-4">
+                                                <h:outputLabel  for="fechNVisi" value="Fecha inicio: "/>
+                                                <h:message for="fechNVisi" errorClass="field-error"/>
+                                                <h:inputText id="fechNVisi" value="#{reportesBean.fechNuevVisi}" class="form-control datepicker" required="true" requiredMessage="Debe Seleccionar una Fecha">
+                                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                                </h:inputText> 
+                                            </div>
+                                            <div style="display: inline-block; height: 40px;" class="input-group col-xs-4">
+                                                <h:outputLabel  for="fechFVisi" value="Fecha final: "/>
+                                                <h:message for="fechFVisi" errorClass="field-error" />
+                                                <h:inputText id="fechFVisi" value="#{reportesBean.fechFinVisi}" class="form-control datepicker" required="true" requiredMessage="Debe Seleccionar una Fecha">
+                                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                                </h:inputText> 
+                                            </div>
+                                            <div style="display: inline-block; vertical-align: top; height: 40px;" class="input-group col-xs-6">
+                                                <h:commandLink id="btonSABER" class="btn btn-success" >
+                                                    <p:ajax oncomplete="PF('ModaRepo').show();" process="@form" listener="#{reportesBean.procVisi()}"  update=":ModaRepoView"  global="true"/>
+                                                    Generar reporte
+                                                </h:commandLink>
+                                            </div>
+                                        </h:panelGrid>
+                                            </h:form>
+                                    </p:tab>
                                     
                                 </p:accordionPanel>
-                            </h:form>
-                            
-                            
-                            
                         </div>
                     </div>
                 </div>
             </div>
-        
+
+            <div class="row">
+                <p:dialog header="" widgetVar="ModaRepo" modal="true" minHeight="40" width="1000px" style="z-index: 9999999;">
+                    <h:panelGroup id="ModaRepoView">
+                        <cs:PdfViewer id="pdfViewer" value="#{reportesBean.docuRepo}" width="100%" height="500px"/>
+                    </h:panelGroup>
+                </p:dialog>
+            </div>
         </ui:define>
     </ui:composition>
 </html>

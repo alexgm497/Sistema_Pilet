@@ -46,9 +46,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Cita.findByCantGrupCita", query = "SELECT c FROM Cita c WHERE c.cantGrupCita = :cantGrupCita")})
 public class Cita implements Serializable {
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codiCita", fetch = FetchType.EAGER)
-    private List<Visitantecita> visitantecitaList;
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -83,6 +80,8 @@ public class Cita implements Serializable {
     @JoinColumn(name = "codi_ubic", referencedColumnName = "codi_ubic")
     @ManyToOne(fetch = FetchType.EAGER)
     private Ubicaciones codiUbic;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codiCita", fetch = FetchType.EAGER)
+    private List<Cambiocita> cambiocitaList;
 
     public Cita() {
     }
@@ -185,6 +184,15 @@ public class Cita implements Serializable {
         this.codiUbic = codiUbic;
     }
 
+    @XmlTransient
+    public List<Cambiocita> getCambiocitaList() {
+        return cambiocitaList;
+    }
+
+    public void setCambiocitaList(List<Cambiocita> cambiocitaList) {
+        this.cambiocitaList = cambiocitaList;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -208,15 +216,6 @@ public class Cita implements Serializable {
     @Override
     public String toString() {
         return "com.sv.udb.modelo.Cita[ codiCita=" + codiCita + " ]";
-    }
-
-    @XmlTransient
-    public List<Visitantecita> getVisitantecitaList() {
-        return visitantecitaList;
-    }
-
-    public void setVisitantecitaList(List<Visitantecita> visitantecitaList) {
-        this.visitantecitaList = visitantecitaList;
     }
     
 }

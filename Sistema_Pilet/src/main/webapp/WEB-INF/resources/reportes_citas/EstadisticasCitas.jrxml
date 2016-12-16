@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="EstadisticasCitas" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d3aeefd7-be22-4429-b7af-bc8e642763fb">
-	<property name="ireport.zoom" value="1.4641000000000006"/>
+	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="table">
@@ -24,12 +24,16 @@
 		</box>
 	</style>
 	<subDataset name="Table Dataset 1" uuid="cc15ba02-8895-4143-b52a-1c90165a9900"/>
-	<parameter name="anioCitas" class="java.lang.String">
+	<parameter name="fech_inic_cita_nuev" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fech_fin_cita_nuev" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT count(`cambio_cita`.`codi_camb_cita`) AS CANTIDAD, case `cambio_cita`.`esta_camb_cita` WHEN 1 then 'Solicitada' WHEN 2 THEN 'Programada' WHEN 3 THEN 'Rechazada' WHEN 6 THEN 'Finalizada' END as ESTADO FROM `cambio_cita`
-WHERE(`cambio_cita`.`esta_camb_cita`= 1 or `cambio_cita`.`esta_camb_cita`= 2 or `cambio_cita`.`esta_camb_cita`= 3 or `cambio_cita`.`esta_camb_cita`= 6) AND (YEAR(`cambio_cita`.`fech_inic_cita_nuev`) = $P{anioCitas} or YEAR(`cambio_cita`.`fech_fin_cita_nuev`)=$P{anioCitas}) GROUP BY `cambio_cita`.`esta_camb_cita`]]>
+		<![CDATA[SELECT count(`cambio_cita`.`codi_camb_cita`) AS CANTIDAD,
+case `cambio_cita`.`esta_camb_cita`WHEN 0 THEN 'Cancelada' WHEN 1 THEN 'Solicitada' WHEN 2 THEN 'Programada' WHEN 3 THEN 'Rechazada' WHEN 4 THEN 'Reprogramación Solicitada' WHEN 5 THEN 'Cancelación Solicitada' WHEN 6 THEN 'Finalizada' END as ESTADO FROM `cambio_cita`
+WHERE(`cambio_cita`.`esta_camb_cita`= 1 or `cambio_cita`.`esta_camb_cita`= 2 or `cambio_cita`.`esta_camb_cita`= 3 or `cambio_cita`.`esta_camb_cita`= 6) AND ((DATE(`cambio_cita`.`fech_inic_cita_nuev`) between $P{fech_inic_cita_nuev} and $P{fech_fin_cita_nuev}) or (DATE(`cambio_cita`.`fech_fin_cita_nuev`) between $P{fech_inic_cita_nuev} and $P{fech_fin_cita_nuev}))  GROUP BY `cambio_cita`.`esta_camb_cita`]]>
 	</queryString>
 	<field name="CANTIDAD" class="java.lang.Long"/>
 	<field name="ESTADO" class="java.lang.String"/>
@@ -44,24 +48,45 @@ WHERE(`cambio_cita`.`esta_camb_cita`= 1 or `cambio_cita`.`esta_camb_cita`= 2 or 
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="78" splitType="Stretch">
+		<band height="103" splitType="Stretch">
 			<image>
-				<reportElement x="18" y="0" width="161" height="78" uuid="66d08cda-7299-4323-9713-7efede6314cb"/>
+				<reportElement x="18" y="9" width="161" height="78" uuid="66d08cda-7299-4323-9713-7efede6314cb"/>
 				<imageExpression><![CDATA["ricaldone.png"]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="179" y="23" width="316" height="28" uuid="a3184cd4-2cc3-43b2-a1fb-7c3217c79844"/>
 				<textElement textAlignment="Center">
-					<font fontName="Arial" size="18" isBold="true"/>
+					<font fontName="Calibri" size="18" isBold="true"/>
 				</textElement>
-				<text><![CDATA[ESTADISTICAS DE CITA POR AÑO]]></text>
+				<text><![CDATA[ESTADÍSTICAS DE CITAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="124" y="59" width="116" height="28" uuid="4ff984d9-9db8-4727-a4af-9290ce7e76f1"/>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha inicio:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="296" y="51" width="132" height="27" uuid="a725eb0a-0cc3-496c-9d3b-dd82a41c0a61"/>
+				<reportElement x="240" y="59" width="93" height="28" uuid="1ed62972-d3bc-45bb-9f81-8d56e4cfa2b6"/>
 				<textElement>
-					<font fontName="Arial" size="18" isBold="true"/>
+					<font fontName="Calibri" size="18"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{anioCitas}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{fech_inic_cita_nuev}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="333" y="59" width="116" height="28" uuid="2c9c9184-fb3a-4028-a385-2d2a3756424d"/>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha final:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="449" y="59" width="93" height="28" uuid="78a6c3b3-1712-425c-8971-d2780307aae7"/>
+				<textElement>
+					<font fontName="Calibri" size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fech_fin_cita_nuev}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -69,38 +94,66 @@ WHERE(`cambio_cita`.`esta_camb_cita`= 1 or `cambio_cita`.`esta_camb_cita`= 2 or 
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="20" splitType="Stretch">
+		<band height="28" splitType="Stretch">
 			<staticText>
-				<reportElement style="table_TH" positionType="Float" x="124" y="0" width="162" height="20" backcolor="#808080" uuid="46c70711-fe4c-4c25-87a1-a74a78a12cb9"/>
-				<textElement textAlignment="Center">
-					<font fontName="Arial" size="14" isBold="true"/>
+				<reportElement style="table_TH" positionType="Float" x="124" y="0" width="162" height="28" backcolor="#F7F7F7" uuid="46c70711-fe4c-4c25-87a1-a74a78a12cb9"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="18" isBold="true"/>
 				</textElement>
 				<text><![CDATA[CANTIDAD DE CITAS]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="table_TH" x="286" y="0" width="158" height="20" backcolor="#808080" uuid="36e8bfd8-d2be-4f20-bc4a-f754201dbcc8"/>
-				<textElement textAlignment="Center">
-					<font fontName="Arial" size="14" isBold="true"/>
+				<reportElement style="table_TH" x="286" y="0" width="158" height="28" backcolor="#F7F7F7" uuid="36e8bfd8-d2be-4f20-bc4a-f754201dbcc8"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="18" isBold="true"/>
 				</textElement>
 				<text><![CDATA[CLASIFICACIÓN]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="20" splitType="Stretch">
+		<band height="23" splitType="Stretch">
 			<textField>
-				<reportElement style="table" x="286" y="0" width="158" height="20" uuid="097b0d4a-004e-4c6a-829b-db68d6445ace"/>
-				<textElement textAlignment="Center">
-					<font fontName="Arial" size="14" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{ESTADO}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement style="table" x="124" y="0" width="162" height="20" uuid="dd6c0a64-ff87-4e1a-bafa-0351dbf1a749"/>
-				<textElement textAlignment="Center">
-					<font fontName="Arial" size="14" isBold="true"/>
+				<reportElement style="table" x="124" y="0" width="162" height="23" backcolor="#F7F7F7" uuid="dd6c0a64-ff87-4e1a-bafa-0351dbf1a749"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="16" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{CANTIDAD}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="table" x="286" y="0" width="158" height="23" backcolor="#F7F7F7" uuid="097b0d4a-004e-4c6a-829b-db68d6445ace"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="16" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ESTADO}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

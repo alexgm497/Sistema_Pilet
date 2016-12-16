@@ -64,25 +64,27 @@ and open the template in the editor.
                                     <h:form>
                                         <!--Form exclusivo para los remotos-->
                                         <!--Entradas-->
-                                        <p:remoteCommand name="consObje" actionListener="#{transaccionBean.cons()}" update=":FormRegi" 
-                                                        oncomplete="$('#ModaForm').modal('show');" global="true"/>
-                                        <p:remoteCommand name="elimObje" actionListener="#{transaccionBean.desaEntr()}" update=":FormRegi :ContRegi" 
-                                                         oncomplete="INIT_OBJE();" global="true"/>
-                                        <h:commandLink id="btonNuev" class="btn btn-success">
-                                            <p:ajax listener="#{transaccionBean.limpForm()}" update=":FormRegi" global="true" 
-                                                    oncomplete="$('#ModaForm').modal('show');"/>
-                                            <i class="fa fa-plus"/> Nueva Entrada
-                                        </h:commandLink>
-                                        <!--Salidas-->
-                                        <p:remoteCommand name="consObjeSali" actionListener="#{transaccionBean.cons()}" update=":FormRegi1" 
-                                                          oncomplete="$('#SaliForm').modal('show');" global="true"/>
-                                        <p:remoteCommand name="elimObjeSali" actionListener="#{transaccionBean.desaSali()}" update=":FormRegi1 :ContRegi" 
-                                                         oncomplete="INIT_OBJE_SALI();" global="true"/>
-                                         <h:commandLink id="btonNuevSali" class="btn btn-success">
-                                            <p:ajax listener="#{transaccionBean.limpForm()}" update=":FormRegi1" global="true" 
-                                                    oncomplete="$('#SaliForm').modal('show');"/>
-                                            <i class="fa fa-plus"/> Nueva Salida
-                                        </h:commandLink>
+                                        <div class="btn-group">
+                                            <p:remoteCommand name="consObje" actionListener="#{transaccionBean.cons()}" update=":FormRegi" 
+                                                            oncomplete="$('#ModaForm').modal('show');" global="true"/>
+                                            <p:remoteCommand name="elimObje" actionListener="#{transaccionBean.desaEntr()}" update=":FormRegi :ContRegi" 
+                                                             oncomplete="INIT_OBJE();" global="true"/>
+                                            <h:commandLink id="btonNuev" class="btn btn-success">
+                                                <p:ajax listener="#{transaccionBean.limpForm()}" update=":FormRegi" global="true" 
+                                                        oncomplete="$('#ModaForm').modal('show');"/>
+                                                <i class="fa fa-plus"/> Nueva Entrada
+                                            </h:commandLink>
+                                            <!--Salidas-->
+                                            <p:remoteCommand name="consObjeSali" actionListener="#{transaccionBean.cons()}" update=":FormRegi1" 
+                                                              oncomplete="$('#SaliForm').modal('show');" global="true"/>
+                                            <p:remoteCommand name="elimObjeSali" actionListener="#{transaccionBean.desaSali()}" update=":FormRegi1 :ContRegi" 
+                                                             oncomplete="INIT_OBJE_SALI();" global="true"/>
+                                             <h:commandLink id="btonNuevSali" class="btn btn-info">
+                                                <p:ajax listener="#{transaccionBean.limpForm()}" update=":FormRegi1" global="true" 
+                                                        oncomplete="$('#SaliForm').modal('show');"/>
+                                                <i class="fa fa-plus"/> Nueva Salida
+                                            </h:commandLink>
+                                         </div>
                                     </h:form>
                                 </div>
                                 <h:dataTable pt:data-id="TablRegi" id="TablRegi" value="#{transaccionBean.listTran}"
@@ -164,7 +166,7 @@ and open the template in the editor.
             </div>
             <div class="row">
                 <!-- Modal -->
-                <div id="ModaForm" class="modal fade" role="dialog">
+                <div id="ModaForm" class="modal fade" role="dialog" onshow="INIT_OBJE();">
                     <div class="modal-dialog">
                         <!-- Modal content-->
                         <div class="modal-content">
@@ -178,28 +180,36 @@ and open the template in the editor.
                                         <h:inputHidden id="codi" value="#{transaccionBean.objeTran.codiTran}" />
                                         <div class="form-group input-group-xs">
                                             <h:outputLabel  for="emprDona" value="Empresa: "/>
-                                            <h:selectOneMenu id="emprDona"  value="#{transaccionBean.objeCombPadr1 }" class="form-control" pt:data-live-search="true">
+                                            <h:selectOneMenu id="emprDona"  value="#{transaccionBean.objeCombPadr1 }" class="form-control select" pt:data-live-search="true" validatorMessage="Debe Elegir una empresa">
                                                 <f:selectItem pt:data-hidden="true" itemLabel="Seleccione..."/>
                                                 <f:selectItems value="#{empresaBean.listEmpr}" var="lst" itemLabel="#{lst.nombEmpr}" itemValue="#{lst}"/>
-                                                <p:ajax update="donaEntr" listener="#{transaccionBean.onEmpresaSelect()}" process="@this"/>  
+                                                <p:ajax update="donaEntr :FormRegi" oncomplete="INIT_OBJE_MODA();" listener="#{transaccionBean.onEmpresaSelect()}" process="@this"/>  
                                                 <f:converter converterId="PooConv"/>
                                             </h:selectOneMenu>
+                                            <br/>
+                                            <br/>
                                           <h:outputLabel  for="donaEntr" value="Donación: "/>
-                                          <h:selectOneMenu id="donaEntr" value="#{transaccionBean.objeTran.codiDona }" class="form-control" pt:data-live-search="true">
-                                              <f:selectItems value="#{transaccionBean.listHijo1}" var="lst" itemLabel="#{lst.nombDona}" itemValue="#{lst}"/>
-                                                <f:converter converterId="PooConv"/>
+                                          <h:selectOneMenu id="donaEntr" value="#{transaccionBean.objeTran.codiDona }" class="form-control select" pt:data-live-search="true" validatorMessage="Debe Elegir una donación">
+                                              <f:selectItems value="#{transaccionBean.listHijo1}" var="lst" itemLabel="Nombre: #{lst.nombDona} Monto pendiente: $#{lst.montPend}" itemValue="#{lst}"/>
+                                              <p:ajax update="mont" listener="#{transaccionBean.onDonaSelec()}" process="@this"/>
+                                              <f:converter converterId="PooConv"/>
                                             </h:selectOneMenu>                                      
                                             <h:message for="becaSali" errorClass="field-error" />           
+                                            <br/>
+                                            <br/>
+                                            
                                         </div>
                                         <div class="form-group input-group-xs">
                                             <h:outputLabel  for="mont" value="Monto:"/>
                                             <h:message for="mont" errorClass="field-error" />
-                                            <h:inputText id="mont" value="#{transaccionBean.objeTran.montTran}" class="form-control" />
+                                            <h:inputText disabled="true" id="mont" value="$#{transaccionBean.objeTran.montTran}" class="form-control" />
                                         </div>
+                                         <br/>
+                                            <br/>
                                         <div class="form-group input-group-xs">
                                             <h:outputLabel  for="fech" value="Fecha Entrada "/>
                                             <h:message for="fech" errorClass="field-error" />
-                                            <h:inputText id="fech" value="#{transaccionBean.objeTran.fechTran}" class="form-control">
+                                            <h:inputText id="fech"  disabled="true"  value="#{transaccionBean.objeTran.fechTran}" class="form-control">
                                                 <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
                                             </h:inputText>
                                         </div>
@@ -214,9 +224,11 @@ and open the template in the editor.
                                                     <i class="fa fa-mail-forward"/> Cerrar
                                                 </h:commandLink>
                                                 <h:commandLink id="btonGuar" class="btn btn-success" rendered="#{transaccionBean.guardar}">
-                                                    <p:ajax listener="#{transaccionBean.guarEntr()}" process="@form" update="@form :ContRegi" oncomplete="INIT_OBJE();" />
-                                                    <i class="fa fa-plus"/> Guardar
+                                                    <p:ajax listener="#{transaccionBean.guarEntr()}" process="@form" update=":ContRegi :FormRegi" oncomplete="INIT_OBJE();" />
+                                                    <i class="fa fa-plus"/> Registrar nueva entrada
                                                 </h:commandLink>
+                                                 <p:remoteCommand name="elimObjeEmpr" actionListener="#{transaccionBean.guarEntr()}" oncomplete="INIT_OBJE();$('#ModaForm').modal('hide');"
+                                                    update=":ContRegi" global="true"/>
                                                 <h:commandLink id="btonNuev" class="btn btn-success" rendered="#{!transaccionBean.guardar}">
                                                     <p:ajax listener="#{transaccionBean.limpForm()}" process="@form" update="@form" oncomplete="INIT_OBJE_MODA();" />
                                                     <i class="fa fa-plus"/> Nuevo
@@ -247,7 +259,7 @@ and open the template in the editor.
             <!--COMIENZO PARA LAS SALIDAS-->
             <div class="row">
                 <!-- Modal -->
-                <div id="SaliForm" class="modal fade" role="dialog">
+                <div id="SaliForm" class="modal fade" role="dialog" onshow="INIT_OBJE_MODA_SALI();">
                     <div class="modal-dialog">
                         <!-- Modal content-->
                         <div class="modal-content">
@@ -261,14 +273,15 @@ and open the template in the editor.
                                         <h:inputHidden id="codiSali" value="#{transaccionBean.objeTran.codiTran}" />
                                         <div class="form-group input-group-xs">
                                             <h:outputLabel  for="becaAlum" value="Alumno "/>
-                                            <h:selectOneMenu id="becaAlum"  value="#{transaccionBean.objeCombPadr }" class="form-control" pt:data-live-search="true">
+                                            <h:selectOneMenu id="becaAlum"  value="#{transaccionBean.objeCombPadr }" class="form-control select" pt:data-live-search="true" validatorMessage="Debe Elegir un Dia de la Semana">
                                                 <f:selectItem pt:data-hidden="true" itemLabel="Seleccione..."/>
-                                                <f:selectItems value="#{becaSoliBean.listBeca}" var="lst" itemLabel="#{lst.codiSoliBeca.nombAlum}" itemValue="#{lst}"/>
-                                                <p:ajax update="becaSali" listener="#{transaccionBean.onDetalleSelect}" process="@this"/>  
+                                                <f:selectItems value="#{becasBean.listSoliActivos}" var="lst" itemLabel="#{lst.nombAlum}" itemValue="#{lst}"/>
+                                                <p:ajax update="becaSali :FormRegi1"  oncomplete="INIT_OBJE_MODA();" listener="#{transaccionBean.onDetalleSelect}" process="@this"/>  
                                                 <f:converter converterId="PooConv"/>
                                             </h:selectOneMenu>
+                                            
                                           <h:outputLabel  for="becaSali" value="Beca "/>
-                                            <h:selectOneMenu id="becaSali" value="#{transaccionBean.objeTran.codiDetaBeca }" class="form-control" pt:data-live-search="true">
+                                            <h:selectOneMenu id="becaSali" value="#{transaccionBean.objeTran.codiDetaBeca }" class="form-control select" pt:data-live-search="true" validatorMessage="Debe Elegir un Dia de la Semana">
                                                 <f:selectItems value="#{transaccionBean.listHijo}" var="lst" itemLabel="#{lst.codiTipoBeca.nombTipoBeca}" itemValue="#{lst}"/>
                                                 <f:converter converterId="PooConv"/>
                                             </h:selectOneMenu>                                      
@@ -277,7 +290,7 @@ and open the template in the editor.
                                         <div class="form-group input-group-xs">
                                             <h:outputLabel  for="fechSali" value="Fecha Entrada "/>
                                             <h:message for="fechSali" errorClass="field-error" />
-                                            <h:inputText id="fechSali" value="#{transaccionBean.objeTran.fechTran}" class="form-control">
+                                            <h:inputText id="fechSali"  disabled="true"  value="#{transaccionBean.objeTran.fechTran}" class="form-control">
                                                 <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
                                             </h:inputText>
                                         </div>
@@ -293,7 +306,7 @@ and open the template in the editor.
                                                 </h:commandLink>
                                                 <h:commandLink id="btonGuarSali" class="btn btn-success" rendered="#{transaccionBean.guardar}">
                                                     <p:ajax listener="#{transaccionBean.guarSali()}" process="@form" update="@form :ContRegi" oncomplete="INIT_OBJE_SALI();" />
-                                                    <i class="fa fa-plus"/> Guardar
+                                                    <i class="fa fa-plus"/> Registrar nueva salida
                                                 </h:commandLink>
                                                 <h:commandLink id="btonNuevSali" class="btn btn-success" rendered="#{!transaccionBean.guardar}">
                                                     <p:ajax listener="#{transaccionBean.limpForm()}" process="@form" update="@form" oncomplete="INIT_OBJE_MODA_SALI();" />

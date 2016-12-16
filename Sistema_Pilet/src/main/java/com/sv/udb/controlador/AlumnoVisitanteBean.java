@@ -174,14 +174,14 @@ public class AlumnoVisitanteBean implements Serializable{
             this.guardar = false;
             this.Disabled=false;
             this.contForm = false;
+            log.info(this.logiBean.getObjeUsua().getCodiUsua()+"-"+"AlumnoVisitante"+"-"+"Se ha consultado un  alumno con visitante de codigo : " +  objeAlumVisi.getCodiAlumVisi());
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Registro Consultado')");
-            log.info(this.logiBean.getObjeUsua().getCodiUsua()+"-"+"AlumnoVisitante"+"-"+" Consultar alumno visitante: " +  objeAlumVisi.getCarnAlum());
             //por alguna razón, al consultar con cambia el select... asi que se hace manualmente....
             ctx.execute("selectedItem("+this.objeAlumVisi.getPareAlumVisi()+")");
         }
         catch(Exception ex)
         {
-            log.error("Error al consultar alumno visitante");
+            log.error(this.logiBean.getObjeUsua().getCodiUsua()+"-"+"AlumnoVisitante"+"-"+"Error al consultar un  alumno con visitante de codigo : " +  objeAlumVisi.getCodiAlumVisi());
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al consultar')");
         }
     }
@@ -234,14 +234,14 @@ public class AlumnoVisitanteBean implements Serializable{
             objeAlumVisi.setCarnAlum(this.carnAlum);
             FCDEAlumVisi.create(this.objeAlumVisi);
             this.listAlumVisi.add(this.objeAlumVisi);
+            log.info(this.logiBean.getObjeUsua().getCodiUsua()+"-"+"AlumnoVisitante"+"-"+"Se ha agregado un  alumno con visitante de codigo : " +  objeAlumVisi.getCodiAlumVisi());
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos guardados'); INIT_OBJE_TABL();");
-            log.info(this.logiBean.getObjeUsua().getCodiUsua()+"-"+"AlumnoVisitante"+"-"+" Agregar alumno visitante: " +  objeAlumVisi.getCarnAlum());
             this.limpForm();
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al guardar')");
-            log.error("Error al guardar alumno visitante");
+            log.error(this.logiBean.getObjeUsua().getCodiUsua()+"-"+"AlumnoVisitante"+"-"+"Error al registrar");
             ex.printStackTrace();
         }
     }
@@ -260,12 +260,12 @@ public class AlumnoVisitanteBean implements Serializable{
             this.objeAlumVisi.setCarnAlum(this.carnAlum);
             FCDEAlumVisi.edit(this.objeAlumVisi);
             this.listAlumVisi.add(this.objeAlumVisi); //Agrega el objeto modificado
+            log.info(this.logiBean.getObjeUsua().getCodiUsua()+"-"+"AlumnoVisitante"+"-"+"Se ha modificado un  alumno con visitante de codigo : " +  objeAlumVisi.getCodiAlumVisi());
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos Modificados')");
-            log.info(this.logiBean.getObjeUsua().getCodiUsua()+"-"+"AlumnoVisitante"+"-"+" Modificar alumno visitante: " +  objeAlumVisi.getCarnAlum());
         }
         catch(Exception ex)
         {
-            log.error("Error al modificar alumno visitante");
+            log.error(this.logiBean.getObjeUsua().getCodiUsua()+"-"+"AlumnoVisitante"+"-"+"Error al modificar un  alumno con visitante de codigo : " +  objeAlumVisi.getCodiAlumVisi());
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al modificar ')");
         }
     }
@@ -284,11 +284,11 @@ public class AlumnoVisitanteBean implements Serializable{
             this.listAlumVisi.remove(this.objeAlumVisi);
             this.listAlumVisiCarne.remove(this.objeAlumVisi);
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos Eliminados')");
-            log.info(this.logiBean.getObjeUsua().getCodiUsua()+"-"+"AlumnoVisitante"+"-"+" Eliminar alumno visitante codigo: " +  objeAlumVisi.getCodiAlumVisi());
+            log.info(this.logiBean.getObjeUsua().getCodiUsua()+"-"+"AlumnoVisitante"+"-"+"Se ha eliminado un  alumno con visitante de codigo : " +  objeAlumVisi.getCodiAlumVisi());
         }
         catch(Exception ex)
         {
-            log.error("Error al eliminar alumno visitante");
+            log.error(this.logiBean.getObjeUsua().getCodiUsua()+"-"+"AlumnoVisitante"+"-"+"Error al eliminar un  alumno con visitante de codigo : " +  objeAlumVisi.getCodiAlumVisi());
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al eliminar')");
         }
     }
@@ -299,7 +299,6 @@ public class AlumnoVisitanteBean implements Serializable{
      */
     public void regiVisi(){
         RequestContext ctx = RequestContext.getCurrentInstance();
-        FacesContext facsCtxt = FacesContext.getCurrentInstance();
         try{
             if(!Disabled){//si aun no está registrado
                 //Registramos Visitante
@@ -322,13 +321,22 @@ public class AlumnoVisitanteBean implements Serializable{
     public void asigAlumVisi(){
         try{
             RequestContext ctx = RequestContext.getCurrentInstance();
-            System.out.println("ACCE CARNET ");
-            objeAlumVisi.setCarnAlum(String.valueOf(logiBean.getObjeUsua().getAcceUsua()));
-            //System.out.println("CODIGO VISI: "+objeVisi.getCodiVisi()+" NOMBRE VISI: "+objeVisi.getNombVisi());
-            objeAlumVisi.setCodiVisi(objeVisi);
-            objeAlumVisi.setEstaAlumVisi(1);
-            this.listAlumVisiCarne.add(this.objeAlumVisi);
-            this.guar();
+            if((FCDEAlumVisi.findByVisiCarn(carnAlum, objeVisi)) != null){
+                objeAlumVisi = FCDEAlumVisi.findByVisiCarn(carnAlum, objeVisi);
+                objeAlumVisi.setEstaAlumVisi(1);
+                FCDEAlumVisi.edit(objeAlumVisi);
+                ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Visitante Reactivado'); INIT_OBJE_TABL();");
+                
+                
+            }else{
+                objeAlumVisi.setCarnAlum(String.valueOf(logiBean.getObjeUsua().getAcceUsua()));
+                //System.out.println("CODIGO VISI: "+objeVisi.getCodiVisi()+" NOMBRE VISI: "+objeVisi.getNombVisi());
+                this.carnAlum = String.valueOf(logiBean.getObjeUsua().getAcceUsua());
+                objeAlumVisi.setCodiVisi(objeVisi);
+                objeAlumVisi.setEstaAlumVisi(1);
+                this.listAlumVisiCarne.add(this.objeAlumVisi);
+                this.guar();
+            }
         }catch(Exception e){
             System.out.println("ERROR AL ASIGNAR ALUMNO");
             e.printStackTrace();

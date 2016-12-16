@@ -9,6 +9,7 @@ import static com.fasterxml.jackson.databind.util.ClassUtil.getRootCause;
 import com.sv.udb.ejb.TipoSeguimientoFacadeLocal;
 import com.sv.udb.modelo.TipoSeguimiento;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -74,17 +75,19 @@ public class TipoSeguBean implements Serializable{
         RequestContext ctx = RequestContext.getCurrentInstance(); //Capturo el contexto de la página
         try
         {
+            
             this.objeTipo.setEstaTipoSegui(1);
             FCDETipoSegu.create(this.objeTipo);
+            if(listTipo == null){listTipo = new ArrayList();}
             this.listTipo.add(this.objeTipo);
             this.limpForm();
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos guardados')");
-            log.info("Tipo Seguimiento Guardado");
+            //log.info("Tipo Seguimiento Guardado");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al guardar ')");
-            log.error(getRootCause(ex).getMessage());
+            //log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -104,12 +107,12 @@ public class TipoSeguBean implements Serializable{
             FCDETipoSegu.edit(this.objeTipo);
             this.listTipo.add(this.objeTipo); //Agrega el objeto modificado
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos Modificados')");
-            log.info("Tipo Seguimiento Modificado");
+            //log.info("Tipo Seguimiento Modificado");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al modificar ')");
-            log.error(getRootCause(ex).getMessage());
+            //log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -130,17 +133,41 @@ public class TipoSeguBean implements Serializable{
             FCDETipoSegu.edit(this.objeTipo);
             this.listTipo.add(this.objeTipo); //Agrega el objeto modificado
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos Modificados')");
-            log.info("Tipo Seguimiento Eliminado");
+            //log.info("Tipo Seguimiento Eliminado");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al modificar ')");
-            log.error(getRootCause(ex).getMessage());
+            //log.error(getRootCause(ex).getMessage());
         }
         finally
         {
             
         }
+    }
+    
+    public void reActi()
+    {
+         RequestContext ctx = RequestContext.getCurrentInstance(); //Capturo el contexto de la página
+        try
+        {
+            this.listTipo.remove(this.objeTipo); //Limpia el objeto viejo
+            this.objeTipo.setEstaTipoSegui(1);
+            FCDETipoSegu.edit(this.objeTipo);
+            this.listTipo.add(this.objeTipo); //Agrega el objeto modificado
+            ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos Modificados')");
+            //log.info("Tipo Seguimiento Activado");
+        }
+        catch(Exception ex)
+        {
+            ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al modificar ')");
+            //log.error(getRootCause(ex).getMessage());
+        }
+        finally
+        {
+            
+        }
+        
     }
     
     /**
@@ -151,12 +178,12 @@ public class TipoSeguBean implements Serializable{
         try
         {
             this.listTipo = FCDETipoSegu.findAll();
-            log.info("Tipos de Seguimientos Consultados");
+            //log.info("Tipos de Seguimientos Consultados");
         }
         catch(Exception ex)
         {
             ex.printStackTrace();
-            log.error(getRootCause(ex).getMessage());
+            //log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -177,12 +204,12 @@ public class TipoSeguBean implements Serializable{
             this.guardar = false;
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Consultado a " + 
                     String.format("%s", this.objeTipo.getNombTipoSegui()) + "')");
-            log.info("Tipo Seguimiento Consultado");
+            //log.info("Tipo Seguimiento Consultado");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al consultar')");
-            log.error(getRootCause(ex).getMessage());
+            //log.error(getRootCause(ex).getMessage());
         }
         finally
         {

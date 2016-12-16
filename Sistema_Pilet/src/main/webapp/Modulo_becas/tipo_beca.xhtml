@@ -10,7 +10,8 @@ and open the template in the editor.
       xmlns:f="http://xmlns.jcp.org/jsf/core" 
       xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" 
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:composition template="../WEB-INF/resources/fragmentos/comun.xhtml">
         <!-- Título de la página -->
         <ui:param name="pageTitl" value="::: Página Tipo Beca :::"/>
@@ -57,7 +58,7 @@ and open the template in the editor.
             <div class="row">
                 <div class="col-md-12 col-xs-12">
                     <div class="panel panel-default">
-                        <div class="panel-heading">Tabla de Datos</div>
+                        <div class="panel-heading">Tabla de Datos de tipos de beca</div>
                         <div class="panel-body">
                             <h:panelGroup id="ContRegi">
                                 <div id="toolTablRegi">
@@ -70,7 +71,7 @@ and open the template in the editor.
                                         <h:commandLink id="btonNuev" class="btn btn-success">
                                             <p:ajax listener="#{tipoBecaBean.limpForm()}" update=":FormRegi" global="true" 
                                                     oncomplete="$('#ModaForm').modal('show');"/>
-                                            <i class="fa fa-plus"/> Nuevo
+                                            <i class="fa fa-plus"/> Nuevo tipo de beca
                                         </h:commandLink>
                                     </h:form>
                                 </div>
@@ -91,7 +92,7 @@ and open the template in the editor.
                                         <f:facet name="header">Nombre</f:facet>
                                         <h:outputText value="#{fila.nombTipoBeca}"/>   
                                     </h:column>
-                                    <h:column pt:data-sortable="true">
+                                    <h:column pt:data-align="right" pt:data-sortable="true">
                                         <f:facet name="header">Descuento:</f:facet>
                                         <h:outputText value="#{fila.descTipoBeca}"/>
                                     </h:column>
@@ -101,7 +102,7 @@ and open the template in the editor.
                                         Matrícula</h:panelGroup>
                                         <h:panelGroup class="label label-info" rendered="#{fila.tipoTipoBeca eq '2'}">
                                         Mensualidad</h:panelGroup>
-                                        <h:panelGroup class="label label-info" rendered="#{fila.tipoTipoBeca eq '0'}">
+                                        <h:panelGroup class="label label-info" rendered="#{fila.tipoTipoBeca eq '3'}">
                                         Otro</h:panelGroup>
                                     </h:column>
                                     <h:column pt:data-sortable = "true">
@@ -110,11 +111,11 @@ and open the template in the editor.
                                         Tercer ciclo</h:panelGroup>
                                         <h:panelGroup class="label label-info" rendered="#{fila.nivelTipoBeca eq '2'}">
                                         1º y 2º año</h:panelGroup>
-                                        <h:panelGroup class="label label-info" rendered="#{fila.nivelTipoBeca eq '0'}">
+                                        <h:panelGroup class="label label-info" rendered="#{fila.nivelTipoBeca eq '3'}">
                                         3ºaño</h:panelGroup>
                                     </h:column>
                                     <h:column pt:data-sortable="true">
-                                        <f:facet name="header">Estado</f:facet> 
+                                        <f:facet name="header">Estado de registro</f:facet> 
                                         <h:panelGroup class="label label-success" rendered="#{fila.estaTipoBeca eq '1'}">
                                         <i class="fa fa-unlock"/> Activo</h:panelGroup>
                                         <h:panelGroup class="label label-danger" rendered="#{fila.estaTipoBeca ne '1'}">
@@ -147,9 +148,9 @@ and open the template in the editor.
                                             
                                         </div>
                                         <div class="form-group input-group-xs">
-                                            <h:outputLabel  for="desc" value="Descuento: "/>
+                                            <h:outputLabel  for="desc" value="Descuento:$ "/>
                                             <h:message for="desc" errorClass="field-error" />
-                                            <h:inputText id="desc" value="#{tipoBecaBean.objeTipo.descTipoBeca}" class="form-control" />
+                                            <h:inputText id="descCita"  value="#{tipoBecaBean.objeTipo.descTipoBeca}" class="form-control"/>
                                         </div>
                                         <div class="form-group input-group-xs">
                                             <h:outputLabel  for="tipo" value="Descuento: "/>
@@ -157,7 +158,7 @@ and open the template in the editor.
                                             <h:selectOneRadio value="#{tipoBecaBean.objeTipo.tipoTipoBeca}">
                                                 <f:selectItem itemValue="1" itemLabel="Matrícula" />
                                                 <f:selectItem itemValue="2" itemLabel="Mensualidad" />
-                                                <f:selectItem itemValue="0" itemLabel="Otro" />
+                                                <f:selectItem itemValue="3" itemLabel="Otro" />
                                             </h:selectOneRadio>
                                         </div>
                                         <div class="form-group input-group-xs">
@@ -166,7 +167,7 @@ and open the template in the editor.
                                             <h:selectOneRadio value="#{tipoBecaBean.objeTipo.nivelTipoBeca}">
                                                 <f:selectItem itemValue="1" itemLabel="Tercer ciclo" />
                                                 <f:selectItem itemValue="2" itemLabel="1º y 2º año" />
-                                                <f:selectItem itemValue="0" itemLabel="3º año" />
+                                                <f:selectItem itemValue="3" itemLabel="3º año" />
                                             </h:selectOneRadio>
                                         </div>
                                     </fieldset>
@@ -180,7 +181,7 @@ and open the template in the editor.
                                                 </h:commandLink>
                                                 <h:commandLink id="btonGuar" class="btn btn-success" rendered="#{tipoBecaBean.guardar}">
                                                     <p:ajax listener="#{tipoBecaBean.guar()}" process="@form" update="@form :ContRegi" oncomplete="INIT_OBJE();" />
-                                                    <i class="fa fa-plus"/> Guardar
+                                                    <i class="fa fa-plus"/> Guardar tipo de beca
                                                 </h:commandLink>
                                                 <h:commandLink id="btonNuev" class="btn btn-success" rendered="#{!tipoBecaBean.guardar}">
                                                     <p:ajax listener="#{tipoBecaBean.limpForm()}" process="@form" update="@form" oncomplete="INIT_OBJE_MODA();" />
@@ -188,7 +189,7 @@ and open the template in the editor.
                                                 </h:commandLink>
                                                 <h:commandLink id="btonModi" class="btn btn-primary" rendered="#{!tipoBecaBean.guardar}">
                                                     <p:ajax listener="#{tipoBecaBean.modi()}" process="@form" update="@form :ContRegi" oncomplete="INIT_OBJE();" />
-                                                    <i class="fa fa-edit"/> Modificar
+                                                    <i class="fa fa-edit"/> Modificar tipo de beca
                                                 </h:commandLink>
                                                 <!--
                                                     # Para corregir el error que redirecciona hice una serie de pasos
@@ -197,13 +198,27 @@ and open the template in the editor.
                                                     3. Modifiqué el custom alum.js(en este ejemplo) quitando la función y dejando todo en una sola línea
                                                     4. Y por último y lo mas importante que creo era lo único necesario al elemento h:outputLink le agregué el value="#"
                                                 -->
-                                                <h:outputLink id="btonElim" class="btn btn-danger" rendered="#{!tipoBecaBean.guardar}" value="#" pt:data-placement="left"
+                                               
+                                                
+                                                
+                                                <c:if test="#{tipoBecaBean.objeTipo.estaTipoBeca == 1}">
+                                                   <h:outputLink id="btonElim" class="btn btn-danger" rendered="#{!tipoBecaBean.guardar}" value="#" pt:data-placement="left"
                                                               pt:data-toggle="confirmat ion" pt:data-btn-ok-label="Sí" pt:data-btn-ok-icon="fa fa-times"
                                                               pt:data-btn-ok-class="btn-danger btn-xs" pt:data-btn-cancel-label="No" pt:data-btn-cancel-icon="fa fa-mail-forward"
                                                               pt:data-btn-cancel-class="btn-default btn-xs" pt:data-title="¿Esta seguro que desea eliminar?"
                                                               pt:data-on-confirm="elimObje"><!--data-on-confirm = nombre del comando remoto de eliminar (sin paréntesis)-->
                                                     <i class="fa fa-times"/> Eliminar
                                                 </h:outputLink>
+                                                
+                                                </c:if>
+                                                
+                                                <c:if test="#{tipoBecaBean.objeTipo.estaTipoBeca == 0}">
+                                                    <h:commandLink id="btonActi" class="btn btn-info" >
+                                                        <p:ajax listener="#{tipoBecaBean.reActi()}" process="@form"  update=":FormRegi :ContRegi" 
+                                                         oncomplete="INIT_OBJE();" />
+                                                        <i class="fa fa-edit"/> Activar
+                                                    </h:commandLink>                                                    
+                                                </c:if>
                                             </div>
                                         </div>
                                 </div>

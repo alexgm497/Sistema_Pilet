@@ -13,18 +13,21 @@ and open the template in the editor.
       xmlns:p="http://primefaces.org/ui">
     <ui:composition template="WEB-INF/resources/fragmentos/comun.xhtml">
         <!-- Título de la página -->
-        <ui:param name="pageTitl" value="Bienvenido ::: Página Principal"/>
-        <ui:param name="pageNomb" value="Página Principal"/>
-        <ui:param name="pageDesc" value="Esta es la página principal"/>
+        <ui:param name="pageTitl" value="Bienvenido "/>
+        <ui:param name="pageNomb" value=""/>
+        <ui:param name="pageDesc" value=""/>
         <!-- Activar el link del menú -->
         <ui:param name="actiIndex" value="active"/>
         <!-- Scripts personalizados -->
         <ui:define name="CustomScripts">
-            <!--h:outputScript library="js" name="custom/alum.js"/-->
+            <h:outputStylesheet library="css" name="custom/welcome.css"/>
         </ui:define>
         <!-- Elementos propios del boby -->
         <ui:define name="body">
-            
+            <div class="col-md-12 col-xs-12">
+            <p:graphicImage style="width:15%; margin-top: 3%; margin-left: 43%" value="#{globalAppBean.getImage('images/logoitr.png')}"/>
+            <h1 style='margin-top: 10%'>Bienvenido <strong>#{loginBean.usuaPojo.nomb}</strong> <p:clock  class="fondDefa" pattern="dd/MM/yyyy" mode="server" /> <br/> <p:clock class="fondDefa" pattern="hh:mm:ss aa" mode="server" /></h1>
+            </div>
         </ui:define>
     </ui:composition>
 </html>

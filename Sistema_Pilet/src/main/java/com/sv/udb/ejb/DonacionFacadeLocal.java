@@ -28,7 +28,8 @@ public interface DonacionFacadeLocal {
     
     List<Donacion> findAllActive();
 
-
+    List<Donacion> findDona(int codi);
+    
     List<Donacion> findRange(int[] range);
     
     List<Donacion> findForCombo2(Object id);

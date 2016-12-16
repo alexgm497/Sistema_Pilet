@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" 
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" 
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:composition template="../WEB-INF/resources/fragmentos/comun.xhtml">
+        <!-- Título de la página -->
+        <ui:param name="pageTitl" value="::: Página Dise. Solicitud :::"/>
+        <ui:param name="pageNomb" value="Página Dise. Solicitud"/>
+        <ui:param name="pageDesc" value="Mantenimiento para Dise. Solicitud"/>
+        <!-- Activar el link del menú -->
+        <ui:param name="actiMenu1" value="active"/>
+        <ui:param name="actiAlumnos" value="active"/>
+        <!-- Scripts personalizados -->
+        <ui:define name="CustomScripts">
+        <!--Plugins Selector de Fecha-->
+        <h:outputStylesheet library="css" name="datepicker3.css"/>
+        <h:outputScript library="js" name="bootstrap-datepicker.js"/>
+        <h:outputScript library="js" name="bootstrap-datepicker.es.js"/>
+        <!--Plugins Select-->
+        <h:outputStylesheet library="css" name="bootstrap-select.css"/>
+        <h:outputScript library="js" name="bootstrap-select.js"/>
+        <!--Plugins custom-->
+            <h:outputScript library="js" name="custom/general.js"/>
+        </ui:define>
+        <!-- Elementos propios del boby -->
+        <ui:define name="body">
+        <style>
+            .field-error
+            {
+                color: #a94442; 
+                display: inline;
+                font-size: 10px;
+            }
+            .field-error:first-letter
+            {
+                text-transform: capitalize;
+                color: #003399;
+            }
+            .form-group
+            {
+                margin-bottom: 5px !important;
+            }
+            .bootstrap-select > .btn {
+                padding-top: 2px;
+                padding-bottom: 2px;
+            }
+            .completed{
+                
+            }
+        </style>
+            <div class="row">
+                <h:form id="container">
+                    <p:wizard id="wiza" onback="ESTO(); INIT_OBJE(); INIT_OBJE_MODA();" backLabel="Regresar" nextLabel="Siguiente" style="margin-left: 2%; margin-right: 3%;">
+                        <p:tab id="Seccion" title="Seccion" titleStyleClass="completed">
+                            <p:panel header="Prueba">
+                                <p:panelGrid>
+                                    <h:selectOneMenu id="detaBeca" value="#{diseSoliBean.objeSecc}" class="form-control select" pt:data-live-search="true" validatorMessage="Debe Elegir una seccion." >
+                                        <f:selectItems value="#{seccionBean.listSecc}" var="lst" itemLabel="#{lst.nombSecc}" itemValue="#{lst}"/>
+                                            <f:converter converterId="PooConv"/>
+                                    </h:selectOneMenu>  
+                                    
+                                </p:panelGrid>
+                            </p:panel>
+                        </p:tab>
+                        <p:tab id="Pregunta" title="Pregunta">
+                            <p:panel header="Prueba 2">
+                                <p:panelGrid columns="2">
+                                    <h:outputText value="Pregunta:" class="form-control"/>
+                                    <h:inputText  id="preg" value="#{diseSoliBean.objePreg.descPreg}" />
+                                </p:panelGrid>
+                            </p:panel>
+                        </p:tab>
+                        <p:tab id="OpcionPregutna" title="Tipo de opcion" titleStyleClass="completed">
+                            <p:panel header="Tipo opcion pregunta">
+                                <p:panelGrid>
+                                    <h:selectOneMenu id="mes" value="#{diseSoliBean.opcion}" class="form-control select" pt:data-live-search="true" validatorMessage="Debe Elegir una empresa" >
+                                        <f:selectItem itemLabel="Seleccione..."/>
+                                        <f:selectItem itemLabel="Respuesta corta" itemValue="1"/>
+                                        <f:selectItem itemLabel="Respuesta Larga" itemValue="2"/>
+                                        <f:selectItem itemLabel="Multiple respuesta" itemValue="3"/>
+                                        <f:selectItem itemLabel="Multiple respuesta seleccionada" itemValue="4"/> 
+                                        <p:ajax listener="#{diseSoliBean.vali()}"/>
+                                        <f:converter converterId="PooConv"/>
+                                    </h:selectOneMenu> 
+                                </p:panelGrid>
+                            </p:panel>
+                        </p:tab>
+                        <p:tab id="Opcion" title="Opcion pregunta">
+                            <p:panel header="Prueba 3">
+                                <c:if test="#{diseSoliBean.uno == true and diseSoliBean.dos == true}">
+                                    <p:panelGrid columns="4">
+                                        <h:outputText value="Titulo de la opcion:" class="form-control"/>
+                                        <h:inputText id="opci" value="#{diseSoliBean.objeOpci.tituOpci}"/>
+
+                                        <h:outputText value="Descripcion de la opcion:" class="form-control"/>
+                                        <h:inputTextarea id="Desc" value="#{diseSoliBean.objeOpci.descOpci}"></h:inputTextarea>
+                                    </p:panelGrid>
+                                </c:if>
+                                <c:if test="#{diseSoliBean.uno == true and diseSoliBean.dos == false}">
+                                    <p:panelGrid columns="4">
+                                        <h:outputText value="Titulo de la opcion:" class="form-control"/>
+                                        <h:inputText id="opci" value="#{diseSoliBean.objeOpci.tituOpci}"/>
+
+                                        <h:outputText value="Descripcion de la opcion:" class="form-control"/>
+                                        <h:inputTextarea id="Desc" value="#{diseSoliBean.objeOpci.descOpci}"></h:inputTextarea>
+                                    </p:panelGrid>
+                                </c:if>
+                                <c:if test="#{diseSoliBean.uno == false and diseSoliBean.dos == true}">
+                                    <p:panelGrid columns="4">
+                                        <h:outputText value="Titulo de la opcion:" class="form-control"/>
+                                        <h:inputText id="opci" value="#{diseSoliBean.objeOpciResp.tituOpci}"/>
+
+                                        <h:outputText value="Descripcion de la opcion:" class="form-control"/>
+                                        <h:inputTextarea id="Desc" value="#{diseSoliBean.objeOpciResp.descOpci}"></h:inputTextarea>
+                                    </p:panelGrid>
+                                    <h:commandLink id="btonAgreOpci" class="btn btn-primary" style="color: white;">
+                                        <p:ajax listener="#{diseSoliBean.agreList()}" process="@form" update="@form :container wiza" global="true"/>
+                                        Agregar
+                                    </h:commandLink>
+                                </c:if>
+                                <c:if test="#{diseSoliBean.uno == false and diseSoliBean.dos == false}">
+                                    <p:panelGrid columns="4">
+                                        <h:outputText value="Titulo de la opcion:" class="form-control"/>
+                                        <h:inputText id="opci" value="#{diseSoliBean.objeOpciResp.tituOpci}"/>
+
+                                        <h:outputText value="Descripcion de la opcion:" class="form-control"/>
+                                        <h:inputTextarea id="Desc" value="#{diseSoliBean.objeOpciResp.descOpci}"></h:inputTextarea>
+                                    </p:panelGrid>
+                                    <h:commandLink id="btonAgreOpci2" class="btn btn-primary" style="color: white;">
+                                        <p:ajax listener="#{diseSoliBean.agreList()}" process="@form" update="@form :container wiza" global="true"/>
+                                        Agregar
+                                    </h:commandLink>
+                                </c:if>
+                            </p:panel>
+                        </p:tab>
+                        <p:tab id="Visua" title="Opcion pregunta">
+                            <p:panel header="Prueba 4">
+                                <p:panelGrid columns="4">
+                                    <h:outputText value="Seccion: " class="form-control"/>
+                                    <h:outputText value="#{diseSoliBean.objeSecc.nombSecc}" class="form-control"/>
+                                    <h:outputText value="Pregunta: " class="form-control"/>
+                                    <h:outputText value="#{diseSoliBean.objePreg.descPreg}" class="form-control"/>
+                                    <h:outputText value="Opcion: " class="form-control"/>
+                                    <h:outputText value="#{diseSoliBean.objeOpci.tituOpci}" class="form-control"/>
+                                    <h:outputText value="Descripcion opcion: " class="form-control"/>
+                                    <h:outputText value="#{diseSoliBean.objeOpci.descOpci}" class="form-control"/>
+                                </p:panelGrid>
+                                <h:commandLink id="btonAgre" class="btn btn-default">
+                                    <p:ajax listener="#{diseSoliBean.guar()}" process="@form" update="@form :container wiza" global="true"/>
+                                    <i class="fa fa-search"/>
+                                </h:commandLink>
+                            </p:panel>
+                        </p:tab>
+                    </p:wizard>
+                </h:form>
+            </div>
+            <div class="row">
+                
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>

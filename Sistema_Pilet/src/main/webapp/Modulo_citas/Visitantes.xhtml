@@ -10,7 +10,8 @@ and open the template in the editor.
       xmlns:f="http://xmlns.jcp.org/jsf/core" 
       xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" 
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:cs="http://xmlns.udb.edu.sv/component">
     <ui:composition template="../WEB-INF/resources/fragmentos/comun.xhtml">
         <!-- Título de la página -->
         <ui:param name="pageTitl" value="Visitantes"/>
@@ -26,6 +27,7 @@ and open the template in the editor.
         <h:outputScript library="js" name="bootstrap-select.js"/>
         <!--Plugins custom-->
             <h:outputScript library="js" name="custom/mantenimientos.js"/>
+            <h:outputScript library="js" name="custom/VisitantesExcel.js"/>
         </ui:define>
         <!-- Elementos propios del boby -->
         <ui:define name="body">
@@ -42,11 +44,18 @@ and open the template in the editor.
                                                          oncomplete="$('#ModaFormRegi').modal('show');" global="true"/>
                                         <p:remoteCommand name="elimObje" actionListener="#{visitantesBean.elim()}" update=":FormRegi :ContRegi" 
                                                          oncomplete="INIT_OBJE(); INIT_OBJE_MODA();" global="true"/>
-                                        <h:commandLink id="btonNuev" class="btn btn-success">
-                                            <p:ajax listener="#{visitantesBean.limpForm()}" update=":FormRegi" global="true" 
-                                                    oncomplete="$('#ModaFormRegi').modal('show'); INIT_OBJE(); INIT_OBJE_MODA(); "/>
-                                            <i class="fa fa-plus"/> Nuevo
-                                        </h:commandLink>
+                                        <div class="btn-group">
+                                            <h:commandLink id="btonNuev" class="btn btn-success">
+                                                <p:ajax listener="#{visitantesBean.limpForm()}" update=":FormRegi" global="true" 
+                                                        oncomplete="$('#ModaFormRegi').modal('show'); INIT_OBJE(); INIT_OBJE_MODA(); "/>
+                                                <i class="fa fa-plus"/> Nuevo
+                                            </h:commandLink>
+                                            <h:commandLink id="btnImpoExceBtn" class="btn btn-success">
+                                                <p:ajax listener="#{visitantesBean.limpForm()}" update=":FormImpoExce" global="true" 
+                                                        oncomplete="$('#ModaFormImpoExce').modal('show'); INIT_OBJE(); INIT_OBJE_MODA_EXCE();"/>
+                                                <i class="fa fa-file-text-o"/> Importar Excel
+                                            </h:commandLink>
+                                        </div>
                                         
                                     </h:form>
                                 </div>
@@ -93,12 +102,33 @@ and open the template in the editor.
                                         <h:outputText value="#{fila.teleVisi}"/>
                                     </h:panelGroup>
                                </h:column>
+                                    <h:column pt:data-sortable="true" pt:data-field="acci" pt:data-click-to-select="false">
+                                        <f:facet name="header">Acciones</f:facet>
+                                        <div style="width: 120px">
+                                            <h:form>
+                                                <h:commandLink  class="btn btn-primary" style="margin-bottom: 5px; width: 100%;">
+                                                    <p:ajax oncomplete="PF('ModaRepo').show();" listener="#{reportesBean.procAsisVisi(fila.codiVisi)}"  update=":ModaRepoView"  global="true"/>
+                                                    <i class="fa fa-file-text-o"/> Asistencias
+                                                </h:commandLink>
+                                            </h:form>
+                                        </div>
+
+                                    </h:column>
                             </h:dataTable>
                             </h:panelGroup>
                         </div>
                     </div>
                 </div>
             </div>
+            
+            <div class="row">
+                <p:dialog header="" widgetVar="ModaRepo" modal="true" minHeight="40" width="1000px" style="z-index: 9999999;">
+                    <h:panelGroup id="ModaRepoView">
+                        <cs:PdfViewer id="pdfViewer" value="#{reportesBean.docuRepo}" width="100%" height="500px"/>
+                    </h:panelGroup>
+                </p:dialog>
+            </div>
+            
             <div class="row">
                 <!-- Modal -->
                 <div id="ModaFormRegi" class="modal fade" role="dialog">
@@ -150,6 +180,7 @@ and open the template in the editor.
                                     </fieldset>
                                 </div>
                                 <div class="modal-footer">
+                                    
                                         <div class="input-group-btn right" style="padding-top: 5px;">
                                             <div class="btn-group">
                                                 <h:commandLink id="btonCanc" class="btn btn-default" pt:data-dismiss="modal">
@@ -175,6 +206,91 @@ and open the template in the editor.
                                                               pt:data-on-confirm="elimObje"><!--data-on-confirm = nombre del comando remoto de eliminar (sin paréntesis)-->
                                                     <i class="fa fa-times"/> Eliminar
                                                 </h:outputLink>
+                                            </div>
+                                        </div>
+                                </div>
+                            </h:form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <!-- Modal -->
+                <div id="ModaFormImpoExce" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <h:form id="FormImpoExce" class="form-horizontal" enctype="multipart/form-data">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times"/></button>
+                                    <h4 class="modal-title">Gestión de Visitantes</h4>
+                                </div>
+                                <div class="modal-body" style="padding-top: 2px;">
+                                    <fieldset class="col-md-12">
+                                        <div class="input-group col-xs-12">
+                                            <h:message for="file" errorClass="field-error" />
+                                            <label class="file" title="Seleccione el archivo Excel" style="display: inline-block;">
+                                                <h:inputFile   pt:data-id="file" id="file" value="#{visitantesBean.file}"  onchange="this.parentNode.setAttribute('title', this.value.replace(/^.*[\\/]/, ''))" pt:multiple="false" class="input-file" required="true" requiredMessage="Seleccionar Archivo"/>
+                                            </label>
+                                            <h:commandLink id="btnGetExce" class="btn btn-success" actionListener="#{visitantesBean.setListVisiExce()}" style="width: 100px; display: inline-block; height: 30px; border-radius: 0 3px 3px 0px; vertical-align: top; padding-top: 3px;">
+                                                <f:ajax execute="@all" render="@form" onevent="INIT_OBJE_MODA_EXCE" />
+                                                <i class="fa fa-check"/> Verificar
+                                            </h:commandLink>
+                                        </div>
+                                        <div class="input-group col-xs-12">
+                                            <h:panelGroup id="pnlVisiExce">
+                                                <h:dataTable pt:data-id="TablDocuExce" id="TablDocuExce" value="#{visitantesBean.listVisiExce}"
+                                                        var="fila" class="boottable" 
+                                                        styleClass="table-hover table-bordered table-condensed table-striped table-responsive"
+                                                        pt:data-show-refresh="false" pt:data-show-toggle="false" pt:data-show-columns="false" 
+                                                        pt:data-search="false" pt:data-pagination="true" pt:data-page-list="[5, 10, 20, 50]"
+                                                        pt:data-click-to-select="false"  pt:data-select-item-name="radio"
+                                                        pt:data-single-select="true" style="width: 100%;">                                
+                                                    <h:column pt:data-field="state" pt:data-checkbox="true" pt:data-visible='false'>
+                                                    </h:column>
+                                                    <h:column pt:data-sortable="true" pt:data-field="nomb">
+                                                       <f:facet name="header">Nombre</f:facet>
+                                                       <h:outputText value="#{fila.nombVisi.concat(' ').concat(fila.apelVisi)}"/>   
+                                                    </h:column>
+                                                    <h:column pt:data-sortable="true" pt:data-field="dui">
+                                                       <f:facet name="header">DUI</f:facet>
+                                                       <h:outputText value="#{fila.duiVisi}"/>   
+                                                    </h:column>
+                                                    <h:column pt:data-sortable="true" pt:data-field="tele">
+                                                       <f:facet name="header">Contacto</f:facet>
+                                                       <h:panelGroup rendered="#{fila.corrVisi != null}">
+                                                           <span class='fa fa-envelope' style="margin-right: 10px;"></span>
+                                                            <h:outputText value="#{fila.corrVisi}"/>
+                                                            <br/>
+                                                        </h:panelGroup>
+                                                       <h:panelGroup rendered="#{fila.teleVisi != null}">
+                                                           <span class='fa fa-phone' style="margin-right: 10px;"></span>
+                                                            <h:outputText value="#{fila.teleVisi}"/>
+                                                        </h:panelGroup>
+                                                    </h:column>
+                                                    <h:column pt:data-sortable="true" pt:data-field="acci" rendered="#{citasBean.programar}">
+                                                    <f:facet name="header">Acciones</f:facet>
+                                                    <h:commandLink class="btn btn-xs btn-danger">
+                                                            <p:ajax listener="#{visitantesBean.dropVisiDocuExce(fila)}" process="@this" update="@form:pnlVisiExce" oncomplete="INIT_OBJE_MODA_EXCE();" />
+                                                            <i class="fa fa-trash-o"/> Quitar
+                                                        </h:commandLink>
+                                                </h:column>
+                                                </h:dataTable>
+                                            </h:panelGroup>
+                                            
+                                            <h:commandLink id="btonNuev" class="btn btn-success">
+                                                <p:ajax listener="#{visitantesBean.impoListExce(0)}" update="@form :ContRegi TablDocuExce" global="true" 
+                                                        oncomplete="INIT_OBJE(); INIT_OBJE_MODA(); "/>
+                                                <i class="fa fa-check"/> Importar
+                                            </h:commandLink>
+                                            
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="modal-footer">
+                                        <div class="input-group-btn right" style="padding-top: 5px;">
+                                            <div class="btn-group">
+                                                
                                             </div>
                                         </div>
                                 </div>

@@ -20,18 +20,20 @@ $(document).ready(function() {
     };
     $('#ModaFormRegi').on('show.bs.modal', function() {
         INIT_OBJE();
+        $("[data-id='chck']").bootstrapToggle();
     });
     $('#ModaFormRegi').on('hide.bs.modal', function() {
         $("#TablRegi").bootstrapTable('uncheckAll');
+        $("[data-id='chck']").bootstrapToggle();
     });
-
-    
     INIT_OBJE();
     $("#TablRegi1").initBootTableRole();
+    $("[data-id='chck']").bootstrapToggle();
 });
 
 function INIT_OBJE()
 {
+    $("[data-id='chck']").bootstrapToggle();
     $("#TablRegi").initBootTable();
     INIT_OBJE_MODA();
 }
@@ -40,7 +42,6 @@ function RECA()
 {
     $("[data-id='chck']").bootstrapToggle();
 }
-
 
 function INIT_OBJE_MODA()
 {

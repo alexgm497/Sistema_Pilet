@@ -6,7 +6,6 @@
 package com.sv.udb.modelo;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,15 +18,13 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author gersonfrancisco
+ * @author joseph
  */
 @Entity
 @Table(name = "equipos", catalog = "sistemas_pilet", schema = "")
@@ -35,11 +32,13 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Equipos.findAll", query = "SELECT e FROM Equipos e"),
     @NamedQuery(name = "Equipos.findByCodiEqui", query = "SELECT e FROM Equipos e WHERE e.codiEqui = :codiEqui"),
+    @NamedQuery(name = "Equipos.findByDescEqui", query = "SELECT e FROM Equipos e WHERE e.descEqui = :descEqui"),
     @NamedQuery(name = "Equipos.findByMarEqui", query = "SELECT e FROM Equipos e WHERE e.marEqui = :marEqui"),
     @NamedQuery(name = "Equipos.findByModeEqui", query = "SELECT e FROM Equipos e WHERE e.modeEqui = :modeEqui"),
     @NamedQuery(name = "Equipos.findBySeriEqui", query = "SELECT e FROM Equipos e WHERE e.seriEqui = :seriEqui"),
     @NamedQuery(name = "Equipos.findByFechGaraEqui", query = "SELECT e FROM Equipos e WHERE e.fechGaraEqui = :fechGaraEqui")})
 public class Equipos implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,8 +68,6 @@ public class Equipos implements Serializable {
     @JoinColumn(name = "codi_ubic", referencedColumnName = "codi_ubic")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Ubicaciones codiUbic;
-    @OneToMany(mappedBy = "codiEqui", fetch = FetchType.LAZY)
-    private List<Solicitudes> solicitudesList;
 
     public Equipos() {
     }
@@ -141,15 +138,6 @@ public class Equipos implements Serializable {
 
     public void setCodiUbic(Ubicaciones codiUbic) {
         this.codiUbic = codiUbic;
-    }
-
-    @XmlTransient
-    public List<Solicitudes> getSolicitudesList() {
-        return solicitudesList;
-    }
-
-    public void setSolicitudesList(List<Solicitudes> solicitudesList) {
-        this.solicitudesList = solicitudesList;
     }
 
     @Override

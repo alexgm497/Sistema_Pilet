@@ -6,7 +6,6 @@
 package com.sv.udb.modelo;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -43,9 +42,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Cambiocita.findByFechFinCitaNuev", query = "SELECT c FROM Cambiocita c WHERE c.fechFinCitaNuev = :fechFinCitaNuev"),
     @NamedQuery(name = "Cambiocita.findByHoraFinCitaNuev", query = "SELECT c FROM Cambiocita c WHERE c.horaFinCitaNuev = :horaFinCitaNuev"),
     @NamedQuery(name = "Cambiocita.findByMotiCambCita", query = "SELECT c FROM Cambiocita c WHERE c.motiCambCita = :motiCambCita"),
-    @NamedQuery(name = "Cambiocita.findByEstaCambCita", query = "SELECT c FROM Cambiocita c WHERE c.estaCambCita = :estaCambCita"),
-    //CUSTOM
-    @NamedQuery(name = "Cambiocita.findByCodiCita", query = "SELECT c FROM Cambiocita c WHERE c.codiCita = :codiCita ORDER BY c.fechCambCita desc, c.horaCambCita desc")})
+    @NamedQuery(name = "Cambiocita.findByEstaCambCita", query = "SELECT c FROM Cambiocita c WHERE c.estaCambCita = :estaCambCita")})
 public class Cambiocita implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -64,24 +61,16 @@ public class Cambiocita implements Serializable {
     @Size(min = 1, max = 8)
     @Column(name = "hora_camb_cita")
     private String horaCambCita;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "fech_inic_cita_nuev")
     @Temporal(TemporalType.DATE)
     private Date fechInicCitaNuev;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 8)
+    @Size(max = 8)
     @Column(name = "hora_inic_cita_nuev")
     private String horaInicCitaNuev;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "fech_fin_cita_nuev")
     @Temporal(TemporalType.DATE)
     private Date fechFinCitaNuev;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 8)
+    @Size(max = 8)
     @Column(name = "hora_fin_cita_nuev")
     private String horaFinCitaNuev;
     @Size(max = 500)
@@ -102,14 +91,10 @@ public class Cambiocita implements Serializable {
         this.codiCambCita = codiCambCita;
     }
 
-    public Cambiocita(Integer codiCambCita, Date fechCambCita, String horaCambCita, Date fechInicCitaNuev, String horaInicCitaNuev, Date fechFinCitaNuev, String horaFinCitaNuev, int estaCambCita) {
+    public Cambiocita(Integer codiCambCita, Date fechCambCita, String horaCambCita, int estaCambCita) {
         this.codiCambCita = codiCambCita;
         this.fechCambCita = fechCambCita;
         this.horaCambCita = horaCambCita;
-        this.fechInicCitaNuev = fechInicCitaNuev;
-        this.horaInicCitaNuev = horaInicCitaNuev;
-        this.fechFinCitaNuev = fechFinCitaNuev;
-        this.horaFinCitaNuev = horaFinCitaNuev;
         this.estaCambCita = estaCambCita;
     }
 
@@ -141,7 +126,6 @@ public class Cambiocita implements Serializable {
         return fechInicCitaNuev;
     }
 
-    
     public void setFechInicCitaNuev(Date fechInicCitaNuev) {
         this.fechInicCitaNuev = fechInicCitaNuev;
     }

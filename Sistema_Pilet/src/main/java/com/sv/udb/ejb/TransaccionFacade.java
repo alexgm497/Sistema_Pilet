@@ -51,22 +51,11 @@ public class TransaccionFacade extends AbstractFacade<Transaccion> implements Tr
     }
     
     @Override
-    public BigDecimal findMontoEmpr(Object id){
-        System.out.println("Id:" +id);
-        BigDecimal montEmpr =new BigDecimal(0);
-        try {
-            String query = "SELECT e.mont_empr FROM empresa e WHERE e.codi_empr = ?1";
-            Query q = getEntityManager().createNativeQuery(query);
-            q.setParameter(1, id);
-            Object  obj = q.getSingleResult();
-            montEmpr = (BigDecimal) obj;
-             
-            System.out.println("Monto empresa: " +montEmpr);
-            
-        } catch (Exception e) {
-            System.out.println("Errosito:" +e.getMessage());
-        }
-        
-        return montEmpr;
+    public BigDecimal findMontoDona(Object id){
+        String query = "SELECT d.cant_cuot FROM donacion d WHERE d.codi_dona = ?1";
+        Query q = getEntityManager().createNativeQuery(query);
+        q.setParameter(1, id);
+        BigDecimal montDona = (BigDecimal) q.getSingleResult();
+        return montDona;
     }
 }

@@ -36,6 +36,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Respuesta.findByEstaResp", query = "SELECT r FROM Respuesta r WHERE r.estaResp = :estaResp")})
 public class Respuesta implements Serializable {
 
+  
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,6 +54,10 @@ public class Respuesta implements Serializable {
     @JoinColumn(name = "codi_opci", referencedColumnName = "codi_opci")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Opcion codiOpci;
+    @JoinColumn(name = "codi_opci_resp", referencedColumnName = "codi_opci_resp")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private OpcionRespuesta codiOpciResp;
+    
     @JoinColumn(name = "codi_soli_beca", referencedColumnName = "codi_soli_beca")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private SolicitudBeca codiSoliBeca;
@@ -62,6 +68,30 @@ public class Respuesta implements Serializable {
     public Respuesta(Integer codiResp) {
         this.codiResp = codiResp;
     }
+
+    public OpcionRespuesta getCodiOpciResp() {
+        return codiOpciResp;
+    }
+
+    public void setCodiOpciResp(OpcionRespuesta codiOpciResp) {
+        this.codiOpciResp = codiOpciResp;
+    }
+
+  
+ public Respuesta(SolicitudBeca codiSoliBeca, Opcion codiOpci,OpcionRespuesta codiOpcionResp,  Integer estaResp ) {
+        this.descOpci = descOpci;
+        this.estaResp = estaResp;
+        this.codiOpci = codiOpci;
+        this.codiSoliBeca = codiSoliBeca;
+        this.codiOpciResp = codiOpcionResp;
+    }
+    public Respuesta(SolicitudBeca codiSoliBeca, Opcion codiOpci,String descOpci, Integer estaResp ) {
+        this.descOpci = descOpci;
+        this.estaResp = estaResp;
+        this.codiOpci = codiOpci;
+        this.codiSoliBeca = codiSoliBeca;
+    }
+    
 
     public Respuesta(Integer codiResp, String descOpci) {
         this.codiResp = codiResp;
@@ -132,5 +162,7 @@ public class Respuesta implements Serializable {
     public String toString() {
         return "com.sv.udb.modelo.Respuesta[ codiResp=" + codiResp + " ]";
     }
+
+ 
     
 }

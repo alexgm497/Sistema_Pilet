@@ -27,11 +27,16 @@ public interface SolicitudBecaFacadeLocal {
     SolicitudBeca findCarnet(String id);
 
     List<SolicitudBeca> findAll();
+    
+    List<SolicitudBeca> findAllActivos();
 
     List<SolicitudBeca> findRange(int[] range);
     
+   void updateAll(int idViejo, int idNuevo);
+   
+    
     SolicitudBeca findLast();
-
+ List<SolicitudBeca> findAllDocu();
     int count();
     
 }

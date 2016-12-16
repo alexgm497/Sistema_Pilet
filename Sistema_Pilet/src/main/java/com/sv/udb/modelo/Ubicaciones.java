@@ -40,6 +40,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Ubicaciones.findByEstaUbic", query = "SELECT u FROM Ubicaciones u WHERE u.estaUbic = :estaUbic")})
 public class Ubicaciones implements Serializable {
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codiUbic", fetch = FetchType.LAZY)
+    private List<Equipos> equiposList;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -164,6 +167,15 @@ public class Ubicaciones implements Serializable {
     @Override
     public String toString() {
         return "com.sv.udb.modelo.Ubicaciones[ codiUbic=" + codiUbic + " ]";
+    }
+
+    @XmlTransient
+    public List<Equipos> getEquiposList() {
+        return equiposList;
+    }
+
+    public void setEquiposList(List<Equipos> equiposList) {
+        this.equiposList = equiposList;
     }
     
 }

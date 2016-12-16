@@ -5,15 +5,17 @@
  */
 package com.sv.udb.utils;
 
+
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.net.URLDecoder;
 import java.nio.file.Files;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 
 /**
  *
@@ -48,13 +50,12 @@ public class ImageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String filename = request.getPathInfo().substring(1);
-        //String ruta ="C:/Users/Ariel/Desktop/becas/";    
-        String ruta = "/home/eduardo/Escritorio/asd/";
+        request.setCharacterEncoding("UTF-8");
+        String filename = request.getParameter("img");        
+        String ruta = getServletContext().getInitParameter("docBecas.URL");
         File file = new File(ruta, filename);
-        response.setHeader("Content-Type", getServletContext().getMimeType(filename));
-        response.setHeader("Content-Length", String.valueOf(file.length()));
-        response.setHeader("Content-Disposition", "inline; filename=\"" + filename + "\"");
+        response.setHeader("Content-Type", getServletContext().getMimeType(filename ));     
+        response.setHeader("Content-Length", String.valueOf(file.length())); response.setHeader("Content-Disposition", "inline; filename=\"" + URLDecoder.decode(filename, "utf-8")   + "\"");
         Files.copy(file.toPath(), response.getOutputStream());
     }
 

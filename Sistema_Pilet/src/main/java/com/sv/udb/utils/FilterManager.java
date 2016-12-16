@@ -74,6 +74,7 @@ public class FilterManager implements Filter {
                             || ignoPageFiltLogi.contains(page)) // Tiene permiso para esta página? o está en las ignoradas por el filtro, deja pasar
                     {
                         chain.doFilter(request, response);
+                        logiBean.consNoti();
                     }
                     else //Sino tiene permiso, se va a la página de error
                     {

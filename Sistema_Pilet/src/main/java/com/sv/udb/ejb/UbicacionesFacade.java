@@ -10,6 +10,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 /**
@@ -48,5 +49,11 @@ public class UbicacionesFacade extends AbstractFacade<Ubicaciones> implements Ub
         List resu = q.getResultList();
         return resu.isEmpty() ? null : resu;
     }
-    
+
+    @Override
+    public List<Ubicaciones> findTodo() {
+    Query q = getEntityManager().createQuery("SELECT u FROM Ubicaciones u WHERE u.estaUbic ="+true, Ubicaciones.class);
+        List resu = q.getResultList();
+        return resu;
+    }    
 }

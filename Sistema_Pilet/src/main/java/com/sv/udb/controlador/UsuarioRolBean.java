@@ -110,6 +110,7 @@ public class UsuarioRolBean implements Serializable {
         this.objeUsuaRole = new UsuarioRol();
         this.objeOldUsuaRole = new UsuarioRol();
         this.guardar = true;        
+        
     }
     
     /**
@@ -139,7 +140,7 @@ public class UsuarioRolBean implements Serializable {
                 FCDEUsuaRole.create(this.objeUsuaRole);
                 this.listUsuaRole.add(this.objeUsuaRole);
                 this.limpForm();
-                this.objeUsuaRole.setCodiUsua(obje);
+                //this.objeUsuaRole.setCodiUsua(obje);
                 /*globalAppBean.addNotificacion(this.objeOldUsuaRole.getCodiUsua().getCodiUsua(), "Se le ha asignado el rol de " + this.objeUsuaRole.getCodiRole().getNombRole(), "Modulo usuarios", "");
                 log.info(logiBean.getObjeUsua().getCodiUsua()+"-"+"UsuarioRol"+"-"+"Usuariorol creado: "+this.objeUsuaRole.getCodiUsua()+"/"+this.objeUsuaRole.getCodiRole());*/
                 ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos guardados')");
@@ -222,6 +223,7 @@ public class UsuarioRolBean implements Serializable {
             Usuario obje = new Usuario();
             obje.setCodiUsua(codi);
             this.objeUsuaRole.setCodiUsua(obje);
+            System.out.println(this.objeUsuaRole.getCodiUsua());
             this.listUsuaRole = FCDEUsuaRole.findByUsua(obje);
             guardar = true;
         }

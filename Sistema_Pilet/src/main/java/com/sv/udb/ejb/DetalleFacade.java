@@ -6,6 +6,7 @@
 package com.sv.udb.ejb;
 
 import com.sv.udb.modelo.Detalle;
+import com.sv.udb.modelo.Documento;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -30,6 +31,7 @@ public class DetalleFacade extends AbstractFacade<Detalle> implements DetalleFac
     public DetalleFacade() {
         super(Detalle.class);
     }
+   
     
     @Override
     public Detalle findDetaTran(Object id){

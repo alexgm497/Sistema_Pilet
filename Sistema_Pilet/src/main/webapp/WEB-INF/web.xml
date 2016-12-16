@@ -14,8 +14,20 @@
         <param-value>poo</param-value>
     </context-param>
     <context-param>  
+        <param-name>sendmail.USER</param-name>  
+        <param-value>sistemas.pilet@gmail.com</param-value>           
+    </context-param>
+    <context-param>  
+        <param-name>sendmail.PASSWORD</param-name>  
+        <param-value>$ricaldone2016</param-value>  
+    </context-param>
+    <context-param>  
         <param-name>webservices.URL</param-name>  
         <param-value>http://www.opensv.tk:8080/WebService/MiServicio</param-value>  
+    </context-param>
+     <context-param>  
+        <param-name>docBecas.URL</param-name>  
+        <param-value>C:/Users/Ariel/Desktop/becas/</param-value>
     </context-param>
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
@@ -58,4 +70,12 @@
         <param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
         <param-value>true</param-value>
     </context-param>
+    <filter>
+        <filter-name>PrimeFaces FileUpload Filter</filter-name>
+        <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>PrimeFaces FileUpload Filter</filter-name>
+        <servlet-name>Faces Servlet</servlet-name>
+    </filter-mapping>
 </web-app>

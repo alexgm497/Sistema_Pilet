@@ -6,12 +6,12 @@
 package com.sv.udb.ejb;
 
 import com.sv.udb.modelo.Documento;
-import com.sv.udb.modelo.Transaccion;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -34,6 +34,26 @@ public class DocumentoFacade extends AbstractFacade<Documento> implements Docume
         List resu = q.getResultList();
         return resu.isEmpty() ? null : (Documento)resu.get(0);
     }
+    
+    @Override
+    public List<Documento> findBySoli(Object id) {
+        String query="select * from documento where documento.codi_soli_beca = ?1";
+         Query q = getEntityManager().createNativeQuery(query,Documento.class);
+        q.setParameter(1, id);
+        List resu = q.getResultList();
+        return resu.isEmpty() ? null : resu;
+    }
+    
+    @Override
+    public List<Documento> findByEmpr(Object id) {
+        System.out.println("Codigo de la empresa :| "+id);
+        String query="select * from documento where documento.codi_empr = ?1";
+         Query q = getEntityManager().createNativeQuery(query,Documento.class);
+        q.setParameter(1, id);
+        List resu = q.getResultList();
+        return resu.isEmpty() ? null : resu;
+    }
+
 
     public DocumentoFacade() {
         super(Documento.class);

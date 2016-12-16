@@ -94,11 +94,17 @@ public class TransaccionBean implements Serializable{
     
     public void onEmpresaSelect(){
         this.listHijo1 = FCDEDona.findForCombo2(this.objeCombPadr1.getCodiEmpr());
+        if(listHijo1.size() > 0)        
+        {
+            this.objeTran.setMontTran(listHijo1.get(0).getCantCuot());
+        }
+           
+    }
+    //Para setear el monto de las donaciones
+    public void onDonaSelec(){
+        this.objeTran.setMontTran(objeTran.getCodiDona().getCantCuot());
     }
     
-    
-    //Para la gestión del monto total de las empresas
-    BigDecimal montEmprTota;
     private Empresa objeEmpr;
     
     //Para los avisos de cancelados
@@ -161,13 +167,25 @@ public class TransaccionBean implements Serializable{
         this.objeEmpr = new Empresa();
         this.guardar = true;
         this.consTodo();
+        this.objeTran.setFechTran(new Date());
     }
     
     public void limpForm()
     {
+        
+        this.objeCombPadr1 = new Empresa();
         this.objeTranDesa = new Transaccion();
+        this.objeDeta = new Detalle();
         this.objeTran = new Transaccion();
+        this.objeDona = new Donacion();
+        this.objeEmpr = new Empresa();
+        if(this.listHijo1 != null)
+        {
+                    this.listHijo1.removeAll(listHijo1);            
+        }
+
         this.objeTran.setFechTran(new Date());
+     
         this.guardar = true;        
     }
     
@@ -252,12 +270,14 @@ public class TransaccionBean implements Serializable{
 
                 this.listTran.add(this.objeTran);
                 this.limpForm();
+                
                 ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos guardados')");
+                ctx.execute("$('#ModaForm').modal('hide');");
                 if (canc) {
                     ctx.execute("setMessage('MESS_SUCC', 'Atención', 'La donación se ha completado')");
-                    log.info("Donación completada");
+                    //log.info("Donación completada");
                 }
-                log.info("Transaccion guardada");
+               // log.info("Transaccion guardada");
             } else {
                  ctx.execute("setMessage('MESS_ERRO', 'Atención', 'La donación seleccionada ya ha sido cancelada completamente')");
             }
@@ -266,7 +286,7 @@ public class TransaccionBean implements Serializable{
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al guardar ')");
-            log.error(getRootCause(ex).getMessage());
+            //log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -287,8 +307,6 @@ public class TransaccionBean implements Serializable{
                 //Setear monto de transacción
                 this.objeTran.setMontTran(this.objeTran.getCodiDetaBeca().getCodiTipoBeca().getDescTipoBeca());
                 //Desde aquí tengo que empezar a cambiar xdddddddddddddddddddddddddddddddddd
-                //Obtener el monto por empresa xd
-                //montEmprTota = this.FCDETran.findMontoEmpr(this.objeTran.getCodiDetaBeca().getCodiBeca().getCodiSoliBeca().getCodiEmpr().getCodiEmpr());
                 //Obtener el monto total disponible en el fondo
                 this.objeTranTemp = FCDETran.findLast();
                 // objeto 1 = monto total, objeto 2 = monto transacción
@@ -354,11 +372,12 @@ public class TransaccionBean implements Serializable{
 
                     this.limpForm();
                     ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos guardados')");
+                    ctx.execute("$('#SaliForm').modal('hide');");
                     if (canc) {
                         ctx.execute("setMessage('MESS_SUCC', 'Atención', 'La beca se ha completado')");
-                        log.info("Beca completada");
+                        //log.info("Beca completada");
                     }
-                    log.info("Transaccion guardada");
+                    //log.info("Transaccion guardada");
 
                     //Llamada al metodo para enviar la información del detalle
                     guarDetalle();
@@ -371,7 +390,7 @@ public class TransaccionBean implements Serializable{
 
         } catch (Exception ex) {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al guardar ')");
-            log.error(getRootCause(ex).getMessage());
+            //log.error(getRootCause(ex).getMessage());
             System.out.println(getRootCause(ex).getMessage());
 
         }
@@ -408,12 +427,12 @@ public class TransaccionBean implements Serializable{
                 FCDEDeta.create(this.objeDeta);
                 this.listDeta.add(this.objeDeta);
                 this.limpForm();
-                log.info("Detalle Guardado");
+                //log.info("Detalle Guardado");
             }
         }
         catch(Exception ex)
         {
-            log.error(getRootCause(ex).getMessage());
+            //log.error(getRootCause(ex).getMessage());
             System.out.println(ex.getMessage());
         }
         finally
@@ -454,14 +473,15 @@ public class TransaccionBean implements Serializable{
                 FCDETran.edit(this.objeTran);
                 this.listTran.add(this.objeTran); //Agrega el objeto modificado
                 ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos Modificados')");
-                log.info("Transaccion Modificada");
+                ctx.execute("$('#ModaForm').modal('hide');");
+                //log.info("Transaccion Modificada");
             }
 
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al desactivar la entrada de donación ')");
-            log.error(getRootCause(ex).getMessage());
+            //log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -509,14 +529,15 @@ public class TransaccionBean implements Serializable{
                //coñoxd
                 this.listTran.add(this.objeTran); //Agrega el objeto modificado
                 ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos Modificados')");
-                log.info("Transaccion Modificada");
+                 ctx.execute("$('#SaliForm').modal('hide');");
+                //log.info("Transaccion Modificada");
             }
             
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al desactivar la entrada de donación ')");
-            log.error(getRootCause(ex).getMessage());
+            //log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -530,12 +551,12 @@ public class TransaccionBean implements Serializable{
         try
         {
             this.listTran = FCDETran.findAll();
-            log.info("Transacciones Consultadas");
+            //log.info("Transacciones Consultadas");
         }
         catch(Exception ex)
         {
             ex.printStackTrace();
-            log.error(getRootCause(ex).getMessage());
+            //log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -565,12 +586,12 @@ public class TransaccionBean implements Serializable{
             this.guardar = false;
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Consultado a " + 
                     String.format("%s", this.objeTran.getFechTran()) + "')");
-            log.info("Transaccion Consultada");
+            //log.info("Transaccion Consultada");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al consultar')");
-            log.error(getRootCause(ex).getMessage());
+            //log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -626,7 +647,7 @@ public class TransaccionBean implements Serializable{
                 FCDETran.create(this.objeTranDesa);
                 this.listTran.add(this.objeTranDesa);
                 ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos guardados')");
-                log.info("Fondo total actualizado");
+                //log.info("Fondo total actualizado");
                 conf = true;
             }
             else{

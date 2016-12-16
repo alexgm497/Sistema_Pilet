@@ -29,7 +29,6 @@ public class GradoBean implements Serializable{
     @EJB
     private GradoFacadeLocal FCDEGrad;
     
-    
     private Grado objeGrad;
     private List<Grado> listGrad;
     private boolean guardar;        
@@ -97,12 +96,12 @@ public class GradoBean implements Serializable{
             this.listGrad.add(this.objeGrad);
             this.limpForm();
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos guardados')");
-            log.info("Tipo Beca Guardado");
+           // log.info("Tipo Beca Guardado");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al guardar ')");
-            log.error(getRootCause(ex).getMessage());
+          //  log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -122,12 +121,12 @@ public class GradoBean implements Serializable{
             FCDEGrad.edit(this.objeGrad);
             this.listGrad.add(this.objeGrad); //Agrega el objeto modificado
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos Modificados')");
-            log.info("Tipo Beca Modificado");
+          //  log.info("Tipo Beca Modificado");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al modificar ')");
-            log.error(getRootCause(ex).getMessage());
+          //  log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -148,12 +147,12 @@ public class GradoBean implements Serializable{
             FCDEGrad.edit(this.objeGrad);
             this.listGrad.add(this.objeGrad); //Agrega el objeto modificado
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos Modificados')");
-            log.info("Tipo Beca Eliminado");
+          //  log.info("Tipo Beca Eliminado");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al modificar ')");
-            log.error(getRootCause(ex).getMessage());
+          //  log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -169,12 +168,12 @@ public class GradoBean implements Serializable{
         try
         {
             this.listGrad = FCDEGrad.findAll();
-            log.info("Tipos de Becas Consultados");
+         //   log.info("Tipos de Becas Consultados");
         }
         catch(Exception ex)
         {
             ex.printStackTrace();
-            log.error(getRootCause(ex).getMessage());
+          //  log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -195,12 +194,12 @@ public class GradoBean implements Serializable{
             this.guardar = false;
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Consultado a " + 
                     String.format("%s", this.objeGrad.getNombGrad()) + "')");
-            log.info("Tipo Beca Consultado");
+           // log.info("Tipo Beca Consultado");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al consultar')");
-            log.error(getRootCause(ex).getMessage());
+         //   log.error(getRootCause(ex).getMessage());
         }
         finally
         {

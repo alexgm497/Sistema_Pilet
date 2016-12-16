@@ -11,7 +11,7 @@ and open the template in the editor.
       xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" 
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
-    <ui:composition template="/WEB-INF/resources/fragmentos/comun.xhtml">
+    <ui:composition template="../WEB-INF/resources/fragmentos/comun.xhtml">
         <!-- Título de la página -->
         <ui:param name="pageTitl" value="::: Habilitar Usuario :::"/>
         <ui:param name="pageNomb" value="Habilitar Usuarios"/>
@@ -56,27 +56,25 @@ and open the template in the editor.
     <div class="row">
                 <div class="col-md-12 col-xs-12">
                     <div class="panel panel-default">
-                        <div class="panel-heading">Tabla de Datos</div>
+                       <div class="panel-heading">Ingrese Datos</div>
                         <div class="panel-body">
-                            <h:panelGroup id="ContRegi">
-                                <div id="toolTablRole">
-                                    <h:form id="habiUsua">
+                            <h:form id="habiUsua">
                                         <!--Form exclusivo para los remotos-->
                                         <fieldset class="col-md-12">
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div class="form-group input-group-s">
                                                     <h:inputText id="FiltNomb" value="#{webServicesBean.filt}" class="form-control" 
                                                                  pt:placeholder="Usuario" autocomplete="off"/>                                                    
                                                 </div>
                                             </div>
                                             
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div class="form-group input-group-s">                                                    
                                                     <h:inputText id="FiltApel" value="#{webServicesBean.filtApel}" class="form-control" 
                                                                  pt:placeholder="Apellido" autocomplete="off"/>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div class="form-group input-group-s">
                                                     <h:selectOneMenu id="FiltTipo" value="#{webServicesBean.filtTipo}" class="form-control">
                                                         <f:selectItem itemValue="alum" itemLabel="Alumno"/>
@@ -87,15 +85,19 @@ and open the template in the editor.
                                                     </h:selectOneMenu>
                                                 </div>
                                             </div>
-                                            <span class="input-group-btn">
-                                                <h:commandLink id="btonBusc" class="btn btn-default">
-                                                    <p:ajax listener="#{webServicesBean.consWebServHabiUsua()}" process="@form" update=":TablRegi" global="true"/>
-                                                    <i class="fa fa-search"/>
-                                                </h:commandLink>
-                                            </span>
+                                            <div class="col-md-3">
+                                                    <h:commandLink id="btonBusc" class="btn btn-success">
+                                                        <p:ajax listener="#{webServicesBean.consWebServHabiUsua()}" process="@form" update=":TablRegi" global="true"/>
+                                                        <i class="fa fa-search"/> Buscar
+                                                    </h:commandLink>
+                                            </div>
                                         </fieldset>
                                     </h:form>
-                                        
+                        </div>
+                        <div class="panel-heading">Tabla de Datos</div>
+                        <div class="panel-body">
+                            <h:panelGroup id="ContRegi">
+                                <div id="toolTablRole">
                                     <h:dataTable pt:data-id="TablRegi" id="TablRegi" value="#{usuarioBean.resuElim}"
                                                      var="fila" class="boottable" pt:data-toolbar="#toolTablPagi"
                                                      styleClass="table-hover table-bordered table-condensed table-striped table-responsive"

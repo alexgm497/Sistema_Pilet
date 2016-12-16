@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SeguimientoCita" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="56b4bfa8-2dfc-497e-9774-99285312632f">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="193"/>
+	<property name="ireport.y" value="30"/>
+	<parameter name="codi_cita" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select c.codi_usua as 'codiUsua', (case(select count(*) from visitante v inner join visitante_cita vcs on v.codi_visi = vcs.codi_visi and vcs.codi_cita = $P{codi_cita})when 1 then (select CONCAT(v.nomb_visi, ' ', v.apel_visi) from visitante v inner join visitante_cita vcs on v.codi_visi = vcs.codi_visi and vcs.codi_cita = $P{codi_cita}) else 'Grupo de Visitantes' end) as 'Visitante(s)', CONCAT(cc.fech_camb_cita, ' ', cc.hora_camb_cita ) as 'Fecha y Hora del Cambio', case (cc.esta_camb_cita) when 0 then 'ELIMINADA' when 1 then 'SOLICITADA' when 2 then 'PROGRAMADA' when 3 then 'RECHAZADA' when 4 then 'REPROGRAMACION SOLICITADA' when 5 then 'CANCELACION SOLICITADA' when 6 then 'FINALIZADA ' END AS 'Cambio Realizado', CONCAT(cc.fech_inic_cita_nuev, ' ', cc.hora_inic_cita_nuev)as 'Fecha y Hora de Inicio Nueva', CONCAT(cc.fech_fin_cita_nuev, ' ', cc.hora_fin_cita_nuev)as 'Fecha y Hora de Finalización Nueva', (case(cc.moti_camb_cita) when NULL then '-' else cc.moti_camb_cita end) as'Motivo del Cambio', c.desc_cita as'Motivo de la Cita' from cambio_cita cc inner join cita c on cc.codi_cita = c.codi_cita and c.codi_cita = $P{codi_cita}]]>
+	</queryString>
+	<field name="codiUsua" class="java.lang.Integer"/>
+	<field name="Visitante(s)" class="java.lang.String"/>
+	<field name="Fecha y Hora del Cambio" class="java.lang.String"/>
+	<field name="Cambio Realizado" class="java.lang.String"/>
+	<field name="Fecha y Hora de Inicio Nueva" class="java.lang.String"/>
+	<field name="Fecha y Hora de Finalización Nueva" class="java.lang.String"/>
+	<field name="Motivo del Cambio" class="java.lang.String"/>
+	<field name="Motivo de la Cita" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="93" splitType="Stretch">
+			<image>
+				<reportElement x="2" y="0" width="161" height="78" uuid="93e4d65c-57a8-4582-8e45-d6aabd8e6536"/>
+				<imageExpression><![CDATA["ricaldone.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="204" y="-63" width="95" height="20" uuid="4b672f93-b290-4b60-80b1-9516468f28e2"/>
+				<text><![CDATA[Visitante(s)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="299" y="-96" width="95" height="20" uuid="7a49b584-750c-4623-b0e4-b6559383b0e2"/>
+				<textFieldExpression><![CDATA[$F{Visitante(s)}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="204" y="13" width="316" height="28" uuid="a5e8779e-ac14-4b03-9ea9-3e677b8e589e"/>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SEGUIMIENTO DE CITA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="225" y="41" width="121" height="20" uuid="370092b0-4d08-4e99-8c0c-d873941d2cf8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Visitante(s):]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="346" y="41" width="144" height="20" uuid="db752f3a-4c88-4094-b069-ee06d2fcf215"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Visitante(s)}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="225" y="61" width="121" height="32" uuid="ef725275-b6ac-47a9-bef7-2d7bef272217"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Motivo de la Cita:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="346" y="61" width="144" height="32" uuid="92e8c7be-ac9e-42eb-a48f-7c35426e7b67"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Motivo de la Cita}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="33" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="2" y="0" width="119" height="33" backcolor="#F7F7F7" uuid="48ab040c-f7fd-4833-8c09-87f31669534a"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha y Hora del Cambio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="121" y="0" width="104" height="33" backcolor="#F7F7F7" uuid="abea1459-fcc4-4f6d-855f-3aea6ef7b84a"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cambio Realizado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="225" y="0" width="121" height="33" backcolor="#F7F7F7" uuid="b3320637-0dd0-42ad-ae4a-5dde7e24c23a"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha y Hora de Inicio Nueva]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="346" y="0" width="123" height="33" backcolor="#F7F7F7" uuid="2fc65487-0cd0-4e0a-8c04-34aec8390fa2"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha y Hora de Finalización Nueva]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="469" y="0" width="102" height="33" backcolor="#F7F7F7" uuid="868938aa-1d9a-43ec-b6a2-f8eec1a299b4"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Motivo del Cambio]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="33" splitType="Stretch">
+			<textField>
+				<reportElement x="2" y="0" width="119" height="33" uuid="8140d421-551a-4faa-a047-8c459b1ab775"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Fecha y Hora del Cambio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="121" y="0" width="104" height="33" uuid="e99671ab-4d01-4f51-8497-695c0533473f"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Cambio Realizado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="225" y="0" width="121" height="33" uuid="da14ebed-6c9b-4b67-b0ea-0532e80ce383"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Fecha y Hora de Inicio Nueva}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="346" y="0" width="123" height="33" uuid="61918ad7-c991-48d3-8b98-0e0a0debbc6f"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Fecha y Hora de Finalización Nueva}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="469" y="0" width="102" height="33" uuid="4d602639-1825-49e9-8a19-4e69c44628d5"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="13" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Motivo del Cambio}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -5,6 +5,8 @@
  */
 package com.sv.udb.utils;
 
+import com.sv.udb.modelo.Pregunta;
+
 /**
  *
  * @author Mauricio
@@ -14,7 +16,8 @@ public class DynamicField {
     private String fieldKey; // some key to identify the field
     private Object fieldValue; // the value of field
     private String type; // can be input,radio,selectbox etc
-    private int id; // can be input,radio,selectbox etc
+    private Pregunta id; // can be input,radio,selectbox etc
+    
 
     public DynamicField(String label, String fieldKey, Object fieldValue, String type) {
         this.label = label;
@@ -23,15 +26,15 @@ public class DynamicField {
         this.type = type;
     }
 
-    public int getId() {
+    public Pregunta getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Pregunta id) {
         this.id = id;
     }
 
-    public DynamicField(String label, String fieldKey, Object fieldValue, String type, int id) {
+    public DynamicField(String label, String fieldKey, Object fieldValue, String type, Pregunta id) {
         this.label = label;
         this.fieldKey = fieldKey;
         this.fieldValue = fieldValue;

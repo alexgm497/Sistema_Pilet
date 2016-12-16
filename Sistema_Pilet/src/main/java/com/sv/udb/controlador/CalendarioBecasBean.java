@@ -21,6 +21,8 @@ import com.sv.udb.modelo.Seguimiento;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.model.ScheduleEvent;
 
 /**
  *
@@ -31,7 +33,44 @@ import javax.ejb.EJB;
 public class CalendarioBecasBean implements Serializable{
     private static final long serialVersionUID = 6527333208194203406L;
     private ScheduleModel objeCale;
+    private ScheduleEvent Cale;
     private List<Seguimiento> listSegu;
+    private String fechForma;
+    private Seguimiento objeSegu;
+
+    public ScheduleEvent getCale() {
+        return Cale;
+    }
+
+    public void setCale(ScheduleEvent Cale) {
+        this.Cale = Cale;
+    }
+
+    
+    public Seguimiento getObjeSegu() {
+        return objeSegu;
+    }
+
+    public void setObjeSegu(Seguimiento objeSegu) {
+        this.objeSegu = objeSegu;
+    }
+   
+    
+    
+    public String getFechForma() {
+        return fechForma;
+    }
+
+    public void setFechForma(String fechForma) {
+        this.fechForma = fechForma;
+    }
+    
+    public void onEventSelect(SelectEvent selectEvent)
+    {
+        this.Cale= (ScheduleEvent) selectEvent.getObject();
+        this.objeSegu = (Seguimiento) Cale.getData();
+        this.fechForma = new SimpleDateFormat("dd/MM/yyyy hh:mm a").format(this.objeSegu.getFechSegu());
+    }
     @EJB
     private SeguimientoFacadeLocal FCDESegu;
     /**
@@ -78,14 +117,13 @@ public class CalendarioBecasBean implements Serializable{
                 String FechFina = sdf.format(objeSegu.getFechFin());
                 String FechInic = sdf.format(objeSegu.getFechInicio());
                 DefaultScheduleEvent evt = new DefaultScheduleEvent();
-                evt.setEndDate(sdf.parse(FechFina));
-                evt.setStartDate(sdf.parse(FechInic));
-                //evt.setTitle(objeSegu.getNombSegu());
-                evt.setTitle(obj.getDescSegu()+ " " + "\nHora inicio: " + objeSegu.getFechInicio()+ "\nHora final: " + objeSegu.getFechFin());
-                evt.setData(obj.getCodiSegu());
+                evt.setEndDate(this.getFecha(FechFina));
+                evt.setStartDate(this.getFecha(FechInic));
+                evt.setTitle(objeSegu.getNombSegu());
+                evt.setData(obj);
                 evt.setDescription(obj.getDescSegu());
                 objeCale.addEvent(evt);
-                System.out.println("Eventus");
+                System.out.println("Evento encontrado");
              }
         }catch(Exception e){
             System.out.println("CatchxdXD");

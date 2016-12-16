@@ -52,9 +52,11 @@ and open the template in the editor.
                                                     oncomplete="$('#ModaFormRegi').modal('show'); INIT_OBJE_MODA();"/>
                                             <i class="fa fa-plus"/> Solicitar
                                         </h:commandLink>
+                                        <p:remoteCommand name="elimObje" actionListener="#{citasBean.cambCita(0, true)}" update=":FormRegi :ContRegi" 
+                                                         oncomplete="INIT_OBJE(); INIT_OBJE_MODA();" global="true"/>
                                     </h:form>
                                 </div>
-                                <h:dataTable pt:data-id="TablRegi" id="TablRegi" value="#{citasBean.listCitaAlum}"
+                                <h:dataTable pt:data-id="TablRegi" id="TablRegi" value="#{citasBean.consListCambCitaVisiAlum()}"
                                         var="fila" class="boottable" pt:data-toolbar="#toolTablRegi"
                                         styleClass="table-hover table-bordered table-condensed table-striped table-responsive"
                                         pt:data-show-refresh="false" pt:data-show-toggle="false" pt:data-show-columns="false" 
@@ -62,20 +64,20 @@ and open the template in the editor.
                                         pt:data-click-to-select="true"  pt:data-select-item-name="radio"
                                         pt:data-single-select="true">                                
                                <h:column pt:data-field="state" pt:data-checkbox="true">
-                                   #{citasBean.consDepeListCitaUsua(fila)}
+                                   #{citasBean.consDepeListCitaUsua(fila.codiCita)}
                                </h:column>
                                <h:column pt:data-align="right" pt:data-sortable="true" pt:data-field="id" pt:data-visible='false'>
                                    <f:facet name="header">Código</f:facet>
-                                   <h:outputText value="#{fila.codiCita}"/>
+                                   <h:outputText value="#{fila.codiCita.codiCita}"/>
                                </h:column>
                                <h:column pt:data-sortable="true" pt:data-field="usuaCita">
                                    <f:facet name="header">Citador</f:facet>
-                                   <h:outputText value="#{webServicesBean.consEmplPorCodi(fila.codiUsua.toString()).nomb}"/>   
+                                   <h:outputText value="#{webServicesBean.consEmplPorCodi(fila.codiCita.codiUsua.toString()).nomb}"/>   
                                </h:column>
                                <h:column pt:data-sortable="true" pt:data-field="contUsuaCita">
                                    <f:facet name="header">Contactos del Citador</f:facet>
-                                   <h:panelGroup rendered="#{webServicesBean.consEmplPorCodi(fila.codiUsua.toString()).mail != null}">
-                                       <span class='fa fa-envelope'><h:outputText style="margin-left: 4px;font-family: calibri;" value="#{webServicesBean.consEmplPorCodi(fila.codiUsua.toString()).mail}"/></span>
+                                   <h:panelGroup rendered="#{webServicesBean.consEmplPorCodi(fila.codiCita.codiUsua.toString()).mail != null}">
+                                       <span class='fa fa-envelope'><h:outputText style="margin-left: 4px;font-family: calibri;" value="#{webServicesBean.consEmplPorCodi(fila.codiCita.codiUsua.toString()).mail}"/></span>
                                         
                                         <br/>
                                     </h:panelGroup> 
@@ -99,7 +101,7 @@ and open the template in the editor.
                                <h:column pt:data-sortable="true" pt:data-field="moti">
                                    <f:facet name="header">Motivo ó Descripción</f:facet>
                                    <span style="font-weight: bold;">Motivo: </span><br/>
-                                   <h:outputText value="#{fila.descCita}"/>   
+                                   <h:outputText value="#{fila.codiCita.descCita}"/>   
                                    <h:panelGroup rendered="#{citasBean.objeCambCitaDepe.motiCambCita ne null}">
                                        <hr style="margin: 3px 1px 3px 1px;" />
                                        <span style="font-weight: bold;">Ultimo Cambio: </span><br/>
@@ -108,19 +110,44 @@ and open the template in the editor.
                                </h:column>
                                <h:column pt:data-sortable="true" pt:data-field="esta">
                                    <f:facet name="header">Estado</f:facet>
-                                   <h:panelGroup class="label label-info" rendered="#{fila.estaCita eq '1'}">
-                                       <i class="fa fa-calendar-o"/> Solicitada</h:panelGroup>
-                                   <h:panelGroup class="label label-success" rendered="#{fila.estaCita eq '2'}">
-                                       <i class="fa fa-calendar-o"/> Programada</h:panelGroup>
-                                   <h:panelGroup class="label label-danger" rendered="#{fila.estaCita eq '3'}">
-                                       <i class="fa fa-calendar-o"/> Rechazada</h:panelGroup>
-                                   <h:panelGroup class="label label-warning" rendered="#{fila.estaCita eq '4'}">
-                                       <i class="fa fa-calendar-o"/> Reprogramación Solicitada</h:panelGroup>
-                                   <h:panelGroup class="label label-danger" rendered="#{fila.estaCita eq '5'}">
-                                       <i class="fa fa-calendar-o"/> Cancelación Solicitada</h:panelGroup>
+                                        <h:panelGroup class="label label-danger" rendered="#{fila.codiCita.estaCita eq '0'}">
+                                            <i class="fa fa-calendar-o"/> Cancelada</h:panelGroup>
+                                        <h:panelGroup class="label label-info" rendered="#{fila.codiCita.estaCita eq '1'}">
+                                            <i class="fa fa-calendar-o"/> Solicitada</h:panelGroup>
+                                        <h:panelGroup class="label label-success" rendered="#{fila.codiCita.estaCita eq '2'}">
+                                            <i class="fa fa-calendar-o"/> Programada</h:panelGroup> 
+                                        <h:panelGroup class="label label-danger" rendered="#{fila.codiCita.estaCita eq '3'}">
+                                            <i class="fa fa-calendar-o"/> Rechazada</h:panelGroup>
+                                        <h:panelGroup class="label label-warning" rendered="#{fila.codiCita.estaCita eq '4'}">
+                                            <i class="fa fa-calendar-o"/> Reprogramación Solicitada</h:panelGroup>
+                                        <h:panelGroup class="label label-danger" rendered="#{fila.codiCita.estaCita eq '5'}">
+                                            <i class="fa fa-calendar-o"/> Cancelación Solicitada</h:panelGroup>
+                                        <h:panelGroup class="label label-info" rendered="#{fila.codiCita.estaCita eq '6'}">
+                                            <i class="fa fa-calendar-o"/>Finalizada</h:panelGroup>
                                </h:column>
-                                    
                             </h:dataTable>
+                                <h:form>
+                                    <h4>Mostrar Registros</h4>
+                                    <p>Entre las fechas:</p>
+                                        <div style="display: inline-block; height: 40px;" class="input-group col-xs-4">
+                                            <h:message for="fechXD" errorClass="field-error" />
+                                            <h:inputText id="fechXD" value="#{citasBean.fechInicBusq}" class="form-control datepicker" required="true" requiredMessage="Debe Seleccionar una Fecha">
+                                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                                            </h:inputText> 
+                                        </div>
+                                        <div style="display: inline-block; height: 40px;" class="input-group col-xs-4">
+                                            <h:message for="fechxd2" errorClass="field-error" />
+                                            <h:inputText id="fechxd2" value="#{citasBean.fechFinaBusq}" class="form-control datepicker" required="true" requiredMessage="Debe Seleccionar una Fecha">
+                                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                                            </h:inputText> 
+                                        </div>       
+                                    <div style="display: inline-block; vertical-align: top; height: 40px;" class="input-group col-xs-6">
+                                        <h:commandLink style="width: 50%" id="btonBusqParam" class="btn btn-success" >
+                                                    <p:ajax  process="@form" update="@form :ContRegi" oncomplete="INIT_OBJE();" />
+                                                    Buscar
+                                                </h:commandLink>
+                                        </div>
+                                </h:form>
                             </h:panelGroup>
                         </div>
                     </div>
@@ -161,17 +188,28 @@ and open the template in the editor.
                                                 <h:inputText id="nombProf" value="#{citasBean.nombProf}" class="form-control disabled" disabled="true"/>
                                             </div>
                                         </h:panelGroup>
-                                        
                                         <div class="input-group col-xs-12">
-                                            
-                                            <h:outputLabel  for="hora" value="Horario comunmente disponible"/>
-                                            <h:message for="hora" errorClass="field-error" />
-                                            <h:selectOneMenu id="hora" value="#{citasBean.horaSeleSoliCita}" class="form-control select" pt:data-live-search="true">
-                                                <f:selectItem pt:data-hidden="true" itemLabel="Seleccione..."/>
-                                                <f:selectItems value="#{citasBean.listHoraCitaDoce}" var="lstHora" itemLabel="#{lstHora.diaDisp} #{lstHora.fecha} de (#{lstHora.horaInic} a #{lstHora.horaFina})" itemValue="#{lstHora}"/>
-                                                <f:converter converterId="PooConv"/>
-                                            </h:selectOneMenu>
+                                            <br/>
+                                            <h:outputText value="Solicitar en otra fecha y hora: " style="font-weight: bold;" />
+                                            <p:selectBooleanCheckbox value="#{citasBean.motiUrge}">
+                                                <p:ajax process="@this" oncomplete="INIT_OBJE_MODA();" update="@form" listener="#{citasBean.setUrgeCita()}" />
+                                            </p:selectBooleanCheckbox>
+                                            <br/>
+                                            <h:outputText value="Esperar respuesta del docente, pueda que no esté disponible" />
+                                            <br/><br/>
                                         </div>
+                                        <h:panelGroup rendered="#{!citasBean.motiUrge}">
+                                            <div class="input-group col-xs-12">
+
+                                                <h:outputLabel  for="hora" value="Horario comunmente disponible"/>
+                                                <h:message for="hora" errorClass="field-error" />
+                                                <h:selectOneMenu id="hora" value="#{citasBean.horaSeleSoliCita}" class="form-control select" pt:data-live-search="true">
+                                                    <f:selectItem pt:data-hidden="true" itemLabel="Seleccione..."/>
+                                                    <f:selectItems value="#{citasBean.listHoraCitaDoce}" var="lstHora" itemLabel="#{lstHora.diaDisp} #{lstHora.fecha} de (#{lstHora.horaInic} a #{lstHora.horaFina})" itemValue="#{lstHora}"/>
+                                                    <f:converter converterId="PooConv"/>
+                                                </h:selectOneMenu>
+                                            </div>
+                                        </h:panelGroup>
                                         
                                         <h:panelGroup rendered="#{citasBean.programar}">
                                             <div class="input-group col-xs-12">
@@ -205,11 +243,11 @@ and open the template in the editor.
                                                     <p:ajax listener="#{citasBean.soliCitaVisi()}" process="@form" update="@form :ContRegi" oncomplete="INIT_OBJE(); INIT_OBJE_MODA();" />
                                                     <i class="fa fa-plus"/> Solicitar
                                                 </h:commandLink>
-                                                <h:commandLink id="btonSoliRepro" class="btn btn-warning" rendered="#{citasBean.reprogramar || (citasBean.objeCita.estaCita eq '4')}">
+                                                <h:commandLink id="btonSoliRepro" class="btn btn-warning" rendered="#{(citasBean.reprogramar and citasBean.objeCita.estaCita ne '0') || (citasBean.objeCita.estaCita eq '4')}">
                                                     <p:ajax listener="#{citasBean.soliCambCita(1)}" process="@form" update="@form :ContRegi" oncomplete="INIT_OBJE(); INIT_OBJE_MODA();" />
                                                     <i class="fa fa-calendar-o"/> Solicitar Reprogramación
                                                 </h:commandLink>
-                                                <h:commandLink id="btonSoliCance" class="btn btn-danger" rendered="#{citasBean.reprogramar|| (citasBean.objeCita.estaCita eq '4')}">
+                                                <h:commandLink id="btonSoliCance" class="btn btn-danger" rendered="#{(citasBean.reprogramar and citasBean.objeCita.estaCita ne '0') || (citasBean.objeCita.estaCita eq '4')}">
                                                     <p:ajax listener="#{citasBean.soliCambCita(2)}" process="@form" update="@form :ContRegi" oncomplete="INIT_OBJE(); INIT_OBJE_MODA();" />
                                                     <i class="fa fa-trash-o"/> Solicitar Cancelación
                                                 </h:commandLink>
@@ -217,6 +255,13 @@ and open the template in the editor.
                                                     <p:ajax listener="#{citasBean.soliCambCita(2)}" process="@form" update="@form :ContRegi" oncomplete="INIT_OBJE(); INIT_OBJE_MODA();" />
                                                     <i class="fa fa-trash-o"/> Cambiar Motivo de cancelación
                                                 </h:commandLink>
+                                                <h:outputLink id="btonElim" class="btn btn-danger" rendered="#{citasBean.confirmar}" value="#" pt:data-placement="left"
+                                                              pt:data-toggle="confirmation" pt:data-btn-ok-label="Sí" pt:data-btn-ok-icon="fa fa-times"
+                                                              pt:data-btn-ok-class="btn-danger btn-xs" pt:data-btn-cancel-label="No" pt:data-btn-cancel-icon="fa fa-mail-forward"
+                                                              pt:data-btn-cancel-class="btn-default btn-xs" pt:data-title="¿Esta seguro que desea eliminar?"
+                                                              pt:data-on-confirm="elimObje"><!--data-on-confirm = nombre del comando remoto de eliminar (sin paréntesis)-->
+                                                    <i class="fa fa-times"/> Cancelar
+                                                </h:outputLink>
                                             </div>
                                         </div>
                                 </div>

@@ -7,6 +7,7 @@ package com.sv.udb.modelo;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,19 +19,21 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author Alvin
+ * @author Kevin
  */
 @Entity
-@Table(name = "evento", catalog = "sistemas_pilet", schema = "")
+@Table(name = "Evento", catalog = "sistemas_pilet", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Evento.findAll", query = "SELECT e FROM Evento e"),
@@ -78,6 +81,8 @@ public class Evento implements Serializable {
     @NotNull
     @Column(name = "esta_even")
     private int estaEven;
+    @OneToMany(mappedBy = "codiEven", fetch = FetchType.EAGER)
+    private List<Cita> citaList;
     @JoinColumn(name = "codi_ubic", referencedColumnName = "codi_ubic")
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Ubicaciones codiUbic;
@@ -153,6 +158,15 @@ public class Evento implements Serializable {
 
     public void setEstaEven(int estaEven) {
         this.estaEven = estaEven;
+    }
+
+    @XmlTransient
+    public List<Cita> getCitaList() {
+        return citaList;
+    }
+
+    public void setCitaList(List<Cita> citaList) {
+        this.citaList = citaList;
     }
 
     public Ubicaciones getCodiUbic() {

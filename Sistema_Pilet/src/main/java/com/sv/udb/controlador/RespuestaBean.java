@@ -77,12 +77,12 @@ public class RespuestaBean implements Serializable{
             this.listResp.add(this.objeResp);
             this.limpForm();
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos guardados')");
-            log.info("Respuesta Guardada");
+           // log.info("Respuesta Guardada");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al guardar ')");
-            log.error(getRootCause(ex).getMessage());
+           // log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -99,12 +99,12 @@ public class RespuestaBean implements Serializable{
             FCDEResp.edit(this.objeResp);
             this.listResp.add(this.objeResp); //Agrega el objeto modificado
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos Modificados')");
-            log.info("Respuesta Modificada");
+          // log.info("Respuesta Modificada");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al modificar ')");
-            log.error(getRootCause(ex).getMessage());
+           // log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -121,12 +121,12 @@ public class RespuestaBean implements Serializable{
             this.listResp.remove(this.objeResp);
             this.limpForm();
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos Eliminados')");
-            log.info("Respuesta Eliminada");
+           /// log.info("Respuesta Eliminada");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al eliminar')");
-            log.error(getRootCause(ex).getMessage());
+          //  log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -139,12 +139,12 @@ public class RespuestaBean implements Serializable{
         try
         {
             this.listResp = FCDEResp.findAll();
-            log.info("Respuestas Consultadas");
+           // log.info("Respuestas Consultadas");
         }
         catch(Exception ex)
         {
             ex.printStackTrace();
-            log.error(getRootCause(ex).getMessage());
+          //  log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -162,12 +162,12 @@ public class RespuestaBean implements Serializable{
             this.guardar = false;
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Consultado a " + 
                     String.format("%s", this.objeResp.getDescOpci()) + "')");
-            log.info("Respuesta Consultada");
+           // log.info("Respuesta Consultada");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al consultar')");
-            log.error(getRootCause(ex).getMessage());
+           // log.error(getRootCause(ex).getMessage());
         }
         finally
         {

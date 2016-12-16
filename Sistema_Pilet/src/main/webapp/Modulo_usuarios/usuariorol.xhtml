@@ -31,7 +31,7 @@ and open the template in the editor.
         <!--Plugins custom-->
         <h:outputStylesheet library="css" name="bootstrap-toggle.css"/>
         <h:outputScript library="js" name="bootstrap-toggle.js"/>
-        <h:outputScript library="js" name="custom/usua.js"/>
+        <h:outputScript library="js" name="custom/permRole.js"/>
         </ui:define>
         <!-- Elementos propios del boby -->
         <ui:define name="body">
@@ -65,7 +65,7 @@ and open the template in the editor.
                                 <div id="toolTablRegi">
                                     <h:form>
                                         <!--Form exclusivo para los remotos-->
-                                        <p:remoteCommand name="cons" actionListener="#{usuarioRolBean.consRoleByUsua()}" update=":TablRegi1 :formRole" 
+                                        <p:remoteCommand oncomplete="RECA()" name="cons" actionListener="#{usuarioRolBean.consRoleByUsua()}" update=":TablRegi1 :formRole" 
                                                           global="true"/>
                                     </h:form>
                                 </div>
@@ -112,7 +112,7 @@ and open the template in the editor.
                                     <h:form id="formRole">
                                         <h:panelGroup rendered="#{usuarioRolBean.guardar}">
                                             <h:commandLink id="btonNuev" class="btn btn-success">
-                                                <p:ajax listener="#{usuarioRolBean.limpForm()}" update=":FormRegi" global="true" 
+                                                <p:ajax update=":FormRegi" global="true" 
                                                         oncomplete="$('#ModaFormRegi').modal('show');"/>
                                                 <i class="fa fa-plus"/> Nuevo
                                             </h:commandLink>
@@ -162,7 +162,7 @@ and open the template in the editor.
                                 </div>
                                 <div class="modal-body" style="padding-top: 2px;">
                                     <fieldset class="col-md-12">
-                                        <h:inputHidden id="codi" value="#{usuarioRolBean.objeUsuaRole.codiUsuaRole}" />
+                                        <input hidden="true" id="codi" value="#{usuarioRolBean.objeUsuaRole.codiUsuaRole}" />
                                         <div class="form-group input-group-xs" >
                                             <h:outputLabel  for="usua" value="Usuario: "/>
                                             <h:message for="usua" errorClass="field-error" />

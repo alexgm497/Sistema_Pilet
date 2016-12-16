@@ -11,7 +11,7 @@ and open the template in the editor.
       xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" 
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
-    <ui:composition template="WEB-INF/resources/fragmentos/comun.xhtml">
+    <ui:composition template="../WEB-INF/resources/fragmentos/comun.xhtml">
         <!-- Título de la página -->
         <ui:param name="pageTitl" value="Bienvenido ::: Página Principal"/>
         <ui:param name="pageNomb" value="Página Principal"/>
@@ -20,10 +20,11 @@ and open the template in the editor.
         <ui:param name="actiIndex" value="active"/>
         <!-- Scripts personalizados -->
         <ui:define name="CustomScripts">
+            <h:outputStylesheet library="css" name="welcome.css"/>
         </ui:define>
         <!-- Elementos propios del boby -->
         <ui:define name="body">
-            <h3>HOLA </h3>
+            <h1>Welcome <strong>stranger</strong></h1>
         </ui:define>
     </ui:composition>
 </html>

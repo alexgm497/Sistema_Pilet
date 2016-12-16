@@ -23,9 +23,14 @@ public interface OpcionFacadeLocal {
     void remove(Opcion opcion);
 
     Opcion find(Object id);
+    
+    Opcion findLast();
 
     List<Opcion> findAll();
 
+    List<Opcion> findAllActive();
+    
+    
     List<Opcion> findRange(int[] range);
 
     int count();

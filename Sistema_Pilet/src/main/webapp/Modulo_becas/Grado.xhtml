@@ -91,11 +91,11 @@ and open the template in the editor.
                                         <f:facet name="header">Nombre</f:facet>
                                         <h:outputText value="#{fila.nombGrad}"/>   
                                     </h:column>
-                                    <h:column pt:data-sortable="true">
+                                    <h:column pt:data-align="right" pt:data-sortable="true">
                                         <f:facet name="header">Matrícula</f:facet>
                                         <h:outputText value="#{fila.matrGrad}"/>
                                     </h:column>
-                                    <h:column pt:data-sortable="true">
+                                    <h:column pt:data-align="right" pt:data-sortable="true">
                                         <f:facet name="header">Mensualidad</f:facet>
                                         <h:outputText value="#{fila.mensGrad}"/>
                                     </h:column>
@@ -105,7 +105,7 @@ and open the template in the editor.
                                         Tercer ciclo</h:panelGroup>
                                         <h:panelGroup class="label label-info" rendered="#{fila.nivelGrad eq '2'}">
                                         1º y 2º año</h:panelGroup>
-                                        <h:panelGroup class="label label-info" rendered="#{fila.nivelGrad eq '0'}">
+                                        <h:panelGroup class="label label-info" rendered="#{fila.nivelGrad eq '3'}">
                                         3ºaño</h:panelGroup>
                                     </h:column>
                                     <h:column pt:data-sortable="true">
@@ -130,7 +130,7 @@ and open the template in the editor.
                             <h:form id="FormRegi" class="form-horizontal">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times"/></button>
-                                    <h4 class="modal-title">Gestión de Tipo Beca</h4>
+                                    <h4 class="modal-title">Gestión de Grados</h4>
                                 </div>
                                 <div class="modal-body" style="padding-top: 2px;">
                                     <fieldset class="col-md-12">
@@ -157,7 +157,7 @@ and open the template in the editor.
                                             <h:selectOneRadio value="#{gradoBean.objeGrad.nivelGrad}">
                                                 <f:selectItem itemValue="1" itemLabel="Tercer ciclo" />
                                                 <f:selectItem itemValue="2" itemLabel="1º y 2º año" />
-                                                <f:selectItem itemValue="0" itemLabel="3º año" />
+                                                <f:selectItem itemValue="3" itemLabel="3º año" />
                                             </h:selectOneRadio>
                                         </div>
                                     </fieldset>

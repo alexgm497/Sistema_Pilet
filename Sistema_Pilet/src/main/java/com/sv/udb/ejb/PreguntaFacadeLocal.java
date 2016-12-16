@@ -5,6 +5,7 @@
  */
 package com.sv.udb.ejb;
 
+import com.sv.udb.modelo.Opcion;
 import com.sv.udb.modelo.Pregunta;
 import java.util.List;
 import javax.ejb.Local;
@@ -23,9 +24,13 @@ public interface PreguntaFacadeLocal {
     void remove(Pregunta pregunta);
 
     Pregunta find(Object id);
+    
+    Pregunta findLast();
 
     List<Pregunta> findAll();
-
+    
+    List<Pregunta> findAllActive();
+    
     List<Pregunta> findRange(int[] range);
 
     int count();

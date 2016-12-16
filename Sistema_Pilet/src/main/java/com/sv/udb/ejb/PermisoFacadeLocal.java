@@ -23,7 +23,13 @@ public interface PermisoFacadeLocal {
     void remove(Permiso permiso);
 
     Permiso find(Object id);
-
+    
+    List<Permiso> findAllModu();
+    
+    List<Permiso> findPagiByModu(Object modu);
+    
+    List<Permiso> findAcciByPagi(Object pagi);
+    
     List<Permiso> findAll();
 
     List<Permiso> findRange(int[] range);

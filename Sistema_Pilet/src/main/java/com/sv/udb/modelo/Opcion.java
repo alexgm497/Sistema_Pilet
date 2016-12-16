@@ -41,6 +41,11 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Opcion.findByEstaOpci", query = "SELECT o FROM Opcion o WHERE o.estaOpci = :estaOpci")})
 public class Opcion implements Serializable {
 
+  
+
+    @OneToMany(mappedBy = "codiOpci", fetch = FetchType.EAGER)
+    private List<OpcionRespuesta> opcionRespuestaList;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -162,5 +167,15 @@ public class Opcion implements Serializable {
     public String toString() {
         return "com.sv.udb.modelo.Opcion[ codiOpci=" + codiOpci + " ]";
     }
+
+    @XmlTransient
+    public List<OpcionRespuesta> getOpcionRespuestaList() {
+        return opcionRespuestaList;
+    }
+
+    public void setOpcionRespuestaList(List<OpcionRespuesta> opcionRespuestaList) {
+        this.opcionRespuestaList = opcionRespuestaList;
+    }
+
     
 }

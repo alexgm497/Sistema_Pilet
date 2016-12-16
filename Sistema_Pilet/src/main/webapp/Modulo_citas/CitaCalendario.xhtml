@@ -22,17 +22,17 @@ and open the template in the editor.
         <!-- Scripts personalizados -->
         <ui:define name="CustomScripts">
             <h:outputScript library="primefaces" name="jquery/jquery.js"/>
-        <!--Plugins Selector de Fecha-->
-        <h:outputStylesheet library="css" name="datepicker3.css"/>
-        <h:outputScript library="js" name="bootstrap-datepicker.js"/>
-        <h:outputScript library="js" name="bootstrap-datepicker.es.js"/>
-         <!--Plugins Selector de Hora-->
-        <h:outputStylesheet library="css" name="bootstrap-timepicker.min.css"/>
-        <h:outputScript library="js" name="bootstrap-timepicker.js"/>
-        <!--Plugins Select-->
-        <h:outputStylesheet library="css" name="bootstrap-select.css"/>
-        <h:outputScript library="js" name="bootstrap-select.js"/>
-        <!--Plugins custom-->
+            <!--Plugins Selector de Fecha-->
+            <h:outputStylesheet library="css" name="datepicker3.css"/>
+            <h:outputScript library="js" name="bootstrap-datepicker.js"/>
+            <h:outputScript library="js" name="bootstrap-datepicker.es.js"/>
+            <!--Plugins Selector de Hora-->
+            <h:outputStylesheet library="css" name="bootstrap-timepicker.min.css"/>
+            <h:outputScript library="js" name="bootstrap-timepicker.js"/>
+            <!--Plugins Select-->
+            <h:outputStylesheet library="css" name="bootstrap-select.css"/>
+            <h:outputScript library="js" name="bootstrap-select.js"/>
+            <!--Plugins custom-->
             <h:outputScript library="js" name="custom/mantenimientos.js"/>
         </ui:define>
         <!-- Elementos propios del boby -->
@@ -50,31 +50,33 @@ and open the template in the editor.
             <div class="row RegDiv">
                 <div class="col-md-12 col-xs-12">
                     <div class="panel panel-default">
-                        
-                        <p:schedule  timeFormat="hh:mm a" resizable="false" displayEventEnd="true" draggable="false" value="#{calendarioBean.objeCale}" clientTimeZone="local" locale="es" columnFormat="dddd DD/MM">
+
+                        <p:schedule  timeFormat="hh:mm a" resizable="false" displayEventEnd="true" draggable="false" value="#{calendarioBean.lazyEventModel}" clientTimeZone="local" locale="es" columnFormat="dddd DD/MM">
                             <p:ajax event="eventSelect" listener="#{calendarioBean.onEventSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" />
                         </p:schedule>
-                        
-                        <p:dialog widgetVar="eventDialog" resizable="false" header="Detalles de Cita" modal="true" showEffect="clip" hideEffect="clip">
-                            <h:panelGrid id="eventDetails" columns="2">
-                                Lugar: #{calendarioBean.objeCambCita.codiCita.codiUbic.nombUbic} <br/>
-                                Fecha: #{calendarioBean.fechForma}<br/>
-                                Hora Inicio: #{calendarioBean.objeCambCita.horaInicCitaNuev}<br/>
-                                Hora Fin: #{calendarioBean.objeCambCita.horaFinCitaNuev} <br/>
-                                Motivo: #{calendarioBean.objeCambCita.codiCita.descCita}
+
+                        <p:dialog widgetVar="eventDialog" resizable="false" width="50%" header="Detalles de Cita" modal="true" showEffect="clip" hideEffect="clip">
+                            <h:panelGrid id="eventDetails" columns="1" >
+                                <strong>Lugar:</strong><br/> #{calendarioBean.objeCambCita.codiCita.codiUbic.nombUbic}<br/>
+                                <strong>Fecha y Hora:</strong><br/> #{calendarioBean.fechForma} #{calendarioBean.objeCambCita.horaInicCitaNuev}<br/>
+                                <strong>Motivo:</strong><br/> #{calendarioBean.objeCambCita.codiCita.descCita}<br/>
+                                <strong>Visitantes:</strong>
+                                <ui:repeat value="#{calendarioBean.listVisi}" var="visitante">
+                                    #{visitante.nombVisi} #{visitante.apelVisi} <br/>
+                                </ui:repeat>
                             </h:panelGrid>
                         </p:dialog>    
-                        
-                           <script type="text/javascript">
+
+                        <script type="text/javascript">
                             PrimeFaces.locales['es'] = {
                                 closeText: 'Cerrar',
                                 prevText: 'Anterior',
                                 nextText: 'Siguiente',
-                                monthNames: ['Enero','Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-                                monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
-                                dayNames: ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'],
-                                dayNamesShort: ['Dom','Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
-                                dayNamesMin: ['D','L','M','X','J','V','S'],
+                                monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                                monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                                dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                                dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+                                dayNamesMin: ['D', 'L', 'M', 'X', 'J', 'V', 'S'],
                                 weekHeader: 'Semana',
                                 firstDay: 1,
                                 isRTL: false,
@@ -90,13 +92,13 @@ and open the template in the editor.
                                 month: 'Mes',
                                 week: 'Semana',
                                 day: 'Día',
-                                allDayText : 'Todo el día'
+                                allDayText: 'Todo el día'
                             };
                         </script>
                     </div>
                 </div>
             </div>
-            
+
         </ui:define>
     </ui:composition>
 </html>

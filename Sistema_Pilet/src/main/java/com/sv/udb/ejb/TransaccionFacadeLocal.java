@@ -31,7 +31,7 @@ public interface TransaccionFacadeLocal {
     
     BigDecimal findMonto(Object id);
     
-    BigDecimal findMontoEmpr(Object id);
+    BigDecimal findMontoDona(Object id);
 
     List<Transaccion> findRange(int[] range);
 

@@ -23,9 +23,10 @@ public interface DocumentoFacadeLocal {
     void remove(Documento documento);
 
     Documento find(Object id);
-
     List<Documento> findAll();
-    
+    List<Documento> findBySoli(Object id);
+    List<Documento> findByEmpr(Object id);
+      
     Documento findLast();
 
     List<Documento> findRange(int[] range);

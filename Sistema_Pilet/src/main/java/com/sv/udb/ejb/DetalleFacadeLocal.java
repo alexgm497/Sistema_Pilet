@@ -27,7 +27,6 @@ public interface DetalleFacadeLocal {
     Detalle findDetaTran(Object id);
 
     List<Detalle> findAll();
-
     List<Detalle> findRange(int[] range);
 
     int count();

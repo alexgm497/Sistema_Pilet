@@ -23,8 +23,12 @@ public interface RespuestaFacadeLocal {
     void remove(Respuesta respuesta);
 
     Respuesta find(Object id);
-
+    
+    boolean ReadIfCarnExis(String carnet);
+    
     List<Respuesta> findAll();
+    
+    List<Respuesta> findAll(int codigo);
 
     List<Respuesta> findRange(int[] range);
 

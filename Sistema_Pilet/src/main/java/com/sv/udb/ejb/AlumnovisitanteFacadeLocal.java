@@ -38,6 +38,8 @@ public interface AlumnovisitanteFacadeLocal {
     
     Alumnovisitante findByAlumVisi(Visitante visi, String carn);
     
+    Alumnovisitante findByVisiCarn(String Carn, Visitante visi);
+    
     int count();
     
 }

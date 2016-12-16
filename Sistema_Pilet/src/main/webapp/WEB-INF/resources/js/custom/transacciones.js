@@ -73,6 +73,7 @@ function INIT_OBJE_SALI()
 {
     $("#TablRegi").initBootTable();
     INIT_OBJE_MODA_SALI();
+    $(".select").selectpicker();  
 }
 
 function INIT_OBJE_MODA_SALI()
@@ -80,12 +81,14 @@ function INIT_OBJE_MODA_SALI()
         console.log("Inicialice salidas");
     $("#FormRegi1\\:btonElim1").confirmation({container: '#FormRegi1'});
     $("#FormRegi1\\:fech1").initDatePick();
+    $(".select").selectpicker();  
 }
 
 function INIT_OBJE()
 {
     $("#TablRegi").initBootTable();
     INIT_OBJE_MODA();
+    $(".select").selectpicker();  
 }
 
 function INIT_OBJE_MODA()
@@ -93,5 +96,5 @@ function INIT_OBJE_MODA()
     console.log("Inicialice entradas");
     $("#FormRegi\\:btonElim").confirmation({container: '#FormRegi'});
      $("#FormRegi\\:fech").initDatePick();
-     
+     $(".select").selectpicker();  
 }

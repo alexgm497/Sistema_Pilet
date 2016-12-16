@@ -54,12 +54,24 @@ public class LoginBean implements Serializable {
     private String usua;
     private String cont;
     private String imagPerf;
-    private List<Notificacion> listNoti;//Lista de Notificaciones
+    private List<Notificacion> listNoti;//Lista de Notificaciones    
     private static WSconsEmplByUser objeWSconsEmplByAcce;
+    private static WSconsEmplByUser objeEmpl;
 
+    public  WSconsEmplByUser getObjeEmpl() {
+        this.objeEmpl = this.objeWSconsEmplByAcce;
+        return objeEmpl;
+    }
+
+    public  void setObjeEmpl(WSconsEmplByUser objeEmpl) {
+        LoginBean.objeEmpl = objeEmpl;
+    }
+    
     public static WSconsEmplByUser getObjeWSconsEmplByAcce() {
         return objeWSconsEmplByAcce;
     }
+    
+    
 
     public void setObjeWSconsEmplByAcce(WSconsEmplByUser objeWSconsEmplByAcce) {
         this.objeWSconsEmplByAcce = objeWSconsEmplByAcce;
@@ -124,7 +136,12 @@ public class LoginBean implements Serializable {
         this.usuaPojo = usuaPojo;
     }
 
+    public void consNoti(){
+        this.listNoti = null;
+        this.listNoti = FCDENoti.findByUsua(this.objeUsua.getCodiUsua());
+    }
 
+    
     /**
      * Método que crea la sesión
      */
@@ -147,7 +164,7 @@ public class LoginBean implements Serializable {
                     //Cargar una imagen de usuario (Puede ser de una BD)
                     this.imagPerf = "images/userDemo.png";
                     //Llenar lista de notif icaciones.... puede salir de la DB
-                    this.listNoti = FCDENoti.findByUsua(this.objeUsua.getCodiUsua());
+                    this.consNoti();
                     //Redireccionar
                     
                     facsCtxt.getExternalContext().redirect(globalAppBean.getUrl("index.xhtml"));

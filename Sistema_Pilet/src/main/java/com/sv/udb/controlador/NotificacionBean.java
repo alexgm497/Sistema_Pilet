@@ -64,6 +64,7 @@ public class NotificacionBean implements Serializable {
             this.objeNoti.setEstaNoti(1);
             logiBean.getListNoti().add(objeNoti);
             FCDENotificacion.edit(this.objeNoti);
+            logiBean.consNoti();
         }
         catch(Exception ex)
         {

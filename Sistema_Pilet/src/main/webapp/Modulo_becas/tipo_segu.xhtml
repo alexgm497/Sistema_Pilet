@@ -10,7 +10,8 @@ and open the template in the editor.
       xmlns:f="http://xmlns.jcp.org/jsf/core" 
       xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" 
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     
     <ui:composition template="../WEB-INF/resources/fragmentos/comun.xhtml">
         <!-- Título de la página -->
@@ -54,6 +55,7 @@ and open the template in the editor.
                 padding-top: 2px;
                 padding-bottom: 2px;
             }
+            
         </style>
             <div class="row">
                 <div class="col-md-12 col-xs-12">
@@ -71,7 +73,7 @@ and open the template in the editor.
                                         <h:commandLink id="btonNuev" class="btn btn-success">
                                             <p:ajax listener="#{tipoSeguBean.limpForm()}" update=":FormRegi" global="true" 
                                                     oncomplete="$('#ModaForm').modal('show');"/>
-                                            <i class="fa fa-plus"/> Nuevo
+                                            <i class="fa fa-plus"/> Nuevo tipo de seguimiento
                                         </h:commandLink>
                                     </h:form>
                                 </div>
@@ -97,7 +99,7 @@ and open the template in the editor.
                                         <h:outputText value="#{fila.descTipoSegui}"/>
                                     </h:column>
                                      <h:column pt:data-sortable="true">
-                                        <f:facet name="header">Estado</f:facet> 
+                                        <f:facet name="header">Estado de registro</f:facet> 
                                         <h:panelGroup class="label label-success" rendered="#{fila.estaTipoSegui eq '1'}">
                                        <i class="fa fa-unlock"/> Activo</h:panelGroup>
                                         <h:panelGroup class="label label-danger" rendered="#{fila.estaTipoSegui ne '1'}">
@@ -132,7 +134,7 @@ and open the template in the editor.
                                         <div class="form-group input-group-xs">
                                             <h:outputLabel  for="desc" value="Descripcion: "/>
                                             <h:message for="desc" errorClass="field-error" />
-                                            <h:inputText id="desc" value="#{tipoSeguBean.objeTipo.descTipoSegui}" class="form-control" />
+                                            <h:inputTextarea style="height: 50px; max-width: 100%;" id="descCita" value="#{tipoSeguBean.objeTipo.descTipoSegui}" class="form-control"/>
                                         </div>
                                     </fieldset>
                                 </div>
@@ -145,7 +147,7 @@ and open the template in the editor.
                                                 </h:commandLink>
                                                 <h:commandLink id="btonGuar" class="btn btn-success" rendered="#{tipoSeguBean.guardar}">
                                                     <p:ajax listener="#{tipoSeguBean.guar()}" process="@form" update="@form :ContRegi" oncomplete="INIT_OBJE();" />
-                                                    <i class="fa fa-plus"/> Guardar
+                                                    <i class="fa fa-plus"/> Guardar nuevo tipo de seguimiento
                                                 </h:commandLink>
                                                 <h:commandLink id="btonNuev" class="btn btn-success" rendered="#{!tipoSeguBean.guardar}">
                                                     <p:ajax listener="#{tipoSeguBean.limpForm()}" process="@form" update="@form" oncomplete="INIT_OBJE_MODA();" />
@@ -153,7 +155,7 @@ and open the template in the editor.
                                                 </h:commandLink>
                                                 <h:commandLink id="btonModi" class="btn btn-primary" rendered="#{!tipoSeguBean.guardar}">
                                                     <p:ajax listener="#{tipoSeguBean.modi()}" process="@form" update="@form :ContRegi" oncomplete="INIT_OBJE();" />
-                                                    <i class="fa fa-edit"/> Modificar
+                                                    <i class="fa fa-edit"/> Modificar tipo de seguimiento
                                                 </h:commandLink>
                                                 <!--
                                                     # Para corregir el error que redirecciona hice una serie de pasos
@@ -162,13 +164,23 @@ and open the template in the editor.
                                                     3. Modifiqué el custom alum.js(en este ejemplo) quitando la función y dejando todo en una sola línea
                                                     4. Y por último y lo mas importante que creo era lo único necesario al elemento h:outputLink le agregué el value="#"
                                                 -->
-                                                <h:outputLink id="btonElim" class="btn btn-danger" rendered="#{!tipoSeguBean.guardar}" value="#" pt:data-placement="left"
-                                                              pt:data-toggle="confirmation" pt:data-btn-ok-label="Sí" pt:data-btn-ok-icon="fa fa-times"
-                                                              pt:data-btn-ok-class="btn-danger btn-xs" pt:data-btn-cancel-label="No" pt:data-btn-cancel-icon="fa fa-mail-forward"
-                                                              pt:data-btn-cancel-class="btn-default btn-xs" pt:data-title="¿Esta seguro que desea eliminar?"
-                                                              pt:data-on-confirm="elimObje"><!--data-on-confirm = nombre del comando remoto de eliminar (sin paréntesis)-->
-                                                    <i class="fa fa-times"/> Eliminar
-                                                </h:outputLink>
+                                                <c:if test="#{tipoSeguBean.objeTipo.estaTipoSegui == 1}">
+                                                    <h:outputLink id="btonElim" class="btn btn-danger" rendered="#{!tipoSeguBean.guardar}" value="#" pt:data-placement="left"
+                                                                  pt:data-toggle="confirmation" pt:data-btn-ok-label="Sí" pt:data-btn-ok-icon="fa fa-times"
+                                                                  pt:data-btn-ok-class="btn-danger btn-xs" pt:data-btn-cancel-label="No" pt:data-btn-cancel-icon="fa fa-mail-forward"
+                                                                  pt:data-btn-cancel-class="btn-default btn-xs" pt:data-title="¿Esta seguro que desea eliminar?"
+                                                                  pt:data-on-confirm="elimObje"><!--data-on-confirm = nombre del comando remoto de eliminar (sin paréntesis)-->
+                                                        <i class="fa fa-times"/> Eliminar
+                                                    </h:outputLink>
+                                                </c:if>
+                                                <c:if test="#{tipoSeguBean.objeTipo.estaTipoSegui == 0}">
+                                                    <h:commandLink id="btonActi" class="btn btn-info" >
+                                                        <p:ajax listener="#{tipoSeguBean.reActi()}" process="@form"  update=":FormRegi :ContRegi" 
+                                                         oncomplete="INIT_OBJE();" />
+                                                        <i class="fa fa-edit"/> Activar
+                                                    </h:commandLink>                                                    
+                                                </c:if>
+                                                
                                             </div>
                                         </div>
                                 </div>

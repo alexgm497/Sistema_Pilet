@@ -9,6 +9,7 @@ import static com.fasterxml.jackson.databind.util.ClassUtil.getRootCause;
 import com.sv.udb.ejb.TipoDonacionFacadeLocal;
 import com.sv.udb.modelo.TipoDonacion;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -86,17 +87,21 @@ public class TipoTipoDonacionBean implements Serializable {
             else
             {
                 FCDETipoDona.create(this.objeTipo);
+                 if(this.listTipo == null)
+                    {
+                        this.listTipo = new ArrayList<>();
+                    }
             this.listTipo.add(this.objeTipo);
             this.limpForm();
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos guardados')");
-            log.info("Tipo Documento Guardado");
+            //log.info("Tipo Documento Guardado");
             
             }    
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al guardar ')");
-            log.error(getRootCause(ex).getMessage());
+            //log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -140,14 +145,36 @@ public class TipoTipoDonacionBean implements Serializable {
             this.listTipo.remove(this.objeTipo); //Limpia el objeto viejo
             this.objeTipo.setEstaDona(0);
             FCDETipoDona.edit(this.objeTipo);
-           // this.listTipo.add(this.objeTipo); //Agrega el objeto modificado
+            this.listTipo.add(this.objeTipo); //Agrega el objeto modificado
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos Modificados')");
-            log.info("Tipo Documento Eliminado");
+            //log.info("Tipo Documento Eliminado");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al modificar ')");
-            log.error(getRootCause(ex).getMessage());
+            //log.error(getRootCause(ex).getMessage());
+        }
+        finally
+        {
+            
+        }
+    }
+    public void reActi()
+    {
+        RequestContext ctx = RequestContext.getCurrentInstance(); //Capturo el contexto de la página
+        try
+        {
+            this.listTipo.remove(this.objeTipo); //Limpia el objeto viejo
+            this.objeTipo.setEstaDona(1);
+            FCDETipoDona.edit(this.objeTipo);
+            this.listTipo.add(this.objeTipo); //Agrega el objeto modificado
+            ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos Modificados')");
+            //log.info("Tipo Documento Eliminado");
+        }
+        catch(Exception ex)
+        {
+            ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al modificar ')");
+            //log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -162,13 +189,13 @@ public class TipoTipoDonacionBean implements Serializable {
     {
         try
         {
-            this.listTipo = FCDETipoDona.findAllActive();
-            log.info("Tipos de Documentos Consultados");
+            this.listTipo = FCDETipoDona.findAll();
+            //log.info("Tipos de Documentos Consultados");
         }
         catch(Exception ex)
         {
             ex.printStackTrace();
-            log.error(getRootCause(ex).getMessage());
+            //log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -189,12 +216,12 @@ public class TipoTipoDonacionBean implements Serializable {
             this.guardar = false;
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Consultado a " + 
                     String.format("%s", this.objeTipo.getNombTipoDona()) + "')");
-            log.info("Tipo Documento Consultado");
+            //log.info("Tipo Documento Consultado");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al consultar')");
-            log.error(getRootCause(ex).getMessage());
+            //log.error(getRootCause(ex).getMessage());
         }
         finally
         {

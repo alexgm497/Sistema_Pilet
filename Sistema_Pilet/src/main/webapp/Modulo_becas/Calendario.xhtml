@@ -27,6 +27,8 @@ and open the template in the editor.
             <h:outputStylesheet library="css" name="datepicker3.css"/>
             <h:outputScript library="js" name="bootstrap-datepicker.js"/>
             <h:outputScript library="js" name="bootstrap-datepicker.es.js"/>
+             <!--Plugins Selector de Hora-->
+            <h:outputStylesheet library="css" name="bootstrap-timepicker.min.css"/>
             <!--Plugins Select-->
             <h:outputStylesheet library="css" name="bootstrap-select.css"/>
             <h:outputScript library="js" name="bootstrap-select.js"/>
@@ -45,35 +47,67 @@ and open the template in the editor.
                     color: #fff !important;
                 }
             </style>
-            <p:schedule value="#{calendarioBecasBean.objeCale}" locale="es" />
-            <script type="text/javascript">
-                PrimeFaces.locales['es'] = {
-                    closeText: 'Cerrar',
-                    prevText: 'Anterior',
-                    nextText: 'Siguiente',
-                    monthNames: ['Enero','Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-                    monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
-                    dayNames: ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'],
-                    dayNamesShort: ['Dom','Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
-                    dayNamesMin: ['D','L','M','X','J','V','S'],
-                    weekHeader: 'Semana',
-                    firstDay: 1,
-                    isRTL: false,
-                    showMonthAfterYear: false,
-                    yearSuffix: '',
-                    timeOnlyTitle: 'Sólo hora',
-                    timeText: 'Tiempo',
-                    hourText: 'Hora',
-                    minuteText: 'Minuto',
-                    secondText: 'Segundo',
-                    currentText: 'Fecha actual',
-                    ampm: false,
-                    month: 'Mes',
-                    week: 'Semana',
-                    day: 'Día',
-                    allDayText : 'Todo el día'
-                };
-            </script>
+                <div class="row RegDiv">
+                    <div class="col-md-12 col-xs-12">
+                        <div class="panel panel-default">
+                            
+                            <p:schedule  timeFormat="hh:mm a" resizable="false" displayEventEnd="true" draggable="false" value="#{calendarioBecasBean.objeCale}" clientTimeZone="local" locale="es" columnFormat="dddd DD/MM">
+                                <p:ajax event="eventSelect" listener="#{calendarioBecasBean.onEventSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" />
+                            </p:schedule>
+
+                            <p:dialog widgetVar="eventDialog" resizable="false" header="Detalles de Segimiento" modal="true" showEffect="clip" hideEffect="clip">
+                                <h:panelGrid id="eventDetails" columns="2">
+                                    <h:outputText value="Nombre: ">
+                                    </h:outputText>
+                                    <h:outputText value="#{calendarioBecasBean.objeSegu.nombSegu}" >
+                                    </h:outputText>
+                                    <h:outputText value="Descripcion: ">
+                                    </h:outputText>
+                                    <h:outputText value="#{calendarioBecasBean.objeSegu.descSegu}" >
+                                    </h:outputText>
+                                    <h:outputText value="Fecha Inicio: ">
+                                    </h:outputText>
+                                    <h:outputText value="#{calendarioBecasBean.objeSegu.fechInicio}" >
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                    </h:outputText>
+                                    <h:outputText value="Fecha Fin: ">
+                                    </h:outputText>
+                                    <h:outputText value="#{calendarioBecasBean.objeSegu.fechFin}" >
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                    </h:outputText>
+                                </h:panelGrid>
+                            </p:dialog>
+                            <script type="text/javascript">
+                                PrimeFaces.locales['es'] = {
+                                    closeText: 'Cerrar',
+                                    prevText: 'Anterior',
+                                    nextText: 'Siguiente',
+                                    monthNames: ['Enero','Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                                    monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
+                                    dayNames: ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'],
+                                    dayNamesShort: ['Dom','Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+                                    dayNamesMin: ['D','L','M','X','J','V','S'],
+                                    weekHeader: 'Semana',
+                                    firstDay: 1,
+                                    isRTL: false,
+                                    showMonthAfterYear: false,
+                                    yearSuffix: '',
+                                    timeOnlyTitle: 'Sólo hora',
+                                    timeText: 'Tiempo',
+                                    hourText: 'Hora',
+                                    minuteText: 'Minuto',
+                                    secondText: 'Segundo',
+                                    currentText: 'Fecha actual',
+                                    ampm: false,
+                                    month: 'Mes',
+                                    week: 'Semana',
+                                    day: 'Día',
+                                    allDayText : 'Todo el día'
+                                };
+                            </script>
+                        </div>
+                    </div>
+                </div>
         </ui:define>
     </ui:composition>
 </html>

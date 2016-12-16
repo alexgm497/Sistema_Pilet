@@ -77,12 +77,12 @@ public class SeccionBean implements Serializable{
             this.listSecc.add(this.objeSecc);
             this.limpForm();
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos guardados')");
-            log.info("Seccion Guardada");
+            //log.info("Seccion Guardada");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al guardar ')");
-            log.error(getRootCause(ex).getMessage());
+           // log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -99,12 +99,12 @@ public class SeccionBean implements Serializable{
             FCDESecc.edit(this.objeSecc);
             this.listSecc.add(this.objeSecc); //Agrega el objeto modificado
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos Modificados')");
-            log.info("Seccion Modificada");
+            //log.info("Seccion Modificada");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al modificar ')");
-            log.error(getRootCause(ex).getMessage());
+           // log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -121,12 +121,12 @@ public class SeccionBean implements Serializable{
             this.listSecc.remove(this.objeSecc);
             this.limpForm();
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos Eliminados')");
-            log.info("Seccion Eliminada");
+           // log.info("Seccion Eliminada");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al eliminar')");
-            log.error(getRootCause(ex).getMessage());
+          //  log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -139,12 +139,12 @@ public class SeccionBean implements Serializable{
         try
         {
             this.listSecc = FCDESecc.findAll();
-            log.info("Secciones Consultadas");
+           // log.info("Secciones Consultadas");
         }
         catch(Exception ex)
         {
             ex.printStackTrace();
-            log.error(getRootCause(ex).getMessage());
+           // log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -162,12 +162,12 @@ public class SeccionBean implements Serializable{
             this.guardar = false;
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Consultado a " + 
                     String.format("%s", this.objeSecc.getNombSecc()) + "')");
-            log.info("Seccion Consultada");
+           // log.info("Seccion Consultada");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al consultar')");
-            log.error(getRootCause(ex).getMessage());
+          //  log.error(getRootCause(ex).getMessage());
         }
         finally
         {

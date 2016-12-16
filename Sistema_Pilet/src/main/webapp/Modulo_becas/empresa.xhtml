@@ -10,7 +10,9 @@ and open the template in the editor.
       xmlns:f="http://xmlns.jcp.org/jsf/core" 
       xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" 
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"      
+      xmlns:cs="http://xmlns.udb.edu.sv/component">
     <ui:composition template="../WEB-INF/resources/fragmentos/comun.xhtml">
         <!-- Título de la página -->
         <ui:param name="pageTitl" value="::: Página Empresas :::"/>
@@ -28,8 +30,11 @@ and open the template in the editor.
         <!--Plugins Select-->
         <h:outputStylesheet library="css" name="bootstrap-select.css"/>
         <h:outputScript library="js" name="bootstrap-select.js"/>
+        
+            <h:outputScript library="js" name="bootstrap-filestyle.js"/>
+            <h:outputScript library="js" name="custom/file.js"/>
         <!--Plugins custom-->
-            <h:outputScript library="js" name="custom/general.js"/>
+            <h:outputScript library="js" name="custom/empresa.js"/>
         </ui:define>
         <!-- Elementos propios del boby -->
         <ui:define name="body">
@@ -55,151 +60,763 @@ and open the template in the editor.
             }
         </style>
             <div class="row">
-                <div class="col-md-12 col-xs-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">Tabla de Datos</div>
-                        <div class="panel-body">
-                            <h:panelGroup id="ContRegi">
-                                <div id="toolTablRegi">
-                                    <h:form>
-                                        <!--Form exclusivo para los remotos-->
-                                        <p:remoteCommand name="consObje" actionListener="#{empresaBean.cons()}" update=":FormRegi" 
-                                                         oncomplete="$('#ModaForm').modal('show');" global="true"/>
-                                        <p:remoteCommand name="elimObje" actionListener="#{empresaBean.elim()}" update=":FormRegi :ContRegi" 
-                                                         oncomplete="INIT_OBJE();" global="true"/>
-                                        <h:commandLink id="btonNuev" class="btn btn-success">
-                                            <p:ajax listener="#{empresaBean.limpForm()}" update=":FormRegi" global="true" 
-                                                    oncomplete="$('#ModaForm').modal('show');"/>
-                                            <i class="fa fa-plus"/> Nuevo
-                                        </h:commandLink>
+                <h:panelGroup id="container">
+                    <h:form>
+                        <!--Form exclusivo para los remotos-->
+                        <p:remoteCommand name="elimObjeEmpr" actionListener="#{empresaBean.elim()}" oncomplete="INIT_OBJE();"
+                                         update=":ContRegi" global="true"/>
+                    </h:form>
+                    <ui:fragment id="FragTabl" rendered="#{empresaBean.guardar==true and empresaBean.showEmpr==false}">
+                        <div class="col-md-12 col-xs-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Tabla de Datos</div>
+                                <div class="panel-body">
+                                    <h:panelGroup id="ContRegi">
+                                        <div id="toolTablRegi">
+                                            <h:form>
+                                                <!--Form exclusivo para los remotos-->
+                                                 <!-- <button onclick="elimObjeEmpr(); return false;">Hola Mundo</button> -->
+                                                <p:remoteCommand name="consObje" actionListener="#{empresaBean.cons()}" oncomplete="INIT_OBJE();" update=":container"/>
+                                                <div class="btn-group">
+                                                <h:commandLink id="btonNuev" class="btn btn-success">
+                                                    <p:ajax listener="#{empresaBean.toogEmpr()}" process="@form :container" update=":container" oncomplete="INIT_OBJE();"/>
+                                                    <i class="fa fa-plus"/> Agregar una nueva empresa
+                                                </h:commandLink>
+                                                <h:commandLink id="btonSABER" class="btn btn-warning" >
+                                                    <p:ajax oncomplete="PF('ModaRepo').show();" process="@form" listener="#{empresaBean.procVisi()}"  update=":ModaRepoView"  global="true"/>
+                                                    Generar reporte
+                                                </h:commandLink>
+                                                    </div>
+                                            </h:form>
+                                        </div>
+                                        <h:dataTable pt:data-id="TablRegi" id="TablRegi" value="#{empresaBean.listEmpr}"
+                                                     var="fila" class="boottable" pt:data-toolbar="#toolTablRegi"
+                                                     styleClass="table-hover table-bordered table-condensed table-striped table-responsive"
+                                                     pt:data-show-refresh="false" pt:data-show-toggle="false" pt:data-show-columns="false" 
+                                                     pt:data-search="true" pt:data-pagination="true" pt:data-page-list="[5, 10, 20, 50]"
+                                                     pt:data-click-to-select="true"  pt:data-select-item-name="radio"
+                                                     pt:data-single-select="true">                                
+                                            <h:column pt:data-field="state" pt:data-checkbox="true">
+                                            </h:column>
+                                            <h:column pt:data-align="right" pt:data-sortable="true" pt:data-field="id">
+                                                <f:facet name="header">Código</f:facet>
+                                                <h:outputText value="#{fila.codiEmpr}"/>
+                                            </h:column>
+                                            <h:column pt:data-sortable="true" pt:data-field="nomb">
+                                                <f:facet name="header">Empresa</f:facet>
+                                                <h:outputText value="#{fila.nombEmpr}"/>   
+                                            </h:column>
+                                            <h:column pt:data-sortable="true">
+                                                <f:facet name="header">Dirección</f:facet>
+                                                <h:outputText value="#{fila.direEmpr}"/>
+                                            </h:column>
+                                            <h:column pt:data-sortable="true">
+                                                <f:facet name="header">Correo electronico</f:facet>
+                                                <h:outputText value="#{fila.emaiEmpr}"/>
+                                            </h:column>
+                                            <h:column pt:data-sortable="true">
+                                                <f:facet name="header">Encargado</f:facet>
+                                                <h:outputText value="#{fila.encaEmpr}"/>
+                                            </h:column>
+                                            <h:column pt:data-sortable="true">
+                                                <f:facet name="header">Estado</f:facet> 
+                                                <h:panelGroup class="label label-success" rendered="#{fila.estaEmpr eq '1'}">
+                                               <i class="fa fa-unlock"/> Activo</h:panelGroup>
+                                                <h:panelGroup class="label label-danger" rendered="#{fila.estaEmpr ne '1'}">
+                                               <i class="fa fa-lock"/> Inactivo</h:panelGroup>
+                                            </h:column>
+                                        </h:dataTable>
+                                    </h:panelGroup>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <p:dialog header="" widgetVar="ModaRepo" minHeight="40" width="1000px" style="z-index: 9999999;">
+                                <h:panelGroup id="ModaRepoView">
+                                    <cs:PdfViewer id="pdfViewer" value="#{empresaBean.docuRepo}" width="100%" height="500px"/>
+                                </h:panelGroup>
+                            </p:dialog>
+                        </div>
+                    </ui:fragment>
+                    <div class="row">
+                        <!-- Modal de empresa pa modificar-->
+                        <div id="ModaForm" class="modal fade" role="dialog" onshow="INIT_OBJE_MODA();">
+                            <div class="modal-dialog">
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                    <h:form id="FormRegi" class="form-horizontal">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times"/></button>
+                                            <h4 class="modal-title">Gestión de Empresas</h4>
+                                        </div>
+                                        <div class="modal-body" style="padding-top: 2px;">
+                                            <fieldset class="col-md-12">
+                                                <h:inputHidden id="codi" value="#{empresaBean.objeEmpr.codiEmpr}" />
+                                                <div class="form-group input-group-xs">
+                                                    <h:outputLabel  for="nomb" value="Nombre: "/>
+                                                    <h:message for="nomb" errorClass="field-error" />
+                                                    <h:inputText id="nomb" value="#{empresaBean.objeEmpr.nombEmpr}" class="form-control" />
+                                                </div>
+                                                <div class="form-group input-group-xs">
+                                                    <h:outputLabel  for="dire" value="Dirección: "/>
+                                                    <h:inputText id="dire" value="#{empresaBean.objeEmpr.direEmpr}" class="form-control"/>
+                                                    <h:message for="dire" errorClass="field-error" />
+                                                </div>
+                                                <div class="form-group input-group-xs">
+                                                    <h:outputLabel  for="emai" value="Correo electronico: "/>
+                                                    <h:inputText id="emai" value="#{empresaBean.objeEmpr.emaiEmpr}" class="form-control"/>
+                                                    <h:message for="emai" errorClass="field-error" />
+                                                </div>
+                                                <div class="form-group input-group-xs">
+                                                    <h:outputLabel  for="enca" value="Encargado: "/>
+                                                    <h:inputText id="enca" value="#{empresaBean.objeEmpr.encaEmpr}" class="form-control"/>
+                                                    <h:message for="enca" errorClass="field-error" />
+                                                </div>
+                                                <div class="form-group input-group-xs">
+                                                    <h:outputLabel  for="fech" value="Fecha de ingreso: "/>
+                                                    <h:inputText id="fech" value="#{empresaBean.objeEmpr.fechEmpr}" class="form-control">
+                                                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                                                    </h:inputText>
+                                                    <h:message for="fech" errorClass="field-error" />
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                        <div class="modal-footer">
+                                                <div class="input-group-btn right" style="padding-top: 5px;">
+                                                    <div class="btn-group">
+                                                        <h:commandLink id="btonCanc" class="btn btn-default" pt:data-dismiss="modal">
+                                                            <p:ajax listener="#{empresaBean.limpForm()}" process="@form" update="@form" global="true"/>
+                                                            <i class="fa fa-mail-forward"/> Cerrar
+                                                        </h:commandLink>
+                                                        <h:commandLink id="btonModi" class="btn btn-primary" rendered="#{!empresaBean.guardar}">
+                                                            <p:ajax listener="#{empresaBean.modi()}" process="@form" update="@form :ContEmpre" oncomplete="INIT_OBJE; INIT_OBJE_MODA;"/>
+                                                            <i class="fa fa-edit"/> Modificar
+                                                        </h:commandLink>
+                                                        <!--
+                                                            # Para corregir el error que redirecciona hice una serie de pasos
+                                                            1. Actualizar el bootstrap-confirmation, yo usé este: http://bootstrap-confirmation.js.org/
+                                                            2. Quitar la referencia: bootstrap-confirmation.min.js del fragmento head.xhtml
+                                                            3. Modifiqué el custom alum.js(en este ejemplo) quitando la función y dejando todo en una sola línea
+                                                            4. Y por último y lo mas importante que creo era lo único necesario al elemento h:outputLink le agregué el value="#"
+                                                        -->
+                                                        <h:outputLink id="btonElim2" class="btn btn-danger" rendered="#{!empresaBean.guardar}" value="#" pt:data-placement="left"
+                                                                      pt:data-toggle="confirmation" pt:data-btn-ok-label="Sí" pt:data-btn-ok-icon="fa fa-times"
+                                                                      pt:data-btn-ok-class="btn-danger btn-xs" pt:data-btn-cancel-label="No" pt:data-btn-cancel-icon="fa fa-mail-forward"
+                                                                      pt:data-btn-cancel-class="btn-default btn-xs" pt:data-title="¿Esta seguro que desea eliminar empresa?"
+                                                                      pt:data-on-confirm="elimObjeEmpr"><!--data-on-confirm = nombre del comando remoto de eliminar (sin paréntesis)-->
+                                                            <i class="fa fa-times"/> Eliminar
+                                                        </h:outputLink>
+                                                    </div>
+                                                </div>
+                                        </div>
                                     </h:form>
                                 </div>
-                                <h:dataTable pt:data-id="TablRegi" id="TablRegi" value="#{empresaBean.listEmpr}"
-                                             var="fila" class="boottable" pt:data-toolbar="#toolTablRegi"
-                                             styleClass="table-hover table-bordered table-condensed table-striped table-responsive"
-                                             pt:data-show-refresh="false" pt:data-show-toggle="false" pt:data-show-columns="false" 
-                                             pt:data-search="true" pt:data-pagination="true" pt:data-page-list="[5, 10, 20, 50]"
-                                             pt:data-click-to-select="true"  pt:data-select-item-name="radio"
-                                             pt:data-single-select="true">                                
-                                    <h:column pt:data-field="state" pt:data-checkbox="true">
-                                    </h:column>
-                                    <h:column pt:data-align="right" pt:data-sortable="true" pt:data-field="id">
-                                        <f:facet name="header">Código</f:facet>
-                                        <h:outputText value="#{fila.codiEmpr}"/>
-                                    </h:column>
-                                    <h:column pt:data-sortable="true" pt:data-field="nomb">
-                                        <f:facet name="header">Empresa</f:facet>
-                                        <h:outputText value="#{fila.nombEmpr}"/>   
-                                    </h:column>
-                                    <h:column pt:data-sortable="true">
-                                        <f:facet name="header">Dirección</f:facet>
-                                        <h:outputText value="#{fila.direEmpr}"/>
-                                    </h:column>
-                                    <h:column pt:data-sortable="true">
-                                        <f:facet name="header">Correo electronico</f:facet>
-                                        <h:outputText value="#{fila.emaiEmpr}"/>
-                                    </h:column>
-                                    <h:column pt:data-sortable="true">
-                                        <f:facet name="header">Encargado</f:facet>
-                                        <h:outputText value="#{fila.encaEmpr}"/>
-                                    </h:column>
-                                    <h:column pt:data-sortable="true">
-                                        <f:facet name="header">Estado</f:facet> 
-                                        <h:panelGroup class="label label-success" rendered="#{fila.estaEmpr eq '1'}">
-                                       <i class="fa fa-unlock"/> Activo</h:panelGroup>
-                                        <h:panelGroup class="label label-danger" rendered="#{fila.estaEmpr ne '1'}">
-                                       <i class="fa fa-lock"/> Inactivo</h:panelGroup>
-                                    </h:column>
-                                </h:dataTable>
-                            </h:panelGroup>
-                        </div>
+                            </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <!-- Modal -->
-                <div id="ModaForm" class="modal fade" role="dialog">
-                    <div class="modal-dialog">
-                        <!-- Modal content-->
-                        <div class="modal-content">
-                            <h:form id="FormRegi" class="form-horizontal">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times"/></button>
-                                    <h4 class="modal-title">Gestión de Empresas</h4>
-                                </div>
-                                <div class="modal-body" style="padding-top: 2px;">
-                                    <fieldset class="col-md-12">
-                                        <h:inputHidden id="codi" value="#{empresaBean.objeEmpr.codiEmpr}" />
-                                        <div class="form-group input-group-xs">
-                                            <h:outputLabel  for="nomb" value="Nombre: "/>
-                                            <h:message for="nomb" errorClass="field-error" />
-                                            <h:inputText id="carn" value="#{empresaBean.objeEmpr.nombEmpr}" class="form-control" />
-                                        </div>
-                                        <div class="form-group input-group-xs">
-                                            <h:outputLabel  for="dire" value="Dirección: "/>
-                                            <h:inputText id="dire" value="#{empresaBean.objeEmpr.direEmpr}" class="form-control"/>
-                                            <h:message for="dire" errorClass="field-error" />
-                                        </div>
-                                        <div class="form-group input-group-xs">
-                                            <h:outputLabel  for="emai" value="Correo electronico: "/>
-                                            <h:inputText id="emai" value="#{empresaBean.objeEmpr.emaiEmpr}" class="form-control"/>
-                                            <h:message for="emai" errorClass="field-error" />
-                                        </div>
-                                        <div class="form-group input-group-xs">
-                                            <h:outputLabel  for="enca" value="Encargado: "/>
-                                            <h:inputText id="enca" value="#{empresaBean.objeEmpr.encaEmpr}" class="form-control"/>
-                                            <h:message for="enca" errorClass="field-error" />
-                                        </div>
-                                        <div class="form-group input-group-xs">
-                                            <h:outputLabel  for="fech" value="Fecha de ingreso: "/>
-                                            <h:inputText id="fech" value="#{empresaBean.objeEmpr.fechEmpr}" class="form-control">
-                                                <f:convertDateTime pattern="dd/MM/yyyy" />
-                                            </h:inputText>
-                                            <h:message for="fech" errorClass="field-error" />
-                                        </div>
-                                    </fieldset>
-                                </div>
-                                <div class="modal-footer">
-                                        <div class="input-group-btn right" style="padding-top: 5px;">
-                                            <div class="btn-group">
-                                                <h:commandLink id="btonCanc" class="btn btn-default" pt:data-dismiss="modal">
-                                                    <p:ajax listener="#{empresaBean.limpForm()}" process="@form" update="@form" global="true"/>
-                                                    <i class="fa fa-mail-forward"/> Cerrar
-                                                </h:commandLink>
-                                                <h:commandLink id="btonGuar" class="btn btn-success" rendered="#{empresaBean.guardar}">
-                                                    <p:ajax listener="#{empresaBean.guar()}" process="@form" update="@form :ContRegi" oncomplete="INIT_OBJE();" />
-                                                    <i class="fa fa-plus"/> Guardar
-                                                </h:commandLink>
-                                                <h:commandLink id="btonNuev" class="btn btn-success" rendered="#{!empresaBean.guardar}">
-                                                    <p:ajax listener="#{empresaBean.limpForm()}" process="@form" update="@form" oncomplete="INIT_OBJE_MODA();" />
-                                                    <i class="fa fa-plus"/> Nuevo
-                                                </h:commandLink>
-                                                <h:commandLink id="btonModi" class="btn btn-primary" rendered="#{!empresaBean.guardar}">
-                                                    <p:ajax listener="#{empresaBean.modi()}" process="@form" update="@form :ContRegi" oncomplete="INIT_OBJE();" />
-                                                    <i class="fa fa-edit"/> Modificar
-                                                </h:commandLink>
-                                                <!--
-                                                    # Para corregir el error que redirecciona hice una serie de pasos
-                                                    1. Actualizar el bootstrap-confirmation, yo usé este: http://bootstrap-confirmation.js.org/
-                                                    2. Quitar la referencia: bootstrap-confirmation.min.js del fragmento head.xhtml
-                                                    3. Modifiqué el custom alum.js(en este ejemplo) quitando la función y dejando todo en una sola línea
-                                                    4. Y por último y lo mas importante que creo era lo único necesario al elemento h:outputLink le agregué el value="#"
-                                                -->
-                                                <h:outputLink id="btonElim" class="btn btn-danger" rendered="#{!empresaBean.guardar}" value="#" pt:data-placement="left"
-                                                              pt:data-toggle="confirmation" pt:data-btn-ok-label="Sí" pt:data-btn-ok-icon="fa fa-times"
-                                                              pt:data-btn-ok-class="btn-danger btn-xs" pt:data-btn-cancel-label="No" pt:data-btn-cancel-icon="fa fa-mail-forward"
-                                                              pt:data-btn-cancel-class="btn-default btn-xs" pt:data-title="¿Esta seguro que desea eliminar?"
-                                                              pt:data-on-confirm="elimObje"><!--data-on-confirm = nombre del comando remoto de eliminar (sin paréntesis)-->
-                                                    <i class="fa fa-times"/> Eliminar
-                                                </h:outputLink>
-                                            </div>
-                                        </div>
-                                </div>
-                            </h:form>
+                     <!-- /Modal de empresa pa modificar-->
+                    <ui:fragment id="NuevEmpr" rendered="#{empresaBean.showEmpr == true}">
+                        <div class="panel panel-primary" style="margin-left: 1%; margin-right: 2%;"> 
+                            <div class="panel-heading"> 
+                                <h3 class="panel-title">Informacion Empresa</h3> 
+                            </div> 
+                            <div class="panel-body"> 
+                                <h:form id="FormEmpr" class="form-horizontal">
+                                    <h:inputHidden id="codi" value="#{empresaBean.objeEmpr.codiEmpr}" />
+                                    <div class="form-group input-group-sm" style="margin-left: 1%; margin-right: 2%;">
+                                        <h:outputLabel  for="nomb" value="Nombre: "/>
+                                        <h:message for="nomb" errorClass="field-error" />
+                                        <h:inputText id="nomb" value="#{empresaBean.objeEmpr.nombEmpr}" class="form-control" />
+                                    </div>
+                                    <div class="form-group input-group-sm" style="margin-left: 1%; margin-right: 2%;">
+                                        <h:outputLabel  for="dire" value="Dirección: "/>
+                                        <h:inputText id="dire" value="#{empresaBean.objeEmpr.direEmpr}" class="form-control"/>
+                                        <h:message for="dire" errorClass="field-error" />
+                                    </div>
+                                    <div class="form-group input-group-sm" style="margin-left: 1%; margin-right: 2%;">
+                                        <h:outputLabel  for="emai" value="Correo electronico: "/>
+                                        <h:inputText id="emai" value="#{empresaBean.objeEmpr.emaiEmpr}" class="form-control"/>
+                                        <h:message for="emai" errorClass="field-error" />
+                                    </div>
+                                    <div class="form-group input-group-sm" style="margin-left: 1%; margin-right: 2%;">
+                                        <h:outputLabel  for="enca" value="Encargado: "/>
+                                        <h:inputText id="enca" value="#{empresaBean.objeEmpr.encaEmpr}" class="form-control"/>
+                                        <h:message for="enca" errorClass="field-error" />
+                                    </div>
+                                    <div class="form-group input-group-sm" style="margin-left: 1%; margin-right: 2%;">
+                                        <h:outputLabel  for="fech" value="Fecha de ingreso: "/>
+                                        <h:inputText id="fech" value="#{empresaBean.objeEmpr.fechEmpr}" class="form-control">
+                                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                                        </h:inputText>
+                                        <h:message for="fech" errorClass="field-error" />
+                                    </div>
+                                    <h:commandLink id="btonGuarSegu" class="btn btn-success" style="margin-left: 1%;" rendered="#{seguimientoBean.guardar}">
+                                        <p:ajax listener="#{empresaBean.guar()}" process="@form" update="@form :container" oncomplete="INIT_OBJE();" />
+                                        <i class="fa fa-plus"/> Guardar
+                                    </h:commandLink>
+                                </h:form>
+                            </div> 
                         </div>
-                    </div>
+                    </ui:fragment><!-- Aqui empieza lo que sale luego de guardar la empresa! -->
+                    <ui:fragment id="FragOtro" rendered="#{empresaBean.guardar == false and empresaBean.showEmpr == false}">
+                        <h:panelGroup id="ContEmpre">
+                        <h:form class="form-horizontal">
+                            <fieldset>
+                                <center><h3>#{empresaBean.objeEmpr.nombEmpr}</h3></center>
+                                <p:panelGrid columns="2" layout="grid" style="margin-left: 5%; margin-right: 5%;">
+                                    <f:facet name="header">
+                                        <center><p:graphicImage value="#{globalAppBean.getImage('images/building.png')}" width="150px" class="img-responsive media-object img-circle profile-img" alt="Empresa"/></center>
+                                    </f:facet>
+
+                                    
+                                    <c:if test="#{!empresaBean.guardar}">
+                                        <h:outputText value="Estado:" />
+                                        <h:panelGroup class="label label-success" rendered="#{empresaBean.objeEmpr.estaEmpr == 1}">
+                                            <i class="fa fa-unlock"/> Activo</h:panelGroup>
+                                        <h:panelGroup class="label label-danger" rendered="#{empresaBean.objeEmpr.estaEmpr == 2}">
+                                            <i class="fa fa-unlock"/> Inactivo</h:panelGroup>
+                                    </c:if>
+                                    <h:outputText value="Direccion:" />
+                                    <h:outputText value="#{empresaBean.objeEmpr.direEmpr}" />
+
+                                    <h:outputText value="Email:" />
+                                    <h:outputText value="#{empresaBean.objeEmpr.emaiEmpr}" />
+
+                                    <h:outputText value="Encargado:" />
+                                    <h:outputText value="#{empresaBean.objeEmpr.encaEmpr}" />
+
+                                    <h:outputText value="Monto:" />
+                                    <h:outputText value="$#{empresaBean.objeEmpr.montEmpr}" />
+                                    <f:facet name="footer">
+                                        <h:commandLink id="btonRegr" class="btn btn-primary pull-left" style="color: white;">
+                                            <p:ajax listener="#{empresaBean.toogRegr()}" process="@form" update="@form :container" oncomplete="INIT_OBJE();" />
+                                            <i class="fa fa-edit"/> Regresar
+                                        </h:commandLink>
+                                        <h:commandLink id="btonActi" class="btn btn-info pull-right" style="color: white;">
+                                                <p:ajax update=":FormRegi" global="true" 
+                                                 oncomplete="$('#ModaForm').modal('show');INIT_OBJE();INIT_OBJE_MODA();"/>
+                                                <i class="fa fa-edit"/> Modificar
+                                        </h:commandLink><br/><br/>
+                                    </f:facet>
+                                </p:panelGrid><br/>
+                            </fieldset>
+                        </h:form>
+                            </h:panelGroup>
+                        <div class="col-md-12 col-xs-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Donaciones a pagar por esta empresa</div>
+                                <div class="panel-body">
+                                    <h:panelGroup id="ContDona">
+                                        <div id="toolTablDona">
+                                            <h:form>
+                                                <!--Form exclusivo para los remotos-->
+                                                <p:remoteCommand name="consDonaObje" actionListener="#{donacionBean.cons()}" 
+                                                                 oncomplete="$('#ModaDonaForm').modal('show'); INIT_OBJE(); INIT_OBJE_MODA();" global="true" update=":container"/>
+                                                <p:remoteCommand name="elimObje" actionListener="#{donacionBean.elim()}" update="@form :ContDona :TablDona"
+                                                                 oncomplete="INIT_OBJE();" global="true"/>
+                                                <h:commandLink id="btonNuevDona" class="btn btn-success">
+                                                    <p:ajax listener="#{donacionBean.limpForm()}" update=":FormDona" global="true" 
+                                                            oncomplete="$('#ModaDonaForm').modal('show');"/>
+                                                    <i class="fa fa-plus"/> Agregar una nueva donación a esta empresa
+                                                </h:commandLink>
+                                            </h:form>
+                                        </div>
+                                        <h:dataTable pt:data-id="TablDona" id="TablDona" value="#{donacionBean.listDonaEmpr}"
+                                                     var="fila" class="boottable" pt:data-toolbar="#toolTablDona"
+                                                     styleClass="table-hover table-bordered table-condensed table-striped table-responsive"
+                                                     pt:data-show-refresh="false" pt:data-show-toggle="false" pt:data-show-columns="false" 
+                                                     pt:data-search="true" pt:data-pagination="true" pt:data-page-list="[5, 10, 20, 50]"
+                                                     pt:data-click-to-select="true"  pt:data-select-item-name="radio"
+                                                     pt:data-single-select="true">                                
+                                            <h:column pt:data-field="state" pt:data-checkbox="true">
+                                            </h:column>
+                                            <h:column pt:data-align="right" pt:data-sortable="true" pt:data-field="idDona">
+                                                <f:facet name="header">Código</f:facet>
+                                                <h:outputText value="#{fila.codiDona}"/>
+                                            </h:column>
+                                            <h:column pt:data-sortable="true" pt:data-field="nomb">
+                                                <f:facet name="header">Nombre empresa</f:facet>
+                                                <h:outputText value="#{fila.codiEmpr.nombEmpr}"/>   
+                                            </h:column>
+                                            <h:column pt:data-sortable="true">
+                                                <f:facet name="header">Nombre</f:facet>
+                                                <h:outputText value="#{fila.nombDona}"/>
+                                            </h:column>
+                                            <h:column pt:data-sortable="true">
+                                                <f:facet name="header">Plazo Donacion</f:facet>
+                                                <h:outputText value="#{fila.plazDona} Meses"/>
+                                            </h:column>
+                                            <h:column pt:data-sortable="true">
+                                                <f:facet name="header">Cantidad cuota</f:facet>
+                                                <h:outputText value="$#{fila.cantCuot}"/>
+                                            </h:column>
+                                            <h:column pt:data-sortable="true">
+                                                <f:facet name="header">Monto Total</f:facet>
+                                                <h:outputText value="$#{fila.montTot}"/>
+                                            </h:column>
+                                            <h:column pt:data-sortable="true">
+                                                <f:facet name="header">Monto pendiente</f:facet>
+                                                <h:outputText value="$#{fila.montPend}"/>
+                                            </h:column>
+                                            <h:column pt:data-sortable="true">
+                                                <f:facet name="header">Tipo de donación</f:facet>
+                                                <h:outputText value="#{fila.codiTipoDona.nombTipoDona}"/>
+                                            </h:column>
+                                            <h:column pt:data-sortable="true">
+                                                <f:facet name="header">Fecha</f:facet>
+                                                <h:outputText value="#{fila.fechDona}">
+                                                    <f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-6"/>
+                                                </h:outputText>
+                                            </h:column>
+                                            <h:column pt:data-sortable="true">
+                                                <f:facet name="header">Estado</f:facet> 
+                                                <h:panelGroup class="label label-success" rendered="#{fila.estaDona eq '1'}">
+                                               <i class="fa fa-unlock"/> Activo</h:panelGroup>
+                                                <h:panelGroup class="label label-danger" rendered="#{fila.estaDona ne '1'}">
+                                               <i class="fa fa-lock"/> Inactivo</h:panelGroup>
+                                            </h:column>
+                                        </h:dataTable>
+                                    </h:panelGroup>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <!-- Modal -->
+                            <div id="ModaDonaForm" class="modal fade" role="dialog" onshow="INIT_OBJE_MODA();">
+                                <div class="modal-dialog">
+                                    <!-- Modal content-->
+                                    <div class="modal-content">
+                                        <h:form id="FormDona" class="form-horizontal">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times"/></button>
+                                                <h4 class="modal-title">Gestión Donacion</h4>
+                                            </div>
+                                            <div class="modal-body" style="padding-top: 2px;">
+                                                <ui:fragment id="FragDona" rendered="#{!donacionBean.donacion}">
+                                                    <fieldset class="col-md-12">
+                                                        <h:inputHidden id="codiDona" value="#{donacionBean.objeDona.codiDona}" />
+                                                        <div class="form-group input-group-xs">
+                                                            <h:outputLabel  for="tipoDona" value="Tipo donación: "/>
+                                                             <h:selectOneMenu id="tipoDona" value="#{donacionBean.objeDona.codiTipoDona}" class="form-control select" pt:data-live-search="true" validatorMessage="Debe Elegir un Dia de la Semana">
+                                                            <f:selectItems value="#{tipoTipoDonacionBean.listTipo}" var="lst" itemLabel="#{lst.nombTipoDona}" itemValue="#{lst}"/>
+                                                                <f:converter converterId="PooConv"/>
+                                                            </h:selectOneMenu>
+                                                            <h:message for="tipoDona" errorClass="field-error" />
+                                                        </div>
+                                                        <div class="form-group input-group-xs">
+                                                            <h:outputLabel  for="nomb" value="Nombre Donacion"/>
+                                                            <h:message for="nomb" errorClass="field-error" />
+                                                            <h:inputText id="nombDona" value="#{donacionBean.objeDona.nombDona}" class="form-control" />
+                                                        </div>
+                                                        <div class="form-group input-group-xs">
+                                                            <h:outputLabel  for="mens" value="Plazo Donacion (Meses)"/>
+                                                            <h:message for="mens" errorClass="field-error" />
+                                                            <h:inputText id="mens" value="#{donacionBean.objeDona.plazDona}" class="form-control" />
+                                                        </div>
+                                                        <div class="form-group input-group-xs">
+                                                            <h:outputLabel  for="cant" value="Cantidad cuota"/>
+                                                            <h:message for="cant" errorClass="field-error" />
+                                                            $<h:inputText id="cant" value="#{donacionBean.objeDona.cantCuot}" class="form-control" />
+                                                        </div>
+                                                        <div class="form-group input-group-xs">
+                                                            <h:outputLabel  for="mont" value="Monto total"/>
+                                                            <h:message for="mont" errorClass="field-error" />
+                                                            <h:inputText  disabled="true" id="mont" value="$#{donacionBean.objeDona.montTot}" class="form-control" />
+                                                        </div>
+                                                        <div class="form-group input-group-xs">
+                                                            <h:outputLabel  for="montp" value="Monto pendiente"/>
+                                                            <h:message for="montp" errorClass="field-error" />
+                                                            <h:inputText disabled="true" id="montp" value="$#{donacionBean.objeDona.montPend}" class="form-control" />
+                                                        </div>                                                        
+                                                        <div class="form-group input-group-xs">
+                                                            <h:outputLabel  for="fech" value="Fecha Inicio "/>
+                                                            <h:message for="fech" errorClass="field-error" />
+                                                            <h:inputText id="fech" value="#{donacionBean.objeDona.fechDona}" class="form-control">
+                                                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                                                            </h:inputText>
+                                                        </div>
+                                                    </fieldset>
+                                                </ui:fragment>
+                                            </div>
+                                            <div class="modal-footer">
+                                                    <div class="input-group-btn right" style="padding-top: 5px;">
+                                                        <div class="btn-group">
+                                                            <h:commandLink id="btonCanc" class="btn btn-default" pt:data-dismiss="modal">
+                                                                <p:ajax listener="#{donacionBean.limpForm()}" process="@form" update="@form" global="true"/>
+                                                                <i class="fa fa-mail-forward"/> Cerrar
+                                                            </h:commandLink>
+                                                            <h:commandLink id="btonGuar" class="btn btn-success" rendered="#{donacionBean.guardar}">
+                                                                <p:ajax listener="#{donacionBean.guar2()}" process="@form" update="@form :ContDona :TablDona" oncomplete="INIT_OBJE();" />
+                                                                <i class="fa fa-plus"/> Guardar
+                                                            </h:commandLink>
+                                                            <h:commandLink id="btonNuev" class="btn btn-success" rendered="#{!donacionBean.guardar}">
+                                                                <p:ajax listener="#{donacionBean.limpForm()}" process="@form" update="@form :ContDona :TablDona" oncomplete="INIT_OBJE_MODA();" />
+                                                                <i class="fa fa-plus"/> Nuevo
+                                                            </h:commandLink>
+                                                            <h:commandLink id="btonModi" class="btn btn-primary" rendered="#{!donacionBean.guardar}">
+                                                                <p:ajax listener="#{donacionBean.modi()}" process="@form" update="@form :ContDona :TablDona" oncomplete="INIT_OBJE();" />
+                                                                <i class="fa fa-edit"/> Modificar
+                                                            </h:commandLink>
+                                                            <!--
+                                                                # Para corregir el error que redirecciona hice una serie de pasos
+                                                                1. Actualizar el bootstrap-confirmation, yo usé este: http://bootstrap-confirmation.js.org/
+                                                                2. Quitar la referencia: bootstrap-confirmation.min.js del fragmento head.xhtml
+                                                                3. Modifiqué el custom alum.js(en este ejemplo) quitando la función y dejando todo en una sola línea
+                                                                4. Y por último y lo mas importante que creo era lo único necesario al elemento h:outputLinke agregué el value="#"
+                                                            -->
+                                                            <h:outputLink id="btonElim" class="btn btn-danger" rendered="#{!donacionBean.guardar}" value="#" pt:data-placement="left"
+                                                                          pt:data-toggle="confirmat ion" pt:data-btn-ok-label="Sí" pt:data-btn-ok-icon="fa fa-times"
+                                                                          pt:data-btn-ok-class="btn-danger btn-xs" pt:data-btn-cancel-label="No" pt:data-btn-cancel-icon="fa fa-mail-forward"
+                                                                          pt:data-btn-cancel-class="btn-default btn-xs" pt:data-title="¿Esta seguro que desea eliminar?"
+                                                                          pt:data-on-confirm="elimObje"><!--data-on-confirm = nombre del comando remoto de eliminar (sin paréntesis)-->
+                                                                <i class="fa fa-times"/> Eliminar
+                                                            </h:outputLink>
+                                                        </div>
+                                                    </div>
+                                            </div>
+                                        </h:form>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            
+                            <!-- fin de modal -->
+                           
+                        </div>
+                        
+                        
+                            <!-- tabla de documentos -->   
+                            <div class="col-md-12 col-xs-12">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">Documentos que posee este alumno</div>
+                                    <div class="panel-body">
+                                        <h:panelGroup id="ContDocu">
+                                            <div id="toolTablDocu">
+                                               
+                                                <h:form id="FormDocu" class="form-horizontal" enctype="multipart/form-data">
+                                                    <!--Form exclusivo para los remotos-->
+                                                    <p:remoteCommand name="consObjeDocu" actionListener="#{empresaBean.consDocu()}" update=":FormRegiDocu" 
+                                                                     oncomplete="$('#ModaDocuForm').modal('show');INIT_OBJE(); INIT_OBJE_MODA();" global="true"/>
+                                                    <p:remoteCommand name="elimObjeDocu" actionListener="#{empresaBean.elimDocu()}" update="@form :ContDocu" 
+                                                                     oncomplete="INIT_OBJE();" global="true">
+
+                                                    </p:remoteCommand>
+                                                    <h:commandLink id="btonNuev" class="btn btn-success">
+                                                        <p:ajax listener="#{empresaBean.limpFormDocu()}" update=":ContDocu" global="true" 
+                                                                oncomplete="$('#ModaDocuForm').modal('show');INIT_OBJE();" />
+
+                                                        <i class="fa fa-plus"/> Agregar un nuevo documento a esta empresa
+                                                    </h:commandLink>
+
+                                                </h:form>
+                                             
+                                            </div>
+                                            <h:dataTable pt:data-id="TablDocu" id="TablDocu" value="#{empresaBean.listDocuDocu}"
+                                                         var="fila" class="boottable" pt:data-toolbar="#toolTablDocu"
+                                                         styleClass="table-hover table-bordered table-condensed table-striped table-responsive"
+                                                         pt:data-show-refresh="false" pt:data-show-toggle="false" pt:data-show-columns="false" 
+                                                         pt:data-search="true" pt:data-pagination="true" pt:data-page-list="[5, 10, 20, 50]"
+                                                         pt:data-click-to-select="true"  pt:data-select-item-name="radio"
+                                                         pt:data-single-select="true">                                
+                                                <h:column pt:data-field="state" pt:data-checkbox="true">
+                                                </h:column>
+                                                <h:column pt:data-align="right" pt:data-sortable="true" pt:data-field="idDocu">
+                                                    <f:facet name="header">Código</f:facet>
+                                                    <h:outputText value="#{fila.codiDocu}"/>
+                                                </h:column>
+                                                <h:column pt:data-sortable="true"  pt:data-field="tipoDocu">
+                                                    <f:facet name="header">Tipo documento</f:facet>
+                                                    <h:outputText value="#{fila.codiTipoDocu.nombTipoDocu}"/>
+                                                </h:column>
+                                                <h:column pt:data-sortable="true" pt:data-field="fechDocu">
+                                                    <f:facet name="header">Fecha </f:facet>
+                                                    <h:outputText value="#{fila.fechDocu}">
+                                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-6"/>
+                                                    </h:outputText>
+                                                </h:column>
+
+                                                <h:column pt:data-sortable="true" pt:data-field="ruta">
+                                                    <f:facet name="header">Ruta </f:facet>
+                                                    <h:outputText value="#{fila.rutaDocu}">
+                                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-6"/>
+                                                    </h:outputText>
+                                                </h:column>
+                                            </h:dataTable>
+                                        </h:panelGroup>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /tabla de documentos --> 
+                            <!-- modal de documentos-->
+                            <div class="row">
+                                <!-- Modal -->
+                                <div id="ModaDocuForm" class="modal fade" role="dialog">
+                                    <div class="modal-dialog">
+                                        <!-- Modal content-->
+                                        <div class="modal-content">
+                                            <h:form id="FormRegiDocu" class="form-horizontal" enctype="multipart/form-data">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times"/></button>
+                                                    <h4 class="modal-title">Gestión documento</h4>
+                                                </div>
+                                                <div class="modal-body" style="padding-top: 2px;">
+                                                    <ui:fragment id="FragBusc" rendered="#{!empresaBean.showImag}">
+                                                        <fieldset class="col-md-12">
+                                                            <h:inputHidden id="codi" value="#{empresaBean.objeDocu.codiDocu}" />
+                                                   
+                                                            <div class="form-group input-group-xs">
+                                                                <h:outputLabel  for="fech" value="Fecha "/>
+                                                                <h:inputText id="fech" disabled="true"  value="#{empresaBean.objeDocu.fechDocu}" class="form-control">
+                                                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                                                                </h:inputText>
+                                                                <h:message for="fech" errorClass="field-error" />
+                                                            </div>
+                                                            <div class="form-group input-group-xs">
+                                                                <h:outputLabel  for="tipo" value="Tipo de documento"/>
+                                                                <h:selectOneMenu id="tipo" value="#{empresaBean.objeDocu.codiTipoDocu}" class="form-control select" pt:data-live-search="true" validatorMessage="Debe Elegir un Dia de la Semana">
+                                                                    <f:selectItems value="#{tipoDocumentoBean.listTipo}" var="lst" itemLabel="#{lst.nombTipoDocu}" itemValue="#{lst}"/>
+                                                                    <f:converter converterId="PooConv"/>
+                                                                </h:selectOneMenu>
+                                                                <h:message for="tipo" errorClass="field-error" />           
+                                                            </div>
+                                                            <div class="form-group input-group-xs">
+                                                                <c:if test="#{empresaBean.guardarDocumento}">
+                                                                    <h:outputLabel  for="file" value="Selecciona tu archivo"/>
+                                                                    <h:inputFile pt:data-id="file" value="#{empresaBean.file}" pt:multiple="true"/>
+                                                                </c:if>
+                                                            </div>
+
+                                                        </fieldset>
+                                                    </ui:fragment>
+                                                    <ui:fragment id="FragGrad" rendered="#{empresaBean.showImag}">
+                                                        <c:if test="#{!empresaBean.imagen}">
+                                                            <div>
+                                                                <h:panelGroup>
+                                                                    <h:graphicImage height="500px" class="img-responsive" value="/images/?img=#{empresaBean.objeDocu.rutaDocu}" />                                                                                                                                                                         
+                                                                </h:panelGroup>
+                                                            </div>
+                                                        </c:if>
+                                                        <c:if test="#{empresaBean.imagen}">
+                                                            <div>
+                                                                <h:panelGroup>
+                                                                    <cs:PdfViewer id="demo" value="#{empresaBean.esto}" width="100%" height="500px"/>                                                                                                                                                                              
+                                                                </h:panelGroup>
+                                                            </div>
+                                                        </c:if>
+                                                    </ui:fragment>
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <div class="input-group-btn right" style="padding-top: 5px;">
+                                                        <div class="btn-group">
+                                                            <h:commandLink id="btonCanc" class="btn btn-default" pt:data-dismiss="modal">
+                                                                <p:ajax listener="#{empresaBean.limpFormDocu()}" process="@form" update="@form" global="true"/>
+                                                                <i class="fa fa-mail-forward"/> Cerrar
+                                                            </h:commandLink>
+
+                                                            <c:if test="#{empresaBean.guardarDocumento}">
+                                                                <h:commandLink id="btonSubira" class="btn btn-success btn-md" actionListener="#{empresaBean.guarDocu()}">
+                                                                    <f:ajax execute="@all" render="@form :ContDocu" onevent="INIT_OBJE" />
+                                                                    <i class="fa fa-cloud-upload"/> Subir
+                                                                </h:commandLink>
+                                                            </c:if>
+
+                                                            <c:if test="#{empresaBean.guardarDocumento == false and empresaBean.showImag==false}">
+                                                                <h:commandLink id="btonMostBusc" class="btn btn-default btn-md">
+                                                                    <p:ajax listener="#{empresaBean.toogImag()}" process="@this" update="@form" global="true"/>
+                                                                    <i class="fa fa-chevron-down"/> Ver #{empresaBean.tokens}
+                                                                </h:commandLink>
+
+
+                                                                <h:outputLink id="btonElimDocu" class="btn btn-danger" rendered="#{!empresaBean.guardarDocumento}" value="#" pt:data-placement="left"
+                                                                              pt:data-toggle="confirmat ion" pt:data-btn-ok-label="Sí" pt:data-btn-ok-icon="fa fa-times"
+                                                                              pt:data-btn-ok-class="btn-danger btn-xs" pt:data-btn-cancel-label="No" pt:data-btn-cancel-icon="fa fa-mail-forward"
+                                                                              pt:data-btn-cancel-class="btn-default btn-xs" pt:data-title="¿Esta seguro que desea eliminar?"
+                                                                              pt:data-on-confirm="elimObjeDocu"><!--data-on-confirm = nombre del comando remoto de eliminar (sin paréntesis)-->
+                                                                    <i class="fa fa-times"/> Eliminar
+                                                                </h:outputLink>
+
+                                                            </c:if>
+
+                                                            <c:if test="#{empresaBean.guardarDocumento == false and empresaBean.showImag==true}">
+                                                                <h:commandLink id="btonOculEsta" class="btn btn-default btn-md">
+
+                                                                    <p:ajax listener="#{empresaBean.toogImag}" oncomplete="INIT_OBJE_FILE();" process="@this" update="@form" global="true"/>
+                                                                    <i class="fa fa-undo"/> Regresar
+                                                                </h:commandLink>
+                                                            </c:if>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </h:form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /modal de documentos -->
+                        
+                         <!-- tabla de seguimientos -->
+                           
+                        <div class="col-md-12 col-xs-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Bitacoras de esta empresa</div>
+                                <div class="panel-body">
+                                    <h:panelGroup id="ContSegu">
+                                        <div id="toolTablSegu">
+                                            <h:form>
+                                                <!--Form exclusivo para los remotos-->
+                                                <p:remoteCommand name="consSeguObje" actionListener="#{seguimientoBean.cons()}" 
+                                                                 oncomplete="$('#ModaSeguForm').modal('show'); INIT_OBJE(); INIT_OBJE_MODA();" global="true" update=":container"/>
+                                                <p:remoteCommand name="elimObjeSegu" actionListener="#{seguimientoBean.elim()}" update="@form :ContSegu :TablSegu"
+                                                                 oncomplete="INIT_OBJE();" global="true"/>
+                                                <h:commandLink id="btonNuevSegu" class="btn btn-success">
+                                                    <p:ajax listener="#{seguimientoBean.limpForm()}" update="@form :ContSegu :TablSegu :container" global="true" 
+                                                            oncomplete="$('#ModaSeguForm').modal('show'); INIT_OBJE(); INIT_OBJE_MODA();"/>
+                                                    <i class="fa fa-plus"/> Agregar un nuevo seguimiento a esta empresa
+                                                </h:commandLink>
+                                            </h:form>
+                                        </div>
+                                        <h:dataTable pt:data-id="TablSegu" id="TablSegu" value="#{seguimientoBean.listSegu}"
+                                                     var="fila" class="boottable" pt:data-toolbar="#toolTablSegu"
+                                                     styleClass="table-hover table-bordered table-condensed table-striped table-responsive"
+                                                     pt:data-show-refresh="false" pt:data-show-toggle="false" pt:data-show-columns="false" 
+                                                     pt:data-search="true" pt:data-pagination="true" pt:data-page-list="[5, 10, 20, 50]"
+                                                     pt:data-click-to-select="true"  pt:data-select-item-name="radio"
+                                                     pt:data-single-select="true">                                
+                                            <h:column pt:data-field="state" pt:data-checkbox="true">
+                                            </h:column>
+                                            <h:column pt:data-align="right" pt:data-sortable="true" pt:data-field="idSegu">
+                                                <f:facet name="header">Código</f:facet>
+                                                <h:outputText value="#{fila.codiSegu}"/>
+                                            </h:column>
+                                            <h:column pt:data-sortable="true" pt:data-field="nomb">
+                                                <f:facet name="header">Fecha </f:facet>
+                                                 <h:outputText value="#{fila.fechSegu}">
+                                                   <f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-6"/>
+                                                </h:outputText>
+                                            </h:column>
+                                            <h:column pt:data-sortable="true">
+                                                <f:facet name="header">Fech Inicio</f:facet>
+                                                <h:outputText value="#{fila.fechInicio}">
+                                                   <f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-6"/>
+                                                </h:outputText>
+                                            </h:column>
+                                            <h:column pt:data-sortable="true">
+                                                <f:facet name="header">Fech Fin</f:facet>
+                                                <h:outputText value="#{fila.fechFin}">
+                                                   <f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-6"/>
+                                                </h:outputText>
+                                            </h:column>
+                                            <h:column pt:data-sortable="true">
+                                                <f:facet name="header">Nombre</f:facet>
+                                                <h:outputText value="#{fila.nombSegu}"/>
+                                            </h:column>
+                                            <h:column pt:data-sortable="true">
+                                                <f:facet name="header">Empresa</f:facet>
+                                                <h:outputText value="#{fila.codiEmpr.nombEmpr}"/>
+                                            </h:column>
+
+                                        </h:dataTable>
+                                    </h:panelGroup>
+                                </div>
+                            </div>
+                        </div>
+                          <!-- fin tabla de seguimientos -->
+                            <!--  modal de seguimeintos -->
+                           
+                        <div class="row">
+                            <div id="ModaSeguForm" class="modal fade" role="dialog">
+                                <div class="modal-dialog">
+                                    <!-- Modal content-->
+                                    <div class="modal-content">
+                                        <h:form id="FormSegu" class="form-horizontal">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times"/></button>
+                                                <h4 class="modal-title">Gestión seguimeinto</h4>
+                                            </div>
+                                            <div class="modal-body" style="padding-top: 2px;">
+                                                <fieldset class="col-md-12">
+                                                    <h:inputHidden id="codiSegu" value="#{seguimientoBean.objeSegu.codiSegu}" />
+                                                    <div class="form-group input-group-xs">
+                                                        <h:outputLabel  for="TipoSegu" value="Tipo Seguimiento: "/>
+                                                        <h:selectOneMenu id="TipoSegu" value="#{seguimientoBean.objeSegu.codiTipoSegui}" class="form-control select" pt:data-live-search="true" validatorMessage="Debe Elegir un Dia de la Semana">
+                                                            <f:selectItems value="#{tipoSeguBean.listTipo}" var="lst" itemLabel="#{lst.nombTipoSegui}" itemValue="#{lst}"/>
+                                                            <f:converter converterId="PooConv"/>
+                                                        </h:selectOneMenu>
+                                                        <h:message for="TipoSegu" errorClass="field-error" />
+                                                    </div>
+                                                    <div class="form-group input-group-xs">
+                                                        <h:outputLabel  for="fech" value="Fecha Inicio: "/>
+                                                        <h:inputText id="fech" value="#{seguimientoBean.objeSegu.fechInicio}" class="form-control">
+                                                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                                                        </h:inputText>
+                                                        <h:message for="fech" errorClass="field-error" />
+                                                    </div>
+                                                    <div class="form-group input-group-xs">
+                                                        <h:outputLabel  for="fech2" value="Fecha Fin: "/>
+                                                        <h:inputText id="fech2" value="#{seguimientoBean.objeSegu.fechFin}" class="form-control">
+                                                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                                                        </h:inputText>
+                                                        <h:message for="fech2" errorClass="field-error" />
+                                                    </div>
+                                                    <div class="form-group input-group-xs">
+                                                        <h:outputLabel  for="nombSegu" value="Nombre seguimiento "/>
+                                                        <h:message for="nombSegu" errorClass="field-error" />
+                                                        <h:inputText id="nombSegu" value="#{seguimientoBean.objeSegu.nombSegu}" class="form-control" />
+                                                    </div>
+                                                    <div class="form-group input-group-xs">
+                                                        <h:outputLabel  for="descSegu" value="Descripción"/>
+                                                        <h:message for="descSegu" errorClass="field-error" />
+                                                        <h:inputTextarea  style="height: 50px; max-width: 100%;" id="descSegu" value="#{seguimientoBean.objeSegu.descSegu}" class="form-control" />
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+                                            <div class="modal-footer">
+                                                    <div class="input-group-btn right" style="padding-top: 5px;">
+                                                        <div class="btn-group">
+                                                            <h:commandLink id="btonCancSegu" class="btn btn-default" pt:data-dismiss="modal">
+                                                                <p:ajax listener="#{seguimientoBean.limpForm()}" process="@form"  global="true"/>
+                                                                <i class="fa fa-mail-forward"/> Cerrar
+                                                            </h:commandLink>
+                                                            <h:commandLink id="btonGuarSegu" class="btn btn-success" rendered="#{seguimientoBean.guardar}">
+                                                                <p:ajax listener="#{seguimientoBean.guar()}" process="@form" update="@form :ContSegu :TablSegu" oncomplete="INIT_OBJE();" />
+                                                                <i class="fa fa-plus"/> Guardar
+                                                            </h:commandLink>
+                                                            <h:commandLink id="btonNuevSegu" class="btn btn-success" rendered="#{!seguimientoBean.guardar}">
+                                                                <p:ajax listener="#{seguimientoBean.limpForm()}" process="@form" update="@form :ContSegu :TablSegu" oncomplete="INIT_OBJE(); INIT_OBJE_MODA();" />
+                                                                <i class="fa fa-plus"/> Nuevo
+                                                            </h:commandLink>
+                                                            <h:commandLink id="btonModiSegu" class="btn btn-primary" rendered="#{!seguimientoBean.guardar}">
+                                                                <p:ajax listener="#{seguimientoBean.modi()}" process="@form" update="@form :ContSegu :TablSegu" oncomplete="INIT_OBJE();" />
+                                                                <i class="fa fa-edit"/> Modificar
+                                                            </h:commandLink>
+                                                            <!--
+                                                                # Para corregir el error que redirecciona hice una serie de pasos
+                                                                1. Actualizar el bootstrap-confirmation, yo usé este: http://bootstrap-confirmation.js.org/
+                                                                2. Quitar la referencia: bootstrap-confirmation.min.js del fragmento head.xhtml
+                                                                3. Modifiqué el custom alum.js(en este ejemplo) quitando la función y dejando todo en una sola línea
+                                                                4. Y por último y lo mas importante que creo era lo único necesario al elemento h:outputLink le agregué el value="#"
+                                                            -->
+                                                            <h:outputLink id="btonElim" class="btn btn-danger" rendered="#{!seguimientoBean.guardar}" value="#" pt:data-placement="left"
+                                                                          pt:data-toggle="confirmat ion" pt:data-btn-ok-label="Sí" pt:data-btn-ok-icon="fa fa-times"
+                                                                          pt:data-btn-ok-class="btn-danger btn-xs" pt:data-btn-cancel-label="No" pt:data-btn-cancel-icon="fa fa-mail-forward"
+                                                                          pt:data-btn-cancel-class="btn-default btn-xs" pt:data-title="¿Esta seguro que desea eliminar?"
+                                                                          pt:data-on-confirm="elimObjeSegu"><!--data-on-confirm = nombre del comando remoto de eliminar (sin paréntesis)-->
+                                                                <i class="fa fa-times"/> Eliminar
+                                                            </h:outputLink>
+                                                        </div>
+                                                    </div>
+                                            </div>
+                                        </h:form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                             <!-- fin de modal -->
+                           
+                    </ui:fragment>
+                </h:panelGroup>
             </div>
-        </div>
         </ui:define>
     </ui:composition>
 </html>

@@ -9,6 +9,7 @@ import static com.fasterxml.jackson.databind.util.ClassUtil.getRootCause;
 import com.sv.udb.ejb.TipoRetiroFacadeLocal;
 import com.sv.udb.modelo.TipoRetiro;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -84,18 +85,21 @@ public class TipoRetiroBean implements Serializable{
         RequestContext ctx = RequestContext.getCurrentInstance(); //Capturo el contexto de la página
         try
         {
-            
+            if(this.listTipoReti == null)
+            {
+            this.listTipoReti = new ArrayList();
+            }
             this.objeTipoReti.setEstaReti(1);
             FCDETipoReti.create(this.objeTipoReti);
             this.listTipoReti.add(this.objeTipoReti);
             this.limpForm();
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos guardados')");
-            log.info("Tipo Beca Guardado");
+            //log.info("Tipo Beca Guardado");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al guardar ')");
-            log.error(getRootCause(ex).getMessage());
+            //log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -115,12 +119,12 @@ public class TipoRetiroBean implements Serializable{
             FCDETipoReti.edit(this.objeTipoReti);
             this.listTipoReti.add(this.objeTipoReti); //Agrega el objeto modificado
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos Modificados')");
-            log.info("Tipo Beca Modificado");
+            //log.info("Tipo Beca Modificado");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al modificar ')");
-            log.error(getRootCause(ex).getMessage());
+            //log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -139,14 +143,37 @@ public class TipoRetiroBean implements Serializable{
             this.listTipoReti.remove(this.objeTipoReti); //Limpia el objeto viejo
             this.objeTipoReti.setEstaReti(0);
             FCDETipoReti.edit(this.objeTipoReti);
-           // this.listTipoReti.add(this.objeTipoReti); //Agrega el objeto modificado
+            this.listTipoReti.add(this.objeTipoReti); //Agrega el objeto modificado
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos Modificados')");
-            log.info("Tipo Beca Eliminado");
+            //log.info("Tipo Beca Eliminado");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al modificar ')");
-            log.error(getRootCause(ex).getMessage());
+            //log.error(getRootCause(ex).getMessage());
+        }
+        finally
+        {
+            
+        }
+    }
+    
+      public void reActi()
+    {
+         RequestContext ctx = RequestContext.getCurrentInstance(); //Capturo el contexto de la página
+        try
+        {
+            this.listTipoReti.remove(this.objeTipoReti); //Limpia el objeto viejo
+            this.objeTipoReti.setEstaReti(1);
+            FCDETipoReti.edit(this.objeTipoReti);
+           this.listTipoReti.add(this.objeTipoReti); //Agrega el objeto modificado
+            ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos Modificados')");
+           // log.info("Tipo Beca Eliminado");
+        }
+        catch(Exception ex)
+        {
+            ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al modificar ')");
+            //log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -162,12 +189,13 @@ public class TipoRetiroBean implements Serializable{
         try
         {
             this.listTipoReti = FCDETipoReti.findAllActive();
-            log.info("Tipos de Becas Consultados");
+            //this.listTipoReti = FCDETipoReti.findAll();
+            //log.info("Tipos de Becas Consultados");
         }
         catch(Exception ex)
         {
             ex.printStackTrace();
-            log.error(getRootCause(ex).getMessage());
+           // log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -188,12 +216,12 @@ public class TipoRetiroBean implements Serializable{
             this.guardar = false;
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Consultado a " + 
                     String.format("%s", this.objeTipoReti.getNombReti()) + "')");
-            log.info("Tipo Beca Consultado");
+            //log.info("Tipo Beca Consultado");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al consultar')");
-            log.error(getRootCause(ex).getMessage());
+            //log.error(getRootCause(ex).getMessage());
         }
         finally
         {

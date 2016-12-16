@@ -77,12 +77,12 @@ public class OpcionBean implements Serializable{
             this.listOpci.add(this.objeOpci);
             this.limpForm();
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos guardados')");
-            log.info("Opcion Guardada");
+          //  log.info("Opcion Guardada");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al guardar ')");
-            log.error(getRootCause(ex).getMessage());
+          //  log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -99,12 +99,12 @@ public class OpcionBean implements Serializable{
             FCDEOpci.edit(this.objeOpci);
             this.listOpci.add(this.objeOpci); //Agrega el objeto modificado
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos Modificados')");
-            log.info("Opcion Modificada");
+          //  log.info("Opcion Modificada");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al modificar ')");
-            log.error(getRootCause(ex).getMessage());
+         //   log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -121,12 +121,12 @@ public class OpcionBean implements Serializable{
             this.listOpci.remove(this.objeOpci);
             this.limpForm();
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos Eliminados')");
-            log.info("Opcion Eliminada");
+          //  log.info("Opcion Eliminada");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al eliminar')");
-            log.error(getRootCause(ex).getMessage());
+          //  log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -139,12 +139,12 @@ public class OpcionBean implements Serializable{
         try
         {
             this.listOpci = FCDEOpci.findAll();
-            log.info("Opciones Consultadas");
+          //  log.info("Opciones Consultadas");
         }
         catch(Exception ex)
         {
             ex.printStackTrace();
-            log.error(getRootCause(ex).getMessage());
+           // log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -162,12 +162,12 @@ public class OpcionBean implements Serializable{
             this.guardar = false;
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Consultado a " + 
                     String.format("%s", this.objeOpci.getDescOpci()) + "')");
-            log.info("Opcion Consultada");
+         //   log.info("Opcion Consultada");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al consultar')");
-            log.error(getRootCause(ex).getMessage());
+        //    log.error(getRootCause(ex).getMessage());
         }
         finally
         {

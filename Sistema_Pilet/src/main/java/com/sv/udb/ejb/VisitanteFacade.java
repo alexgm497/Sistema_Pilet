@@ -59,7 +59,7 @@ public class VisitanteFacade extends AbstractFacade<Visitante> implements Visita
     
     @Override
     public List<Visitante> findByAllFields(String cadeText, int cantRegi, int estaRegi) {
-        TypedQuery<Visitante> q = (TypedQuery<Visitante>) getEntityManager().createQuery("SELECT v FROM Visitante v WHERE (v.duiVisi LIKE :cadeText OR v.nombVisi LIKE :cadeText OR v.apelVisi LIKE :cadeText OR v.corrVisi LIKE :cadeText OR v.teleVisi LIKE :cadeText)  AND v.estaVisi = 1");       
+        TypedQuery<Visitante> q = (TypedQuery<Visitante>) getEntityManager().createQuery("SELECT v FROM Visitante v WHERE (v.duiVisi LIKE :cadeText OR v.nombVisi LIKE :cadeText OR v.apelVisi LIKE :cadeText OR v.corrVisi LIKE :cadeText OR v.teleVisi LIKE :cadeText)  AND v.estaVisi = 1 ORDER BY v.nombVisi");       
         q.setParameter("cadeText", "%" + cadeText+ "%"); 
         q.setMaxResults(cantRegi);
         List resu = q.getResultList();

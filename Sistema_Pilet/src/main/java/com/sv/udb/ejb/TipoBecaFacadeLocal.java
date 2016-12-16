@@ -28,7 +28,8 @@ public interface TipoBecaFacadeLocal {
     List<TipoBeca> findAllActive();
     List<TipoBeca> findTipos(Object id);
 
-
+    TipoBeca findByName(String nombre);
+    
     List<TipoBeca> findRange(int[] range);
 
     int count();

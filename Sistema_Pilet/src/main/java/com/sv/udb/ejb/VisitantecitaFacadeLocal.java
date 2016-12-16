@@ -38,6 +38,8 @@ public interface VisitantecitaFacadeLocal {
 
     Visitantecita findByCodiCitaCarnAlum(Cita cita, String carn);
     
+    List<Visitantecita> findByNow();
+    
     int count();
     
 }

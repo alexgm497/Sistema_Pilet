@@ -43,14 +43,21 @@ public class TipoBecaFacade extends AbstractFacade<TipoBeca> implements TipoBeca
     
     @Override
     public List<TipoBeca> findTipos(Object id)  {        
-        String consulta = "SELECT t.codi_tipo_beca, t.nomb_tipo_beca, t.desc_tipo_beca, t.esta_tipo_beca, t.tipo_tipo_beca, t.nivel_tipo_beca "
-                + "FROM tipo_beca t INNER JOIN grado ON grado.nivel_grad = t.nivel_tipo_beca "
-                + "WHERE grado.nivel_grad = ?1 AND grado.esta_grad = 1";
+        String consulta = "SELECT t.codi_tipo_beca, t.nomb_tipo_beca, t.desc_tipo_beca, t.esta_tipo_beca, t.tipo_tipo_beca, t.nivel_tipo_beca FROM tipo_beca t, grado g WHERE t.nivel_tipo_beca = ?1 AND t.nivel_tipo_beca = g.nivel_grad GROUP BY t.codi_tipo_beca";
         Query q = getEntityManager().createNativeQuery(consulta, TipoBeca.class);           
         //Query q = getEntityManager().createNativeQuery("select * from detalle_beca", DetalleBeca.class);           
         q.setParameter(1, id);
         List resu = q.getResultList();
         System.out.println(Arrays.toString(resu.toArray()));
         return resu.isEmpty() ? null : resu;
+    }
+    
+    @Override
+    public TipoBeca findByName(String nombre)
+    {
+        Query q = getEntityManager().createNativeQuery("SELECT * FROM `tipo_beca` WHERE `nomb_tipo_beca` = ?1", TipoBeca.class);
+        q.setParameter(1, nombre);
+        List resu = q.getResultList();
+        return resu.isEmpty() ? null : (TipoBeca)resu.get(0);
     }
 }

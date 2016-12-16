@@ -6,6 +6,7 @@
 package com.sv.udb.ejb;
 
 import com.sv.udb.modelo.Grado;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -27,6 +28,10 @@ public interface GradoFacadeLocal {
     List<Grado> findAll();
 
     List<Grado> findRange(int[] range);
+    
+    BigDecimal findMatrLimit(Object id);
+    
+    BigDecimal findMensLimit(Object id);
 
     int count();
     

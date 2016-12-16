@@ -42,6 +42,10 @@ public interface CitaFacadeLocal {
     
     List<Cita> findCitaCale(int codiUsua);
     
+    public List<Cita> findCitaAlumByCodiUsua(int codi);
+    
+    public List<Cita> findCitaVisiByCodiUsua(int codi);
+    
     int count();
     
 }

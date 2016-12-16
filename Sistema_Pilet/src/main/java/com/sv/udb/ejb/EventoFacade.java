@@ -28,6 +28,14 @@ public class EventoFacade extends AbstractFacade<Evento> implements EventoFacade
         super(Evento.class);
     }
     
+    @Override
+    public List<Evento> findAll()
+    {
+        TypedQuery<Evento> q = (TypedQuery<Evento>) getEntityManager().createQuery("SELECT e FROM Evento e WHERE e.estaEven = 1");  
+        List resu = q.getResultList();
+        return resu.isEmpty() ? null : resu;
+    }
+    @Override
     public List<Evento> findByEsta(int estaEven)
     {
         TypedQuery<Evento> q = (TypedQuery<Evento>) getEntityManager().createQuery("SELECT e FROM Evento e WHERE e.estaEven = :estaEven");      

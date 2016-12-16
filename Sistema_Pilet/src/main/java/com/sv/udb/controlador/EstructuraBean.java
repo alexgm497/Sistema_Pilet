@@ -77,12 +77,12 @@ private static Logger log = Logger.getLogger(EstructuraBean.class);
             this.listEstr.add(this.objeEstr);
             this.limpForm();
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos guardados')");
-            log.info("Estructura Guardada");
+           // log.info("Estructura Guardada");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al guardar ')");
-            log.error(getRootCause(ex).getMessage());
+         //   log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -99,12 +99,12 @@ private static Logger log = Logger.getLogger(EstructuraBean.class);
             FCDEEstr.edit(this.objeEstr);
             this.listEstr.add(this.objeEstr); //Agrega el objeto modificado
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos Modificados')");
-            log.info("Estructura Modificada");
+          //  log.info("Estructura Modificada");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al modificar ')");
-            log.error(getRootCause(ex).getMessage());
+         //   log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -121,12 +121,12 @@ private static Logger log = Logger.getLogger(EstructuraBean.class);
             this.listEstr.remove(this.objeEstr);
             this.limpForm();
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos Eliminados')");
-            log.info("Estructura Eliminada");
+          //  log.info("Estructura Eliminada");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al eliminar')");
-            log.error(getRootCause(ex).getMessage());
+          //  log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -139,12 +139,12 @@ private static Logger log = Logger.getLogger(EstructuraBean.class);
         try
         {
             this.listEstr = FCDEEstr.findAll();
-            log.info("Estructuras Consultadas");
+        //    log.info("Estructuras Consultadas");
         }
         catch(Exception ex)
         {
             ex.printStackTrace();
-            log.error(getRootCause(ex).getMessage());
+        //    log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -162,12 +162,12 @@ private static Logger log = Logger.getLogger(EstructuraBean.class);
             this.guardar = false;
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Consultado a " + 
                     String.format("%s", this.objeEstr.getTipoEstr()) + "')");
-            log.info("Estructura Consultada");
+    //        log.info("Estructura Consultada");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al consultar')");
-            log.error(getRootCause(ex).getMessage());
+      //      log.error(getRootCause(ex).getMessage());
         }
         finally
         {

@@ -29,6 +29,7 @@ public interface TipoEstadoFacadeLocal {
     List<TipoEstado> findAllN();
     
     List<TipoEstado> findAllIna();
+            List<TipoEstado> findAllAct();
 
     List<TipoEstado> findRange(int[] range);
 

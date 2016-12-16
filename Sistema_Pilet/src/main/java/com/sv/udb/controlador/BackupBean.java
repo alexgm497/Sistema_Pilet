@@ -19,6 +19,10 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 import org.apache.log4j.Logger;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.ServletContext;
+import org.primefaces.event.FileUploadEvent;
 
 /**
  *
@@ -88,5 +92,69 @@ public class BackupBean implements Serializable{
         } catch (Exception e) {
             log.error(logiBean.getObjeUsua().getCodiUsua()+"-"+"Backup"+"-"+"ERROR AL CREAR BACKUP");
         }
+    }
+    /**
+     * Datos extras solo de uso
+     */
+    private String lblMessage;
+    ServletContext ctx = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
+    String basePath = ctx.getRealPath("/");
+    // private String txtPath = "G:\\New Folder\\";
+    private String txtPath = basePath + "BackupRestoreMysqldb//";
+    
+    /**
+     * Aquí se sube el archivo, esto sirve para seleccionar la ruta
+     * @param event 
+     */
+
+    public void upload(FileUploadEvent event) {
+
+
+
+
+        if (event.getFile().getFileName().equals("")) {
+            lblMessage = "Seleccione el archivo a recuperar";
+            System.out.println(lblMessage);
+        } else {
+            //restoreDB("root", "root", "G:\\New Folder\\" + event.getFile().getFileName());
+            RecuperarBackUp("root", "root", txtPath + event.getFile().getFileName());
+            System.out.println("Algo va mal" + event.getFile().getFileName());
+        }
+    }
+    
+    /**
+     * Aqui es com funciona todo
+     * @param Usuario
+     * @param Password
+     * @param recurso
+     * @return 
+     */
+    
+    public boolean RecuperarBackUp(String Usuario, String Password, String recurso) {
+        // Se ingresa la ruta donde se restaurará el archivo, con sus parametros
+        //  String[] executeCmd = new String[]{"C:\\Program Files\\MySQL\\MySQL Server 5.0\\bin\\mysql ", "--user=" + dbUserName, "--password=" + dbPassword, "-e", "source " + source};
+        String[] executeCmd = new String[]{"C:\\wampp\\bin\\mysql\\ ", "--user=" +Usuario, "--password=" + Password, "-e", "source " + recurso};
+
+        Process runtimeProcess;
+        try {
+            //Se realiza la acción
+            runtimeProcess = Runtime.getRuntime().exec(executeCmd);
+            int processComplete = runtimeProcess.waitFor();
+            //Verificamos que funcione con un waitfor, que sería la espera de resultado
+            if (processComplete == 0) {
+                log.info(logiBean.getObjeUsua().getCodiUsua()+"--Todo funciono");
+                lblMessage = "Todo funciono";
+                System.out.println(lblMessage);
+                return true;
+            } else {
+                log.info(logiBean.getObjeUsua().getCodiUsua()+"--Nada funciono");
+                lblMessage = "Que regada";
+                System.out.println(lblMessage);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return false;
     }
 }

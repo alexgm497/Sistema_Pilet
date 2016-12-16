@@ -353,7 +353,6 @@ public class WebServicesBean implements Serializable {
         if (response.getStatusInfo().getFamily() == Response.Status.Family.SUCCESSFUL)
         {
             this.objeWebServConsEmplByUser = response.readEntity(WSconsEmplByUser.class); //La respuesta de captura en un pojo que esta en el paquete utils
-            System.out.println("Código Empleado: " + this.objeWebServConsEmplByUser.getCodi());
             return this.objeWebServConsEmplByUser;
         }
         else

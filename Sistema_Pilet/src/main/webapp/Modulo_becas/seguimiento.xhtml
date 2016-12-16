@@ -107,10 +107,6 @@ Hecho por Fernando
                                         <f:facet name="header">Nombre</f:facet>
                                         <h:outputText value="#{fila.nombSegu}"/>
                                     </h:column>
-                                    <h:column pt:data-sortable="true">
-                                        <f:facet name="header">Empresa</f:facet>
-                                        <h:outputText value="#{fila.codiEmpr.nombEmpr}"/>
-                                    </h:column>
                                    
                                 </h:dataTable>
                             </h:panelGroup>
@@ -120,7 +116,7 @@ Hecho por Fernando
             </div>
             <div class="row">
                 <!-- Modal -->
-                <div id="ModaForm" class="modal fade" role="dialog">
+                <div id="ModaForm" class="modal fade" role="dialog" onshow="INIT_OBJE();">
                     <div class="modal-dialog">
                         <!-- Modal content-->
                         <div class="modal-content">
@@ -134,25 +130,25 @@ Hecho por Fernando
                                         <h:inputHidden id="codi" value="#{seguimientoBean.objeSegu.codiSegu}" />
                                         <div class="form-group input-group-xs">
                                             <h:outputLabel  for="Tipo" value="Tipo Seguimiento: "/>
-                                            <h:selectOneMenu id="Tipo" value="#{seguimientoBean.objeSegu.codiTipoSegui}" class="form-control" pt:data-live-search="true">
+                                            <h:selectOneMenu id="Tipo" value="#{seguimientoBean.objeSegu.codiTipoSegui}" class="form-control select" pt:data-live-search="true" validatorMessage="Debe Elegir un Dia de la Semana">
                                                 <f:selectItems value="#{tipoSeguBean.listTipo}" var="lst" itemLabel="#{lst.nombTipoSegui}" itemValue="#{lst}"/>
                                                 <f:converter converterId="PooConv"/>
                                             </h:selectOneMenu>
                                             <h:message for="Tipo" errorClass="field-error" />
                                         </div>
                                         <div class="form-group input-group-xs">
-                                            <h:outputLabel  for="fechInic" value="Fecha Inicio: "/>
-                                            <h:inputText id="fechInic" value="#{seguimientoBean.objeSegu.fechInicio}" class="form-control">
+                                            <h:outputLabel  for="fech" value="Fecha Inicio: "/>
+                                            <h:inputText id="fech" value="#{seguimientoBean.objeSegu.fechInicio}" class="form-control">
                                                 <f:convertDateTime pattern="dd/MM/yyyy" />
                                             </h:inputText>
-                                            <h:message for="fechInic" errorClass="field-error" />
+                                            <h:message for="fech" errorClass="field-error" />
                                         </div>
                                         <div class="form-group input-group-xs">
-                                            <h:outputLabel  for="fechFin" value="Fecha Fin: "/>
-                                            <h:inputText id="fechFin" value="#{seguimientoBean.objeSegu.fechFin}" class="form-control">
+                                            <h:outputLabel  for="fech2" value="Fecha Fin: "/>
+                                            <h:inputText id="fech2" value="#{seguimientoBean.objeSegu.fechFin}" class="form-control">
                                                 <f:convertDateTime pattern="dd/MM/yyyy" />
                                             </h:inputText>
-                                            <h:message for="fechFin" errorClass="field-error" />
+                                            <h:message for="fech2" errorClass="field-error" />
                                         </div>
                                         <div class="form-group input-group-xs">
                                             <h:outputLabel  for="nomb" value="Nombre seguimiento "/>
@@ -162,14 +158,7 @@ Hecho por Fernando
                                         <div class="form-group input-group-xs">
                                             <h:outputLabel  for="desc" value="Descripción"/>
                                             <h:message for="desc" errorClass="field-error" />
-                                            <h:inputTextarea  id="desc" value="#{seguimientoBean.objeSegu.descSegu}" class="form-control" />
-                                        </div>
-                                        <div class="form-group input-group-xs">
-                                            <h:outputLabel  for="padr" value="Padre "/>
-                                            <h:selectOneMenu id="padr" value="#{seguimientoBean.objeSegu.padrSegu}" class="form-control" pt:data-live-search="true">
-                                                <f:selectItems value="#{seguimientoBean.listSegu}" var="lst" itemLabel="#{lst.nombSegu}" itemValue="#{lst}"/>
-                                                <f:converter converterId="PooConv"/>
-                                            </h:selectOneMenu>
+                                            <h:inputTextarea style="height: 50px; max-width: 100%;"  id="desc" value="#{seguimientoBean.objeSegu.descSegu}" class="form-control" />
                                         </div>
                                     </fieldset>
                                 </div>
@@ -182,7 +171,7 @@ Hecho por Fernando
                                                 </h:commandLink>
                                                 <h:commandLink id="btonGuar" class="btn btn-success" rendered="#{seguimientoBean.guardar}">
                                                     <p:ajax listener="#{seguimientoBean.guar()}" process="@form" update="@form :ContRegi" oncomplete="INIT_OBJE();" />
-                                                    <i class="fa fa-plus"/> Guardar
+                                                    <i class="fa fa-plus"/> Guardar Segumiento
                                                 </h:commandLink>
                                                 <h:commandLink id="btonNuev" class="btn btn-success" rendered="#{!seguimientoBean.guardar}">
                                                     <p:ajax listener="#{seguimientoBean.limpForm()}" process="@form" update="@form" oncomplete="INIT_OBJE_MODA();" />
@@ -190,7 +179,7 @@ Hecho por Fernando
                                                 </h:commandLink>
                                                 <h:commandLink id="btonModi" class="btn btn-primary" rendered="#{!seguimientoBean.guardar}">
                                                     <p:ajax listener="#{seguimientoBean.modi()}" process="@form" update="@form :ContRegi" oncomplete="INIT_OBJE();" />
-                                                    <i class="fa fa-edit"/> Modificar
+                                                    <i class="fa fa-edit"/> Modificar Seguimiento
                                                 </h:commandLink>
                                                 <!--
                                                     # Para corregir el error que redirecciona hice una serie de pasos

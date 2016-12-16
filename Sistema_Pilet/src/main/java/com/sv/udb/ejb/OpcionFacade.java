@@ -6,9 +6,15 @@
 package com.sv.udb.ejb;
 
 import com.sv.udb.modelo.Opcion;
+import com.sv.udb.modelo.Seccion;
+import com.sv.udb.modelo.Seguimiento;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -27,6 +33,22 @@ public class OpcionFacade extends AbstractFacade<Opcion> implements OpcionFacade
 
     public OpcionFacade() {
         super(Opcion.class);
+    }
+
+    @Override
+    public Opcion findLast()
+    {
+        Query q = getEntityManager().createNativeQuery("SELECT * FROM `opcion` ORDER BY codi_opci DESC LIMIT 1", Opcion.class);
+        List resu = q.getResultList();
+        return resu.isEmpty() ? null : (Opcion)resu.get(0);
+    }
+    
+    @Override
+    public List<Opcion> findAllActive() {
+        
+        Query q = getEntityManager().createNativeQuery("select * from opcion where opcion.esta_opci =  1", Opcion.class);
+        List resu = q.getResultList();
+        return resu.isEmpty() ? null : resu;
     }
     
 }

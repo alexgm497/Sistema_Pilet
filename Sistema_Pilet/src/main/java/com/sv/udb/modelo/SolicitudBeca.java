@@ -17,6 +17,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -31,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author eduardo
+ * @author Ariel
  */
 @Entity
 @Table(name = "solicitud_beca", catalog = "sistemas_pilet", schema = "")
@@ -41,9 +42,17 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "SolicitudBeca.findByCodiSoliBeca", query = "SELECT s FROM SolicitudBeca s WHERE s.codiSoliBeca = :codiSoliBeca"),
     @NamedQuery(name = "SolicitudBeca.findByCarnAlum", query = "SELECT s FROM SolicitudBeca s WHERE s.carnAlum = :carnAlum"),
     @NamedQuery(name = "SolicitudBeca.findByNombAlum", query = "SELECT s FROM SolicitudBeca s WHERE s.nombAlum = :nombAlum"),
+    @NamedQuery(name = "SolicitudBeca.findByEspeAlum", query = "SELECT s FROM SolicitudBeca s WHERE s.espeAlum = :espeAlum"),
+    @NamedQuery(name = "SolicitudBeca.findByGrupAlum", query = "SELECT s FROM SolicitudBeca s WHERE s.grupAlum = :grupAlum"),
+    @NamedQuery(name = "SolicitudBeca.findBySeccAcad", query = "SELECT s FROM SolicitudBeca s WHERE s.seccAcad = :seccAcad"),
+    @NamedQuery(name = "SolicitudBeca.findBySeccTecn", query = "SELECT s FROM SolicitudBeca s WHERE s.seccTecn = :seccTecn"),
     @NamedQuery(name = "SolicitudBeca.findByFechSoliBeca", query = "SELECT s FROM SolicitudBeca s WHERE s.fechSoliBeca = :fechSoliBeca"),
     @NamedQuery(name = "SolicitudBeca.findByEstaSoliBeca", query = "SELECT s FROM SolicitudBeca s WHERE s.estaSoliBeca = :estaSoliBeca")})
 public class SolicitudBeca implements Serializable {
+
+    @Lob
+    @Column(name = "foto_alum")
+    private byte[] fotoAlum;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -58,32 +67,38 @@ public class SolicitudBeca implements Serializable {
     private String carnAlum;
     @Basic(optional = false)
     @NotNull
+    @Size(min = 1, max = 100)
     @Column(name = "nomb_alum")
     private String nombAlum;
+    @Size(max = 100)
+    @Column(name = "espe_alum")
+    private String espeAlum;
+    @Size(max = 50)
+    @Column(name = "grup_alum")
+    private String grupAlum;
+    @Size(max = 100)
+    @Column(name = "secc_acad")
+    private String seccAcad;
+    @Size(max = 100)
+    @Column(name = "secc_tecn")
+    private String seccTecn;
     @Basic(optional = false)
     @NotNull
     @Column(name = "fech_soli_beca")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date fechSoliBeca;
     @Basic(optional = false)
     @NotNull
     @Column(name = "esta_soli_beca")
     private int estaSoliBeca;
-    @OneToMany(mappedBy = "codiSoliBeca", fetch = FetchType.LAZY)
-    private List<Seguimiento> seguimientoList;
-    @OneToMany(mappedBy = "codiSoliBeca", fetch = FetchType.LAZY)
-    private List<Documento> documentoList;
     @JoinColumn(name = "codi_empr", referencedColumnName = "codi_empr")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Empresa codiEmpr;
     @JoinColumn(name = "codi_grad", referencedColumnName = "codi_grad")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Grado codiGrad;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codiSoliBeca", fetch = FetchType.LAZY)
-    private List<Beca> becaList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codiSoliBeca", fetch = FetchType.LAZY)
-    private List<Respuesta> respuestaList;
-
+    
+    
     public SolicitudBeca() {
     }
 
@@ -123,6 +138,46 @@ public class SolicitudBeca implements Serializable {
         this.nombAlum = nombAlum;
     }
 
+    public byte[] getFotoAlum() {
+        return fotoAlum;
+    }
+
+    public void setFotoAlum(byte[] fotoAlum) {
+        this.fotoAlum = fotoAlum;
+    }
+
+    public String getEspeAlum() {
+        return espeAlum;
+    }
+
+    public void setEspeAlum(String espeAlum) {
+        this.espeAlum = espeAlum;
+    }
+
+    public String getGrupAlum() {
+        return grupAlum;
+    }
+
+    public void setGrupAlum(String grupAlum) {
+        this.grupAlum = grupAlum;
+    }
+
+    public String getSeccAcad() {
+        return seccAcad;
+    }
+
+    public void setSeccAcad(String seccAcad) {
+        this.seccAcad = seccAcad;
+    }
+
+    public String getSeccTecn() {
+        return seccTecn;
+    }
+
+    public void setSeccTecn(String seccTecn) {
+        this.seccTecn = seccTecn;
+    }
+
     public Date getFechSoliBeca() {
         return fechSoliBeca;
     }
@@ -139,24 +194,6 @@ public class SolicitudBeca implements Serializable {
         this.estaSoliBeca = estaSoliBeca;
     }
 
-    @XmlTransient
-    public List<Seguimiento> getSeguimientoList() {
-        return seguimientoList;
-    }
-
-    public void setSeguimientoList(List<Seguimiento> seguimientoList) {
-        this.seguimientoList = seguimientoList;
-    }
-
-    @XmlTransient
-    public List<Documento> getDocumentoList() {
-        return documentoList;
-    }
-
-    public void setDocumentoList(List<Documento> documentoList) {
-        this.documentoList = documentoList;
-    }
-
     public Empresa getCodiEmpr() {
         return codiEmpr;
     }
@@ -171,24 +208,6 @@ public class SolicitudBeca implements Serializable {
 
     public void setCodiGrad(Grado codiGrad) {
         this.codiGrad = codiGrad;
-    }
-
-    @XmlTransient
-    public List<Beca> getBecaList() {
-        return becaList;
-    }
-
-    public void setBecaList(List<Beca> becaList) {
-        this.becaList = becaList;
-    }
-
-    @XmlTransient
-    public List<Respuesta> getRespuestaList() {
-        return respuestaList;
-    }
-
-    public void setRespuestaList(List<Respuesta> respuestaList) {
-        this.respuestaList = respuestaList;
     }
 
     @Override
@@ -215,5 +234,7 @@ public class SolicitudBeca implements Serializable {
     public String toString() {
         return "com.sv.udb.modelo.SolicitudBeca[ codiSoliBeca=" + codiSoliBeca + " ]";
     }
+
+   
     
 }

@@ -5,10 +5,16 @@
  */
 package com.sv.udb.ejb;
 
+import com.sv.udb.modelo.Pregunta;
 import com.sv.udb.modelo.Seccion;
+import com.sv.udb.modelo.Seguimiento;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -23,6 +29,16 @@ public class SeccionFacade extends AbstractFacade<Seccion> implements SeccionFac
     @Override
     protected EntityManager getEntityManager() {
         return em;
+    }
+    
+    
+  
+    @Override
+    public List<Seccion> findAllActive() {
+        
+        Query q = getEntityManager().createNativeQuery("select * from seccion where seccion.esta_secc = 1", Seccion.class);
+        List resu = q.getResultList();
+        return resu.isEmpty() ? null : resu;
     }
 
     public SeccionFacade() {

@@ -8,6 +8,8 @@ package com.sv.udb.controlador;
 import static com.fasterxml.jackson.databind.util.ClassUtil.getRootCause;
 import com.sv.udb.modelo.Documento;
 import com.sv.udb.ejb.DocumentoFacadeLocal;
+import com.sv.udb.ejb.SolicitudBecaFacadeLocal;
+import com.sv.udb.modelo.SolicitudBeca;
 import com.sv.udb.utils.Archivo;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -39,6 +41,7 @@ import org.primefaces.context.RequestContext;
 @Named(value = "documentoBean")
 @ViewScoped
 public class DocumentoBean implements Serializable{
+    
     @EJB
     private DocumentoFacadeLocal FCDEDocu;
     private Documento objeDocu;
@@ -48,7 +51,48 @@ public class DocumentoBean implements Serializable{
     private static Logger log = Logger.getLogger(DocumentoBean.class);
     private String rutaC;
     private byte[] esto;
+    private String tokens = "";
 
+    /*para archivos xd*/
+    
+    private Part file;
+    private String carnet;    
+    List<String> rutas;
+    int DireActuInde;    
+    List<Archivo> listNombFile;
+    
+    
+     private List<SolicitudBeca> listSoli;
+
+    public List<SolicitudBeca> getListSoli() {
+        return listSoli;
+    }
+
+    public void setListSoli(List<SolicitudBeca> listSoli) {
+        this.listSoli = listSoli;
+    }
+    @EJB
+    private SolicitudBecaFacadeLocal FCDESoli;
+    
+    public String getCarnet() {
+        return carnet;
+    }
+
+    public void setCarnet(String carnet) {
+        this.carnet = carnet;
+    }
+
+    public Part getFile() {
+        return file;
+    }
+
+    public void setFile(Part file) {
+        this.file = file;
+    }
+
+    public List<Archivo> getListNombFile() {
+        return listNombFile;
+    }
     public byte[] getEsto() {
         return esto;
     }
@@ -59,6 +103,10 @@ public class DocumentoBean implements Serializable{
 
     public void setImagen(boolean imagen) {
         this.imagen = imagen;
+    }
+
+    public String getTokens() {
+        return tokens;
     }
     
     
@@ -85,15 +133,56 @@ public class DocumentoBean implements Serializable{
     public DocumentoBean() {
     }
     
+   private BecasBean objeBeca;
+      private EmpresaBean objeEmpr;
+    private boolean paBeca = false;
+    private boolean paEmpresa= false;
+
+    public boolean isPaBeca() {
+        return paBeca;
+    }
+
+    public void setPaBeca(boolean paBeca) {
+        this.paBeca = paBeca;
+    }
+
+    public boolean isPaEmpresa() {
+        return paEmpresa;
+    }
+
+    public void setPaEmpresa(boolean paEmpresa) {
+        this.paEmpresa = paEmpresa;
+    }
+    
+    
     @PostConstruct
     public void init()
     {
         this.objeDocu = new Documento();
-        this.guardar = true;
-        this.consTodo();
-        this.objeDocu.setFechDocu(new Date());
-        this.inicializar();
+        this.guardar = true;       
+        this.objeDocu.setFechDocu(new Date());       
         this.imagen = false;
+        this.tokens = "Imagen";        
+       this.listNombFile = new ArrayList<>();
+       this.rutas = new ArrayList<>();
+       FacesContext facsCtxt = FacesContext.getCurrentInstance();            
+       String ruta = facsCtxt.getExternalContext().getInitParameter("docBecas.URL"); 
+       rutas.add(ruta);
+       DireActuInde = 0;
+       this.carnet = "";
+       
+       if (FacesContext.getCurrentInstance().getViewRoot().getViewMap().get("becasBean") != null) {
+            objeBeca = (BecasBean) FacesContext.getCurrentInstance().getViewRoot().getViewMap().get("becasBean");
+            this.paBeca = true;
+            System.out.println("Dato en documentos: "+objeBeca.getObjeSoli().getCarnAlum());
+        }
+        if (FacesContext.getCurrentInstance().getViewRoot().getViewMap().get("empresaBean") != null) {
+            objeEmpr = (EmpresaBean) FacesContext.getCurrentInstance().getViewRoot().getViewMap().get("empresaBean");
+            this.paEmpresa= false;
+            System.out.println("Dato en documentos: "+objeEmpr.getObjeEmpr().getNombEmpr());
+       
+        }    
+         this.consTodo();
     }
     
     public void limpForm()
@@ -104,126 +193,98 @@ public class DocumentoBean implements Serializable{
         this.objeDocu.setFechDocu(new Date());
     }
     
-    public void esta()
-    {
-        RequestContext ctx = RequestContext.getCurrentInstance(); //Capturo el contexto de la página
-        try
-        {
-            this.objeDocu.setEstaDocu(1);                   
-            this.objeDocu.setRutaDocu("mis heuvos");
-            FCDEDocu.create(this.objeDocu);
-            this.listDocu.add(this.objeDocu);
-            this.limpForm();
-            ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos guardados')");
-            log.info("Documento Consultado");
-        }
-        catch (Exception e) 
-        {
-            ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al guardar ')");
-            log.error(getRootCause(e).getMessage());
-        }
-        finally
-        {
-            
-        }
-    }
     
     public void guar()
     {
         RequestContext ctx = RequestContext.getCurrentInstance(); //Capturo el contexto de la página
         try
-        {
-            this.carnet = objeDocu.getCodiSoliBeca().getCarnAlum();
+        {            
+            if(this.objeBeca != null)
+            {
+                 this.objeDocu.setCodiSoliBeca(this.objeBeca.getObjeSoli());
+                  this.carnet = objeDocu.getCodiSoliBeca().getCarnAlum().trim();
+            }
+            if(this.objeEmpr != null)
+            {
+                this.objeDocu.setCodiEmpr(this.objeEmpr.getObjeEmpr());
+                this.carnet  = objeDocu.getCodiEmpr().getNombEmpr().trim();
+            }
             this.uploFile();
             this.objeDocu.setEstaDocu(1);   
-            FCDEDocu.create(this.objeDocu);
+            this.FCDEDocu.create(this.objeDocu);
             this.listDocu.add(this.objeDocu);
             this.limpForm();
             //this.carnet = objeDocu.getCodiSoliBeca().getCarnAlum();
             //this.uploFile();
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos guardados')");
-            log.info("Documento Consultado");
+            //log.info("Documento Consultado");
         }
         catch (Exception e) 
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al guardar ')");
-            log.error(getRootCause(e).getMessage());
+            //log.error(getRootCause(e).getMessage());
         }
         finally
         {
             
         }
     }
-    
-    public void modi()
-    {
-        RequestContext ctx = RequestContext.getCurrentInstance(); //Capturo el contexto de la página
-        try
-        {
-            this.listDocu.remove(this.objeDocu); //Limpia el objeto viejo
-            FCDEDocu.edit(this.objeDocu);
-            this.listDocu.add(this.objeDocu); //Agrega el objeto modificado
-            ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos Modificados')");
-            log.info("Documento Modificado");
-        }
-        catch(Exception ex)
-        {
-            ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al modificar ')");
-            log.error(getRootCause(ex).getMessage());
-        }
-        finally
-        {
-            
-        }
-    }
-    
     public void elim()
     {
         RequestContext ctx = RequestContext.getCurrentInstance(); //Capturo el contexto de la página
         try
-        {
-          
+        {          
             this.objeDocu.setEstaDocu(0);
             String ruta = this.rutas.get(0) + this.objeDocu.getRutaDocu();
             
     		File file = new File(ruta);
-
     		if(file.delete()){
     			System.out.println(file.getName() + " is deleted!");
     		}else{
     			System.out.println("Delete operation is failed.");
     		}
-
-
-            
             FCDEDocu.remove(this.objeDocu);
             this.listDocu.remove(this.objeDocu); //Limpia el objeto viejo
             //this.listDocu.add(this.objeDocu); //Agrega el objeto modificado
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Datos Modificados')");
-            log.info("Documento Modificado");
+            //log.info("Documento Modificado");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al eliminar')");
-            log.error(getRootCause(ex).getMessage());
+            //log.error(getRootCause(ex).getMessage());
         }
         finally
         {
             
         }
     }
-    
     public void consTodo()
     {
         try
         {
+            /*
+            if(this.objeBeca != null)
+            {
+                System.out.println("Dato sobre solis en docu: "+this.objeBeca.getObjeSoli().getCarnAlum());
+                 this.objeDocu.setCodiSoliBeca(this.objeBeca.getObjeSoli());
+                  this.carnet = objeDocu.getCodiSoliBeca().getCarnAlum().trim();
+                  System.out.println(this.carnet);
+            }
+            if(this.objeEmpr != null)
+            {
+                this.objeDocu.setCodiEmpr(this.objeEmpr.getObjeEmpr());
+                this.carnet  = objeDocu.getCodiEmpr().getNombEmpr().trim();
+                System.out.println(this.carnet);
+            }*/
             this.listDocu = FCDEDocu.findAll();
-            log.info("Documentos Consultados");
+           // log.info("Documentos Consultados");
         }
         catch(Exception ex)
         {
             ex.printStackTrace();
-            log.error(getRootCause(ex).getMessage());
+            System.out.println("Error en cons todo en docus: " +ex.getMessage());
+           // log.error(getRootCause(ex).getMessage());
         }
         finally
         {
@@ -238,6 +299,7 @@ public class DocumentoBean implements Serializable{
         try
         {
             this.imagen = false;
+            this.tokens = "Imagen";
             this.objeDocu = FCDEDocu.find(codi);
             String h = this.rutas.get(0);
             //System.out.println(h + this.objeDocu.getRutaDocu());
@@ -252,83 +314,25 @@ public class DocumentoBean implements Serializable{
             if("pdf".equals(tokens[1]))
             {
                 this.imagen = !this.imagen;
+                this.tokens = "Documento";
                 InputStream docu = new FileInputStream(file);
                 this.esto = readFully(docu);
             }
             ctx.execute("setMessage('MESS_SUCC', 'Atención', 'Consultado a " + 
                     String.format("%s", this.objeDocu.getRutaDocu()) + "')");
-            log.info("Documento Consultado");
+            //log.info("Documento Consultado");
         }
         catch(Exception ex)
         {
             ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al consultar')");
-            log.error(getRootCause(ex).getMessage());
+           // log.error(getRootCause(ex).getMessage());
         }
         finally
         {
             
         }
     }
-    
-    
-    
-    /*para archivos xd*/
-    
-    private Part file;
-    private String carnet;    
-    List<String> rutas;
-    int DireActuInde;    
-    List<Archivo> listNombFile;
-
-    public String getCarnet() {
-        return carnet;
-    }
-
-    public void setCarnet(String carnet) {
-        this.carnet = carnet;
-    }
-
-    public Part getFile() {
-        return file;
-    }
-
-    public void setFile(Part file) {
-        this.file = file;
-    }
-
-    public List<Archivo> getListNombFile() {
-        return listNombFile;
-    }
-    
-    /**
-     * Creates a new instance of UploadBean
-     */
-    
-    public void inicializar()
-    {
-        try{
-            
-            this.listNombFile = new ArrayList<>();
-            this.rutas = new ArrayList<>();
-            //String ruta ="C:/Users/Ariel/Desktop/becas/";    
-            String ruta = "/home/eduardo/Escritorio/asd/";
-           rutas.add(ruta);
-           DireActuInde = 0;
-          this.consTodo("");
-           this.carnet = "";
-        }
-        catch(Exception e)
-        {
-            System.out.println(getRootCause(e).getMessage());
-        }   
-    }    
-    public void RegresarRuta()
-    {
-
-        rutas.remove(rutas.size() - 1);
-        DireActuInde--;
-    }
-    
+        
     public void uploFile()
     {
         String Path = this.rutas.get(DireActuInde);
@@ -356,7 +360,7 @@ public class DocumentoBean implements Serializable{
                         try{
                             theDir.mkdir();
                             result = true;
-                            this.listNombFile.add(new Archivo(carnet,"folder"  ));
+                           
                         } 
                         catch(SecurityException se){
                             //handle it
@@ -380,8 +384,6 @@ public class DocumentoBean implements Serializable{
             System.out.println("Error en uploFile"+ex.getMessage());
         }
     }
-    
-    
     public static byte[] readFully(InputStream input) throws IOException
     {
         byte[] buffer = new byte[8192];
@@ -400,27 +402,27 @@ public class DocumentoBean implements Serializable{
         try {
             if(item.getName().equals(file.getName()))
             {
-                
-                System.out.println(item.getSubmittedFileName());
-                
-                                System.out.println(item.getContentType());
-                                
-                                
                  this.listNombFile.add(new Archivo(
                         item.getSubmittedFileName(),
                         item.getInputStream(),
                         item.getContentType(),
                         readFully(item.getInputStream())
                 ));
-
-               // System.out.println(item.getSubmittedFileName() +" "+item.getInputStream()+" "+ item.getContentType());
-                System.out.println("RUTA:" + item.getSubmittedFileName());//Aqui esta la ruta :3 
+            this.processFilePart(item, String.format("%s%s",path, item.getSubmittedFileName()));                
+            if(this.objeBeca != null)
+            {
+                 this.objeDocu.setRutaDocu(this.objeDocu.getCodiSoliBeca().getCarnAlum() + "/" + item.getSubmittedFileName());
+            }
+            if(this.objeEmpr != null)
+            {
+              this.objeDocu.setRutaDocu(this.carnet + "/" + item.getSubmittedFileName());
+            }
+            
+            
                 
-                this.processFilePart(item, String.format("%s%s",path, item.getSubmittedFileName()));
-                this.objeDocu.setRutaDocu(this.objeDocu.getCodiSoliBeca().getCarnAlum() + "/" + item.getSubmittedFileName());
              }
         } catch (Exception e) {
-            System.out.println("Error en moveFilePart"+e.getMessage());
+            System.out.println("Error en moveFilePart "+e.getMessage());
         }
         
     }
@@ -459,131 +461,25 @@ public class DocumentoBean implements Serializable{
                 {
                 }
         }
-
-        // how to get the result
-
         part.delete();
     }
-    
-     public void consFiles()
-    {
-        RequestContext ctx = RequestContext.getCurrentInstance(); //Capturo el contexto de la página
-        String  ruta = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("codiObjePara");
-        try
-        {
-            System.out.println(ruta);
-            if(ruta.equals("Subir"))
-            {
-                this.RegresarRuta();
-                consTodo(ruta);
-            }
-            else
-            {
-                String rutaAnte = this.rutas.get(DireActuInde);
-                String rutaNuev = rutaAnte +ruta.trim()+"/";
-                this.rutas.add(rutaNuev);
-                this.DireActuInde++;
-                 
-                 //consTodo(ruta.trim()+"/");
-            }
-           
-        }
-        catch(Exception ex)
-        {
-            ctx.execute("setMessage('MESS_ERRO', 'Atención', 'Error al consultar')");
-            
-        }
-        finally
-        {
-            
-        }
-    }
-    
-    public void consTodo(String parametro)
-    {
-        System.out.println("Directorio" + this.DireActuInde);
-        System.out.println("Parametro" + parametro.trim());
-        System.out.println("Directorio " + this.DireActuInde);
-        try
-        {
-           
-           if(parametro.equals("Subir"))
-           {
-               this.listNombFile.clear();
-               parametro="";
-           }
-           if(parametro.trim().length()!=0)
-           {
-               
-               this.listNombFile.clear();
-               this.listNombFile.add(new Archivo("Subir","folder"  ));
-           }
-           if(this.DireActuInde != 0)
-           {
-                 this.listNombFile.clear();
-               this.listNombFile.add(new Archivo("Subir","folder"  ));
-           }
-           
-            //tags file java investigar
-            File directory = new File(this.rutas.get(DireActuInde));
-            //System.out.println(this.ruta+parametro);
-            //get all the files from a directory
-            File[] fList = directory.listFiles();
-            for (File file : fList){
-                if (file.isFile()) {
-                    InputStream targetStream = new FileInputStream(file);                
-                    String[] tokens = file.getName().split("\\.(?=[^\\.]+$)");
-                    this.listNombFile.add(new Archivo(
-                            parametro+file.getName(), 
-                            targetStream, 
-                            file.getName(),
-                            file.getAbsolutePath(),
-                            tokens[1],
-                             readFully(targetStream)
-                    ));
-                    //System.out.println(file.getName());
-                } else if (file.isDirectory()) {
-                    this.listNombFile.add(new Archivo(file.getName(),"folder"  ));
-                    
-                }
-                
-            }
-            System.out.println(this.listNombFile.size());
-        }
-        catch(Exception ex)
-        {
-            System.out.println("Error en cons todo"+ex.getMessage());
-           
-        }
-        finally
-        {
-            
-        }
-    }
-    
-    
     //Lógica slider para docuemntos
     private  boolean showDocu = false;
 
     public boolean isShowDocu() {
         return showDocu;
     }
-    
-    
     public void toogDocu()
     {
         RequestContext ctx = RequestContext.getCurrentInstance(); //Capturo el contexto de la página
         this.showDocu = !this.showDocu;
     }
-    
      //Lógica slider para imagenes
     private  boolean showImag = false;
 
     public boolean isShowImag() {
         return showImag;
     }
-    
-    
     public void toogImag()
     {
         RequestContext ctx = RequestContext.getCurrentInstance(); //Capturo el contexto de la página
